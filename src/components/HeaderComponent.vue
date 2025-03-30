@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router';
 
-
 </script>
 
 <template>
   <v-card height="65">
-    <v-toolbar extended class="header">
+    <v-toolbar extended class="header-container">
       <div>
         <RouterLink to="/">
           <img src="@/assets/logo.png" alt="Logo" class="header-logo" />
@@ -65,11 +64,11 @@ import { RouterLink } from 'vue-router';
 </template>
 
 <style scoped>
-.header {
-  background-color: rgba(0, 0, 0, 0.9);
-  color: white;
+.header-container {
+  background-color: rgba(0, 0, 0, 0.95);
   height: 65px;
   position: fixed;
+  border-bottom: solid 1px #80808050;
 }
 
 .header-logo {
@@ -100,7 +99,7 @@ import { RouterLink } from 'vue-router';
 }
 
 .header-component:hover {
-  color: gray;
+  color: #FFD700;
 }
 
 .v-btn {

@@ -2,8 +2,6 @@
 import { ref } from 'vue'
 import { useCryptosStore } from '@/stores/cryptos'
 
-const { GetAllCryptos } = useCryptosStore()
-
 const storeCryptos = useCryptosStore()
 
 const sortBy = ref(0)
@@ -11,19 +9,22 @@ const order = ref(0)
 
 const setSortBy = (newSortBy: number) => {
   sortBy.value = newSortBy
-  GetAllCryptos(sortBy.value, order.value) 
+  storeCryptos.GetAllCryptos(sortBy.value, order.value) 
 }
 
 const setOrder = () => {
   order.value = order.value === 0 ? 1 : 0
-  GetAllCryptos(sortBy.value, order.value) 
+  storeCryptos.GetAllCryptos(sortBy.value, order.value) 
 }
 
-GetAllCryptos(sortBy.value, order.value) 
+storeCryptos.GetAllCryptos(sortBy.value, order.value) 
 </script>
 
 <template>
-  <v-table>
+  <div class="title-container">
+    <p class="title-text">Principales Criptomonedas por capitalización de mercado</p>
+  </div>
+  <v-table class="table-container">
     <thead>
       <tr>
         <th class="text-left">
@@ -36,7 +37,7 @@ GetAllCryptos(sortBy.value, order.value)
     </thead>
     <tbody>
       <tr
-        v-for="crypto in storeCryptos.cryptos"
+        v-for="crypto in storeCryptos.cryptos.splice(0, 10)"
         :key="crypto.id"
       >
         <td>{{ crypto.name }}</td>
@@ -47,5 +48,17 @@ GetAllCryptos(sortBy.value, order.value)
 </template>
 
 <style scoped>
+.title-container {
+  margin: 50px 0;
+}
+
+.title-text {
+  font-size: 2rem;
+  color: white;
+}
+
+.table-container {
+
+}
 
 </style>
