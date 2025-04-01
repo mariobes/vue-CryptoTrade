@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterView } from 'vue-router'
 import HeaderComponent from '@/components/HeaderComponent.vue'
 import FooterComponent from '@/components/FooterComponent.vue'
 
@@ -26,8 +26,12 @@ main {
   flex-grow: 1;
 }
 
-* {
-  background-color: rgb(18, 12, 68);
+html, body, #app, .v-application {
+  background-color: rgba(0, 0, 0, 0.95) !important;
+  color: white;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
 }
 
 </style>
