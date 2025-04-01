@@ -3,7 +3,7 @@ import { useStocksStore } from '@/stores/stocks'
 
 const storeStocks = useStocksStore()
 
-storeStocks.GetStocksTrending()
+// storeStocks.GetStocksTrending()
 
 function getPercentageColor(percentage: number) {
   return percentage > 0 ? 'green' : 'red';

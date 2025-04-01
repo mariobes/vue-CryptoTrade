@@ -17,6 +17,20 @@ const setOrder = () => {
   storeCryptos.GetAllCryptos(sortBy.value, order.value) 
 }
 
+const updateCryptoDatabase = async () => {
+  await storeCryptos.GetCrypto('bitcoin');
+
+  if (storeCryptos.crypto && new Date(storeCryptos.crypto.lastUpdated).toDateString() !== new Date().toDateString()) {
+    // await storeCryptos.GetCryptosApi();
+    console.log("(Crypto) Base de datos actualizada exitosamente.");
+  }
+  else {
+    console.log("(Crypto) La base de datos ya esta actualizada.");
+  }
+};
+
+updateCryptoDatabase();
+
 storeCryptos.GetAllCryptos(sortBy.value, order.value) 
 </script>
 

@@ -4,12 +4,26 @@ import type { Crypto } from '@/core/crypto'
 
 
 export const useCryptosStore = defineStore('cryptos', () => {
-    const cryptos = ref<Crypto[]>([])
-    const trendingCryptos = ref<any[]>([])
-    const totalMarketCapCryptos = ref<any[]>([])
-    const fearGreedIndexCryptos = ref<any[]>([])
-    const CMC100IndexCryptos = ref<any[]>([])
+  const cryptos = ref<Crypto[]>([])
+  const crypto = ref<Crypto | null>(null)
+  const trendingCryptos = ref<any[]>([])
+  const totalMarketCapCryptos = ref<any[]>([])
+  const fearGreedIndexCryptos = ref<any[]>([])
+  const CMC100IndexCryptos = ref<any[]>([])
 
+  async function GetCryptosApi() {
+    try {
+        const apiKey = 'CG-WVWH2AAYPrz7fXiztDF8so6L';
+        await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&sparkline=true', {
+          method: 'GET',
+          headers: {
+            'x-cg-demo-api-key': `${apiKey}`
+          }
+        });
+    } catch (error) {
+        console.error('Error al obtener las criptomonedas de CoinGeko API: ', error)
+    }
+  }
     
   async function GetAllCryptos(sortBy: number, order: number) {
     try {
@@ -18,6 +32,16 @@ export const useCryptosStore = defineStore('cryptos', () => {
         cryptos.value = cryptosInfo
     } catch (error) {
         console.error('Error al obtener las criptomonedas: ', error)
+    }
+  }
+
+  async function GetCrypto(id: string) {
+    try {
+        const response = await fetch(`http://localhost:4746/Cryptos/${id}`)
+        const cryptoInfo = await response.json()
+        crypto.value = cryptoInfo
+    } catch (error) {
+        console.error(`Error al obtener la criptomoneda con ID ${id}: `, error)
     }
   }
 
@@ -61,16 +85,20 @@ export const useCryptosStore = defineStore('cryptos', () => {
     }
   }
     
-  return { cryptos, 
-           trendingCryptos, 
-           totalMarketCapCryptos, 
-           fearGreedIndexCryptos, 
-           CMC100IndexCryptos, 
-           GetAllCryptos, 
-           GetCryptosTrending, 
-           GetTotalMarketCap, 
-           GetFearGreedIndex, 
-           GetCMC100Index }
+  return {
+          cryptos, 
+          crypto,
+          trendingCryptos, 
+          totalMarketCapCryptos, 
+          fearGreedIndexCryptos, 
+          CMC100IndexCryptos, 
+          GetCryptosApi,
+          GetAllCryptos, 
+          GetCrypto,
+          GetCryptosTrending, 
+          GetTotalMarketCap, 
+          GetFearGreedIndex, 
+          GetCMC100Index }
 })
 
 
