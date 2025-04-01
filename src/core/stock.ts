@@ -1,26 +1,21 @@
-export interface Crypto {
+export interface Stock {
     id: string
     name: string
     symbol: string
-    image: string
     price: number
     marketCap: number
-    fullyDilutedValuation?: number
-    totalVolume?: number
-    high24h?: number
-    low24h?: number
-    priceChange24h?: number
-    priceChangePercentage24h?: number
-    marketCapChange24h?: number
-    marketCapChangePercentage24h?: number
-    circulatingSupply?: number
-    totalSupply?: number
-    maxSupply?: number
-    ath?: number
-    athChangePercentage?: number
-    athDate?: Date
-    atl?: number
-    atlChangePercentage?: number
-    atlDate?: Date
+    sector: string,
+    industry: string,
+    lastAnnualDividend: number,
+    volume: number,
+    exchange: string,
+    exchangeShortName: string,
+    country: string,
+    changes: number,
+    isin: string,
+    website: string,
+    description: string,
+    ceo: string,
+    image: string    
     lastUpdated: Date
 }

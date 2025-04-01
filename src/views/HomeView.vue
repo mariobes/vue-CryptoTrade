@@ -3,7 +3,7 @@ import CryptoIndices from '@/components/CryptoIndices.vue'
 import CryptosTrendingTable from '@/components/CryptosTrendingTable.vue'
 import StocksTrendingTable from '@/components/StocksTrendingTable.vue'
 import CryptoTable from '@/components/CryptoTable.vue'
-// import StockTable from '@/components/StockTable.vue'
+import StockTable from '@/components/StockTable.vue'
 </script>
 
 <template>
@@ -19,7 +19,7 @@ import CryptoTable from '@/components/CryptoTable.vue'
     </div>
 
     <CryptoTable></CryptoTable>
-    <!-- <StockTable></StockTable> -->
+    <StockTable></StockTable>
   </div>
 </template>
 
