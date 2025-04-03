@@ -1,0 +1,34 @@
+{
+    "HomeView_Title": "Markets Summary",
+
+    "Header_Title": "Crypto Trade",
+    "Header_Component_1": "Cryptocurrencies",
+    "Header_Component_2": "Stocks",
+    "Header_Component_3": "Exchanges",
+    "Header_Icon_1": "Portfolio",
+    "Header_Icon_2": "Watchlist",
+    "Header_Icon_3": "DeFi Wallet",
+    "Header_Search": "Search",
+    "Header_Select_1": "Language",
+    "Header_Select_2": "Currency",
+    "Header_Select_3": "Dark mode",
+    "Header_Select_4": "Sign up",
+    "Header_Select_5": "Login",
+
+    "CryptoTable_Title": "Top Cryptocurrencies by Market Cap",
+    "CryptoTable_Name": "Name",
+    "CryptoTable_Price": "Price",
+
+    "StockTable_Title": "Top Stocks by Market Cap",
+    "StockTable_Name": "Name",
+    "StockTable_Price": "Price",
+
+    "CryptosTrendingTable_Title": "Trending Cryptocurrencies",
+
+    "StocksTrendingTable_Title": "Trending Stocks",
+
+    "CryptoIndices_Index_1": "Market Cap",
+    "CryptoIndices_Index_2": "CMC100 Index",
+    "CryptoIndices_Index_3": "Fear & Greed Index"
+
+}
