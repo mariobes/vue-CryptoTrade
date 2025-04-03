@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { useStocksStore } from '@/stores/stocks'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const storeStocks = useStocksStore()
 
@@ -20,7 +23,7 @@ function getArrowDirection(percentage: number) {
           <tr>
             <th class="text-left" colspan="2">
               <v-icon class="mb-2" color="red">mdi-fire</v-icon> 
-              <span class="title-table">Acciones en tendencia</span>
+              <span class="title-table">{{ t('StocksTrendingTable_Title') }}</span>
             </th>
           </tr>
         </thead>
@@ -75,7 +78,7 @@ function getArrowDirection(percentage: number) {
 }
 
 .table-price {
-  margin-left: 80px;
+  margin-left: 50px;
 }
 
 .table-change {

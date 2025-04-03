@@ -1,8 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useCryptosStore } from '@/stores/cryptos'
+import { useUserPreferencesStore } from '@/stores/userPreferences'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const storeCryptos = useCryptosStore()
+const storeUserPreferences = useUserPreferencesStore()
 
 const sortBy = ref(0)
 const order = ref(0)
@@ -21,7 +26,7 @@ const updateCryptoDatabase = async () => {
   await storeCryptos.GetCrypto('bitcoin');
 
   if (storeCryptos.crypto && new Date(storeCryptos.crypto.lastUpdated).toDateString() !== new Date().toDateString()) {
-    // await storeCryptos.GetCryptosApi();
+    await storeCryptos.GetCryptosApi();
     console.log("(Crypto) Base de datos actualizada exitosamente.");
   }
   else {
@@ -32,30 +37,35 @@ const updateCryptoDatabase = async () => {
 updateCryptoDatabase();
 
 storeCryptos.GetAllCryptos(sortBy.value, order.value) 
+
+const getConvertedPrice = (price: number): string => {
+  return storeUserPreferences.convertFromUSD(price, storeUserPreferences.selectedCurrency)
+}
+
 </script>
 
 <template>
   <div class="title-container">
-    <p class="title-text">Principales Criptomonedas por capitalización de mercado</p>
+    <p class="title-text">{{ t('CryptoTable_Title') }}</p>
   </div>
   <v-table class="table-container">
     <thead>
       <tr>
         <th class="text-left">
-          Name
+          {{ t('CryptoTable_Name') }}
         </th>
         <th class="text-left">
-          Precio
+          {{ t('CryptoTable_Price') }}
         </th>
       </tr>
     </thead>
     <tbody>
       <tr
-        v-for="crypto in storeCryptos.cryptos.splice(0, 10)"
+        v-for="crypto in storeCryptos.cryptos.slice(0, 10)"
         :key="crypto.id"
       >
         <td>{{ crypto.name }}</td>
-        <td>{{ crypto.current_price }}</td>
+        <td>{{ getConvertedPrice(crypto.current_price) }}</td>
       </tr>
     </tbody>
   </v-table>

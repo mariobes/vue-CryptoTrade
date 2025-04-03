@@ -1,0 +1,34 @@
+{
+    "HomeView_Title": "Resumen de los mercados",
+
+    "Header_Title": "Crypto Trade",
+    "Header_Component_1": "Criptomonedas",
+    "Header_Component_2": "Acciones",
+    "Header_Component_3": "Exchanges",
+    "Header_Icon_1": "Portafolio",
+    "Header_Icon_2": "Seguimiento",
+    "Header_Icon_3": "Billetera DeFi",
+    "Header_Search": "Buscar",
+    "Header_Select_1": "Idioma",
+    "Header_Select_2": "Moneda",
+    "Header_Select_3": "Modo oscuro",
+    "Header_Select_4": "Registrarse",
+    "Header_Select_5": "Iniciar sesión",
+
+    "CryptoTable_Title": "Principales Criptomonedas por capitalización de mercado",
+    "CryptoTable_Name": "Nombre",
+    "CryptoTable_Price": "Precio",
+
+    "StockTable_Title": "Principales Acciones por capitalización de mercado",
+    "StockTable_Name": "Nombre",
+    "StockTable_Price": "Precio",
+
+    "CryptosTrendingTable_Title": "Criptomonedas en tendencia",
+
+    "StocksTrendingTable_Title": "Acciones en tendencia",
+
+    "CryptoIndices_Index_1": "Capitalización del Mercado",
+    "CryptoIndices_Index_2": "Índice CMC100",
+    "CryptoIndices_Index_3": "Índice de Miedo y Codicia"
+
+}

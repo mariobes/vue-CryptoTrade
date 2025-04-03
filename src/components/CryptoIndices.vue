@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useCryptosStore } from '@/stores/cryptos'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const storeCryptos = useCryptosStore()
 
@@ -20,10 +23,6 @@ const formatMarketCap = (value: number): string => {
 
 function getPercentageColor(percentage: number) {
   return percentage > 0 ? 'green' : 'red';
-}
-
-function getArrowDirection(percentage: number) {
-  return percentage > 0 ? 'mdi-menu-up' : 'mdi-menu-down';
 }
 
 function getCirclePosition(value: number) {
@@ -63,7 +62,7 @@ onMounted(() => {
   <div class="index-container">
     <div class="index-section">
       <div class="index-section-content index-section-content-cap">
-        <p class="title-index">Capitalización del Mercado</p>
+        <p class="title-index">{{ t('CryptoIndices_Index_1') }}</p>
         <p class="price-index">${{ totalMarketCap }}</p>
         <p>
           <span
@@ -74,7 +73,7 @@ onMounted(() => {
       </div>
 
       <div class="index-section-content index-section-content-index">
-        <p class="title-index">Índice CMC100</p>
+        <p class="title-index">{{ t('CryptoIndices_Index_2') }}</p>
         <p class="price-index price-index-cmc100">${{ valueCMC100Index }}</p>
         <p>
           <span
@@ -86,7 +85,7 @@ onMounted(() => {
     </div>
 
     <div class="index-content">
-      <p class="title-index">Índice de Miedo y Codicia</p>
+      <p class="title-index">{{ t('CryptoIndices_Index_3') }}</p>
       <!-- Barra de colores -->
       <div class="fear-greed-bar"></div>
       <!-- Círculo marcador -->

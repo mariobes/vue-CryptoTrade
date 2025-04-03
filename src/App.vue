@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
+import { computed } from 'vue'
 import HeaderComponent from '@/components/HeaderComponent.vue'
 import FooterComponent from '@/components/FooterComponent.vue'
+import { useUserPreferencesStore } from '@/stores/userPreferences'
+
+const storeUserPreferences = useUserPreferencesStore()
+
+const backgroundColor = computed(() => storeUserPreferences.getTheme().background)
 
 </script>
 
@@ -27,8 +33,7 @@ main {
 }
 
 html, body, #app, .v-application {
-  background-color: rgba(0, 0, 0, 0.95) !important;
-  color: white;
+  background-color: v-bind(backgroundColor);
   margin: 0;
   padding: 0;
   min-height: 100vh;
