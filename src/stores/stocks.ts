@@ -11,7 +11,12 @@ export const useStocksStore = defineStore('stocks', () => {
   async function GetStocksApi() {
     try {
         const apiKey = 'FH1hPhPUyw89vnrWye6Sf1a4Yiy34RvX';
-        await fetch(`https://financialmodelingprep.com/stable/company-screener?limit=100&apikey=${apiKey}`)
+        await fetch(`https://financialmodelingprep.com/stable/company-screener?limit=100&apikey=${apiKey}`), {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+          }
+        }
     } catch (error) {
         console.error('Error al obtener las acciones de Financial Modeling Prep API: ', error)
     }

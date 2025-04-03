@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useStocksStore } from '@/stores/stocks'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const storeStocks = useStocksStore()
 
@@ -21,7 +24,7 @@ const updateStockDatabase = async () => {
   await storeStocks.GetStock('aapl');
 
   if (storeStocks.stock && new Date(storeStocks.stock.lastUpdated).toDateString() !== new Date().toDateString()) {
-    // await storeStocks.GetStocksApi();
+    await storeStocks.GetStocksApi();
     console.log("(Stock) Base de datos actualizada exitosamente.");
   }
   else {
@@ -36,22 +39,22 @@ storeStocks.GetAllStocks(sortBy.value, order.value)
 
 <template>
   <div class="title-container">
-    <p class="title-text">Principales Acciones por capitalización de mercado</p>
+    <p class="title-text">{{ t('StockTable_Title') }}</p>
   </div>
   <v-table class="table-container">
     <thead>
       <tr>
         <th class="text-left">
-          Name
+          {{ t('StockTable_Name') }}
         </th>
         <th class="text-left">
-          Precio
+          {{ t('StockTable_Price') }}
         </th>
       </tr>
     </thead>
     <tbody>
       <tr
-        v-for="stock in storeStocks.stocks.splice(0, 10)"
+        v-for="stock in storeStocks.stocks.slice(0, 10)"
         :key="stock.id"
       >
         <td>{{ stock.companyName }}</td>

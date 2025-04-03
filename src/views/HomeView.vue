@@ -1,16 +1,19 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import CryptoIndices from '@/components/CryptoIndices.vue'
 import CryptosTrendingTable from '@/components/CryptosTrendingTable.vue'
 import StocksTrendingTable from '@/components/StocksTrendingTable.vue'
 import CryptoTable from '@/components/CryptoTable.vue'
 import StockTable from '@/components/StockTable.vue'
+
+const { t } = useI18n()
 </script>
 
 <template>
 
   <div class="main-container">
     <div class="title-container">
-      <p class="title-text">Resumen de los mercados</p>
+      <p class="title-text">{{ t('HomeView_Title') }}</p>
     </div>
     <div class="content-container"> 
       <CryptoIndices class="content-item"></CryptoIndices>

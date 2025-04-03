@@ -17,6 +17,7 @@ export const useCryptosStore = defineStore('cryptos', () => {
         await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&sparkline=true', {
           method: 'GET',
           headers: {
+            'Accept': 'application/json',
             'x-cg-demo-api-key': `${apiKey}`
           }
         });
