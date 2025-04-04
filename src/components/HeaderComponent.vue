@@ -17,11 +17,36 @@ const languageLabels: { [key in typeof languages[number]]: string } = {
   EN: 'English',
 }
 
+const currencyText = {
+  USD: "United States Dollar",
+  EUR: "Euro",
+  GBP: "Pound Sterling",
+  JPY: "Japanese Yen",
+  CAD: "Canadian Dollar",
+  AUD: "Australian Dollar",
+  CHF: "Swiss Franc",
+  CNY: "Chinese Yuan",
+  MXN: "Mexican Peso",
+  BRL: "Brazilian Real",
+  INR: "Indian Rupee",
+  RUB: "Russian Ruble",
+  ZAR: "South African Rand",
+};
+
 const currencyLabels = {
-  USD: "USD",
-  EUR: "EUR",
-  GBP: "GBP",
-  JPY: "JPY",
+  USD: "$ USD",
+  EUR: "€ EUR",
+  GBP: "£ GBP",
+  JPY: "¥ JPY",
+  CAD: "CA$ CAD",
+  AUD: "A$ AUD",
+  CHF: "CHF CHF",
+  CNY: "¥ CNY",
+  MXN: "$ MXN",
+  BRL: "R$ BRL",
+  INR: "₹ INR",
+  RUB: "₽ RUB",
+  ZAR: "R ZAR",
 };
 
 const menu = ref(false);
@@ -41,6 +66,7 @@ const selectedCurrency = ref(storeUserPreferences.selectedCurrency);
 const selectedTheme = ref(storeUserPreferences.selectedTheme);
 
 const changeLanguage = (language: 'ES' | 'EN') => {
+  selectedLanguage.value = language;
   storeUserPreferences.setSelectedLanguage(selectedLanguage.value);
   locale.value = language;
   languageDialog.value = false;
@@ -102,12 +128,14 @@ const changeTheme = () => {
             hide-details
             single-line
             bg-color="#ffffff99"
-            rounded
+            rounded="lg"
             flat
             @click:append-inner="onClick"
             @keyup.enter=""
           ></v-text-field>
         </v-card-text>
+
+        <v-btn class="header-icons btn-icons login-btn">{{ t('Header_Select_4') }}</v-btn>
 
         <v-menu v-model="menu" offset-y>
           <template v-slot:activator="{ props }">
@@ -116,11 +144,24 @@ const changeTheme = () => {
             </v-btn>
           </template>
           <v-card class="settings-container">
+            <div class="settings-user">
+              <v-btn class="settings-user-btn login-btn">{{ t('Header_Select_4') }}</v-btn>
+              <v-btn class="settings-user-btn register-btn">{{ t('Header_Select_5') }}</v-btn>
+            </div>
+
             <div class="settings-options">
 
-              <v-btn class="settings-options-btn" block @click="openLanguagePopup">{{ t('Header_Select_1') }} {{ languageLabels[locale] }}</v-btn>
+              <v-btn class="settings-options-btn settings-options-btn-language" block @click="openLanguagePopup">
+                {{ t('Header_Select_1') }}
+                <span class="settings-options-language">{{ languageLabels[locale] }}</span>
+                <span class="mdi mdi-chevron-right settings-options-arrow"></span>
+              </v-btn>
 
-              <v-btn class="settings-options-btn" block @click="openCurrencyPopup">{{ t('Header_Select_2') }} {{ currencyLabels[selectedCurrency] }}</v-btn>
+              <v-btn class="settings-options-btn" block @click="openCurrencyPopup">
+                {{ t('Header_Select_2') }}
+                <span class="settings-options-currency">{{ currencyLabels[selectedCurrency] }}</span>
+                <span class="mdi mdi-chevron-right settings-options-arrow"></span>
+              </v-btn>
 
               <div class="settings-options-switch">
                 <span class="switch-text">{{ t('Header_Select_3') }}</span>
@@ -135,45 +176,57 @@ const changeTheme = () => {
                 ></v-switch>
               </div>
             </div>
-            <div class="settings-user">
-              <v-btn class="settings-user-btn register-btn">{{ t('Header_Select_4') }}</v-btn>
-              <v-btn class="settings-user-btn">{{ t('Header_Select_5') }}</v-btn>
-            </div>
           </v-card>
         </v-menu>
       </template>
     </v-toolbar>
-    
+
     <!-- Popup selector de idioma -->
-    <v-dialog v-model="languageDialog" max-width="300px">
-      <v-card>
-        <v-card-title>{{ t('Select_Language') }}</v-card-title>
+    <v-dialog v-model="languageDialog" width="1000px">
+      <v-card class="popup-container">
+        <v-card-title class="popup-title">{{ t('Header_Popup_Title_1') }}</v-card-title>
         <v-card-text>
-          <v-btn
-            v-for="language in languages"
-            :key="language"
-            block
-            @click="changeLanguage(language)"
-          >
-            {{ languageLabels[language] }}
-          </v-btn>
+          <v-row>
+            <v-col v-for="(text, value) in languageLabels" :key="value" cols="3">
+              <v-btn
+                class="popup-text"
+                block
+                @click="changeLanguage(value)"
+                :class="{'selected-value': value === selectedLanguage}"
+              >
+                <div class="language-content">
+                  <div class="language-text">{{ text }}</div>
+                  <div class="language-label">{{ value }}</div>
+                </div>
+                <v-icon v-if="value === selectedLanguage" class="selected-icon">mdi-check-circle</v-icon>
+              </v-btn>
+            </v-col>
+          </v-row>
         </v-card-text>
       </v-card>
     </v-dialog>
 
     <!-- Popup selector de moneda -->
-    <v-dialog v-model="currencyDialog" max-width="300px">
-      <v-card>
-        <v-card-title>{{ t('Select_Currency') }}</v-card-title>
+    <v-dialog v-model="currencyDialog" width="1000px">
+      <v-card class="popup-container">
+        <v-card-title class="popup-title">{{ t('Header_Popup_Title_2') }}</v-card-title>
         <v-card-text>
-          <v-btn
-            v-for="(text, value) in currencyLabels"
-            :key="value"
-            block
-            @click="changeCurrency(value)"
-          >
-            {{ text }}
-          </v-btn>
+          <v-row>
+            <v-col v-for="(text, value) in currencyText" :key="value" cols="3">
+              <v-btn
+                class="popup-text"
+                block
+                @click="changeCurrency(value)"
+                :class="{'selected-value': value === selectedCurrency}"
+              >
+                <div class="currency-content">
+                  <div class="currency-text">{{ text }}</div>
+                  <div class="currency-label">{{ currencyLabels[value] }}</div>
+                </div>
+                <v-icon v-if="value === selectedCurrency" class="selected-icon">mdi-check-circle</v-icon>
+              </v-btn>
+            </v-col>
+          </v-row>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -241,9 +294,10 @@ const changeTheme = () => {
 }
 
 .header-icons-search {
-  width: 250px;
+  width: 200px;
   transition: background-color 0.3s;
-  border-radius: 20px;
+  margin-right: 5px;
+  border-radius: 8px;
 }
 
 .header-icons-search:hover {
@@ -260,18 +314,46 @@ const changeTheme = () => {
   background-color: #ffffff22;
 }
 
+.settings-user {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.settings-user-btn {
+  background-color: transparent;
+  border-radius: 10px;
+  padding: 0 15px;
+  margin-top: 5px;
+}
+
+.login-btn {
+  margin-right: 10px;
+  color: #000000;
+  background-color: #FFD700;
+  padding: 0 15px;
+}
+
+.register-btn {
+  color: #ffd900;
+  border: solid 1px #FFD700;
+}
+
+.login-btn:hover {
+  background-color: rgb(255, 215, 150);
+}
+
 .settings-container {
   width: 300px;
   margin-top: 10px;
-  background-color: rgba(49, 49, 49, 0.5) !important;
+  background-color: #232323 !important;
   border-radius: 10px !important;
   padding: 10px 20px;
 }
 
 .settings-options {
-  padding: 20px 0;
-  margin: 20px 0;
-  border-bottom: solid 1px #8080803a;
+  padding: 10px 0 20px 0;
+  margin-top: 20px;
   border-top: solid 1px #8080803a;
 }
 
@@ -280,6 +362,27 @@ const changeTheme = () => {
   background-color: transparent;
   box-shadow: none;
   border-radius: 10px;
+  padding: 20px 10px;
+  display: flex;
+  justify-content: end;
+}
+
+.settings-options-btn-language {
+  padding-bottom: 25px;
+}
+
+.settings-options-language {
+  color: #808080;
+  /* margin-left: 112px; */
+}
+
+.settings-options-currency {
+  color: #808080;
+  /* margin-left: 90px; */
+}
+
+.settings-options-arrow {
+  color: #808080;
 }
 
 .settings-options-btn:hover {
@@ -297,28 +400,71 @@ const changeTheme = () => {
 .switch-text {
   color: white;
   font-size: 14px;
+  height: 10px;
+  margin-left: 12px;
 }
 
-.settings-user {
+.switch-icon {
+  margin-right: 10px;
+}
+
+.popup-container {
+  background-color: #232323 !important;
+  border-radius: 10px !important;
+}
+
+.popup-title {
+  color: #ffffff;
   display: flex;
   justify-content: center;
-  margin-bottom: 10px;
+  margin: 15px 50px 0 50px;
+  font-size: 26px;
 }
 
-.settings-user-btn {
-  color: white;
-  background-color: #ffffff22;
+.popup-text {
+  color: #ffffff;
+  background-color: #232323;
   box-shadow: none;
-  border-radius: 10px;
-  padding: 10px;
+  padding: 30px 0;
 }
 
-.settings-user-btn:hover {
-  background-color: #ffffff7a;
+.selected-value {
+  background-color: #4b4a4a;
 }
 
-.register-btn {
-  margin-right: 10px;
+.currency-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.currency-text {
+  color: #ffffff;
+}
+
+.currency-label {
+  color: #808080;
+  margin-top: 5px;
+}
+
+.language-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.language-text {
+  color: #ffffff;
+}
+
+.language-label {
+  color: #808080;
+  margin-top: 5px;
+}
+
+.selected-icon {
+  color: green;
+  padding-left: 30px;
 }
 
 

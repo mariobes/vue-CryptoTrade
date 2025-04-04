@@ -58,7 +58,7 @@ function getArrowDirection(percentage: number) {
 
 <style scoped>
 .table-container {
-  background-color: #8080802a;
+  background-color: hsla(0, 0%, 50%, 0.165);
   color: white;
   border-radius: 20px;
   padding: 10px;

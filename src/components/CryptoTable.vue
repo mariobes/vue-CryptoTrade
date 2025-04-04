@@ -27,10 +27,6 @@ const updateCryptoDatabase = async () => {
 
   if (storeCryptos.crypto && new Date(storeCryptos.crypto.lastUpdated).toDateString() !== new Date().toDateString()) {
     await storeCryptos.GetCryptosApi();
-    console.log("(Crypto) Base de datos actualizada exitosamente.");
-  }
-  else {
-    console.log("(Crypto) La base de datos ya esta actualizada.");
   }
 };
 
