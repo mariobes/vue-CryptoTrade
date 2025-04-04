@@ -12,8 +12,10 @@
     "Header_Select_1": "Language",
     "Header_Select_2": "Currency",
     "Header_Select_3": "Dark mode",
-    "Header_Select_4": "Sign up",
-    "Header_Select_5": "Login",
+    "Header_Select_4": "Login",
+    "Header_Select_5": "Sign up",
+    "Header_Popup_Title_1": "Language",
+    "Header_Popup_Title_2": "Currency",
 
     "CryptoTable_Title": "Top Cryptocurrencies by Market Cap",
     "CryptoTable_Name": "Name",

@@ -13,14 +13,17 @@ export const useCryptosStore = defineStore('cryptos', () => {
 
   async function GetCryptosApi() {
     try {
-        const apiKey = 'CG-WVWH2AAYPrz7fXiztDF8so6L';
-        await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&sparkline=true', {
+        const response = await fetch('http://localhost:4746/CryptoApi/cryptos', {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
-            'x-cg-demo-api-key': `${apiKey}`
           }
         });
+        if (!response.ok)
+        {
+          throw new Error(`Error en la respuesta del servidor: ${response.status} ${response.statusText}`);
+        }
+        console.log('Criptomonedas actualizadas en base de datos con éxito.');
     } catch (error) {
         console.error('Error al obtener las criptomonedas de CoinGeko API: ', error)
     }
