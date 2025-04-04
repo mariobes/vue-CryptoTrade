@@ -12,8 +12,10 @@
     "Header_Select_1": "Idioma",
     "Header_Select_2": "Moneda",
     "Header_Select_3": "Modo oscuro",
-    "Header_Select_4": "Registrarse",
-    "Header_Select_5": "Iniciar sesión",
+    "Header_Select_4": "Iniciar sesión",
+    "Header_Select_5": "Registrarse",
+    "Header_Popup_Title_1": "Idioma",
+    "Header_Popup_Title_2": "Moneda",
 
     "CryptoTable_Title": "Principales Criptomonedas por capitalización de mercado",
     "CryptoTable_Name": "Nombre",

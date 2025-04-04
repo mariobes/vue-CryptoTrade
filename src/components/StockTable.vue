@@ -25,10 +25,6 @@ const updateStockDatabase = async () => {
 
   if (storeStocks.stock && new Date(storeStocks.stock.lastUpdated).toDateString() !== new Date().toDateString()) {
     await storeStocks.GetStocksApi();
-    console.log("(Stock) Base de datos actualizada exitosamente.");
-  }
-  else {
-    console.log("(Stock) La base de datos ya esta actualizada.");
   }
 };
 

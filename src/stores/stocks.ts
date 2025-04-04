@@ -10,13 +10,17 @@ export const useStocksStore = defineStore('stocks', () => {
 
   async function GetStocksApi() {
     try {
-        const apiKey = 'FH1hPhPUyw89vnrWye6Sf1a4Yiy34RvX';
-        await fetch(`https://financialmodelingprep.com/stable/company-screener?limit=100&apikey=${apiKey}`), {
+        const response = await fetch('http://localhost:4746/StockApi/stocks', {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
           }
-        }
+        });
+        if (!response.ok)
+          {
+            throw new Error(`Error en la respuesta del servidor: ${response.status} ${response.statusText}`);
+          }
+          console.log('Acciones actualizadas en base de datos con éxito.');
     } catch (error) {
         console.error('Error al obtener las acciones de Financial Modeling Prep API: ', error)
     }
