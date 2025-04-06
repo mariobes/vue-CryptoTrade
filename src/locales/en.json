@@ -20,16 +20,24 @@
     "CryptoTable_Title": "Top Cryptocurrencies by Market Cap",
     "CryptoTable_Name": "Name",
     "CryptoTable_Price": "Price",
+    "CryptoTable_MarketCap": "Market Cap",
+    "CryptoTable_1h": "1 h %",
+    "CryptoTable_24h": "24 h %",
+    "CryptoTable_7d": "7 d %",
+    "CryptoTable_Volume_24h": "Volume (24h)",
+    "CryptoTable_Circulating_Supply": "Circulating Supply",
+    "CryptoTable_Last_7_Days": "Last 7 Days",
 
-    "StockTable_Title": "Top Stocks by Market Cap",
+    "StockTable_Title": "Market Cap",
     "StockTable_Name": "Name",
     "StockTable_Price": "Price",
+    "StockTable_MarketCap": "Market Cap",
 
     "CryptosTrendingTable_Title": "Trending Cryptocurrencies",
 
     "StocksTrendingTable_Title": "Trending Stocks",
 
-    "CryptoIndices_Index_1": "Market Cap",
+    "CryptoIndices_Index_1": "Market Cap Total",
     "CryptoIndices_Index_2": "CMC100 Index",
     "CryptoIndices_Index_3": "Fear & Greed Index"
 

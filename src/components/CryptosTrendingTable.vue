@@ -34,7 +34,7 @@ function getArrowDirection(percentage: number) {
             :key="cryptos.item.id"
           >
             <td>
-              {{ cryptos.item.symbol }}
+              {{ cryptos.item.name }}
             </td>
             <td class="crypto-info">
               <span class="table-price">
