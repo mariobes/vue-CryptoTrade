@@ -20,10 +20,18 @@
     "CryptoTable_Title": "Principales Criptomonedas por capitalización de mercado",
     "CryptoTable_Name": "Nombre",
     "CryptoTable_Price": "Precio",
+    "CryptoTable_MarketCap": "Cap. de mercado",
+    "CryptoTable_1h": "1 h %",
+    "CryptoTable_24h": "24 h %",
+    "CryptoTable_7d": "7 d %",
+    "CryptoTable_Volume_24h": "Volumen (24h)",
+    "CryptoTable_Circulating_Supply": "Suministro circulante",
+    "CryptoTable_Last_7_Days": "Últimos 7 días",
 
     "StockTable_Title": "Principales Acciones por capitalización de mercado",
     "StockTable_Name": "Nombre",
     "StockTable_Price": "Precio",
+    "StockTable_MarketCap": "Capitalización de mercado",
 
     "CryptosTrendingTable_Title": "Criptomonedas en tendencia",
 

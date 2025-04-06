@@ -11,6 +11,8 @@ export interface Crypto {
     low24h?: number
     priceChange24h?: number
     priceChangePercentage24h?: number
+    priceChangePercentage1h?: number
+    priceChangePercentage7d?: number
     marketCapChange24h?: number
     marketCapChangePercentage24h?: number
     circulatingSupply?: number
@@ -22,5 +24,6 @@ export interface Crypto {
     atl?: number
     atlChangePercentage?: number
     atlDate?: Date
+    SparklineIn7d?: string
     lastUpdated: Date
 }
