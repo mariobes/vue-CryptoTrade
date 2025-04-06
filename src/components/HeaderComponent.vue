@@ -130,10 +130,10 @@ const changeTheme = () => {
             bg-color="#ffffff99"
             rounded="lg"
             flat
-            @click:append-inner="onClick"
-            @keyup.enter=""
+            v-model="searchQuery"
           ></v-text-field>
         </v-card-text>
+        <!-- @keydown.enter="searchCrypto" -->
 
         <v-btn class="header-icons btn-icons login-btn">{{ t('Header_Select_4') }}</v-btn>
 
@@ -150,18 +150,25 @@ const changeTheme = () => {
             </div>
 
             <div class="settings-options">
+              <div class="settings-options-buttons-language">
+                <button class="settings-options-btn" @click="openLanguagePopup">
+                  <span class="settings-options-text">{{ t('Header_Select_1') }}</span>
+                  <span class="settings-options-value">
+                    {{ languageLabels[locale] }}
+                    <v-icon class="pt-1 settings-options-arrow">mdi-chevron-right</v-icon> 
+                  </span>
+                </button>
+              </div>
 
-              <v-btn class="settings-options-btn settings-options-btn-language" block @click="openLanguagePopup">
-                {{ t('Header_Select_1') }}
-                <span class="settings-options-language">{{ languageLabels[locale] }}</span>
-                <span class="mdi mdi-chevron-right settings-options-arrow"></span>
-              </v-btn>
-
-              <v-btn class="settings-options-btn" block @click="openCurrencyPopup">
-                {{ t('Header_Select_2') }}
-                <span class="settings-options-currency">{{ currencyLabels[selectedCurrency] }}</span>
-                <span class="mdi mdi-chevron-right settings-options-arrow"></span>
-              </v-btn>
+              <div class="settings-options-buttons-currency">
+                <button class="settings-options-btn" @click="openCurrencyPopup">
+                  <span class="settings-options-text">{{ t('Header_Select_2') }}</span>
+                  <span class="settings-options-value">
+                    {{ currencyLabels[selectedCurrency] }}
+                    <v-icon class="pt-1 settings-options-arrow">mdi-chevron-right</v-icon> 
+                  </span>
+                </button>
+              </div>
 
               <div class="settings-options-switch">
                 <span class="switch-text">{{ t('Header_Select_3') }}</span>
@@ -184,6 +191,9 @@ const changeTheme = () => {
     <!-- Popup selector de idioma -->
     <v-dialog v-model="languageDialog" width="1000px">
       <v-card class="popup-container">
+        <v-btn icon @click="languageDialog = false" class="popup-close-btn">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
         <v-card-title class="popup-title">{{ t('Header_Popup_Title_1') }}</v-card-title>
         <v-card-text>
           <v-row>
@@ -209,6 +219,9 @@ const changeTheme = () => {
     <!-- Popup selector de moneda -->
     <v-dialog v-model="currencyDialog" width="1000px">
       <v-card class="popup-container">
+        <v-btn icon @click="currencyDialog = false" class="popup-close-btn">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
         <v-card-title class="popup-title">{{ t('Header_Popup_Title_2') }}</v-card-title>
         <v-card-text>
           <v-row>
@@ -238,7 +251,7 @@ const changeTheme = () => {
 .header-container {
   height: 65px;
   background-color: v-bind(backgroundColor);
-  position: fixed;
+  /* position: fixed; */
   border-bottom: solid 1px #80808050;
 }
 
@@ -359,34 +372,30 @@ const changeTheme = () => {
 
 .settings-options-btn {
   color: white;
-  background-color: transparent;
-  box-shadow: none;
+  font-size: 14px;
   border-radius: 10px;
-  padding: 20px 10px;
+  padding: 10px 10px;
   display: flex;
-  justify-content: end;
+  justify-content: space-between;
+  width: 100%;
 }
 
-.settings-options-btn-language {
-  padding-bottom: 25px;
-}
-
-.settings-options-language {
+.settings-options-value {
+  display: flex;
   color: #808080;
-  /* margin-left: 112px; */
-}
-
-.settings-options-currency {
-  color: #808080;
-  /* margin-left: 90px; */
 }
 
 .settings-options-arrow {
   color: #808080;
+  font-size: 16px;
 }
 
 .settings-options-btn:hover {
   background-color: #ffffff22;
+}
+
+.settings-options-buttons-currency {
+  padding-top: 5px;
 }
 
 .settings-options-switch, .v-switch {
@@ -411,6 +420,15 @@ const changeTheme = () => {
 .popup-container {
   background-color: #232323 !important;
   border-radius: 10px !important;
+}
+
+.popup-close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #ffffff;
+  background-color: transparent;
+  box-shadow: none;
 }
 
 .popup-title {

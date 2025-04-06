@@ -116,7 +116,6 @@ onMounted(() => {
 
 .index-section-content-cap {
   margin-right: 20px;
-
 }
 
 .index-section-content-index {

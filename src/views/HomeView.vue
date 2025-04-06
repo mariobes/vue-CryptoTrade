@@ -27,13 +27,8 @@ const { t } = useI18n()
 </template>
 
 <style scoped>
-/* :deep(.table th),
-:deep(.table td) {
-  border: none !important;
-} */
-
 .main-container {
-  max-width: 65vw;
+  max-width: 70vw;
   margin: 0 auto;
 }
 
