@@ -7,6 +7,8 @@ export const useCryptosStore = defineStore('cryptos', () => {
   const cryptos = ref<Crypto[]>([])
   const crypto = ref<Crypto | null>(null)
   const trendingCryptos = ref<any[]>([])
+  const gainersCryptos = ref<any[]>([])
+  const losersCryptos = ref<any[]>([])
   const totalMarketCapCryptos = ref<any[]>([])
   const fearGreedIndexCryptos = ref<any[]>([])
   const CMC100IndexCryptos = ref<any[]>([])
@@ -59,6 +61,26 @@ export const useCryptosStore = defineStore('cryptos', () => {
     }
   }
 
+  async function GetCryptosGainers() {
+    try {
+        const response = await fetch(`http://localhost:4746/CryptoApi/cryptos-gainers`)
+        const cryptosGainersInfo = await response.json()
+        gainersCryptos.value = cryptosGainersInfo
+    } catch (error) {
+        console.error('Error al obtener las criptomonedas más ganadoras: ', error)
+    }
+  }
+
+  async function GetCryptosLosers() {
+    try {
+        const response = await fetch(`http://localhost:4746/CryptoApi/cryptos-losers`)
+        const cryptosLosersInfo = await response.json()
+        losersCryptos.value = cryptosLosersInfo
+    } catch (error) {
+        console.error('Error al obtener las criptomonedas más perdedoras: ', error)
+    }
+  }
+
   async function GetTotalMarketCap() {
     try {
         const response = await fetch(`http://localhost:4746/CryptoApi/total-market-cap`)
@@ -93,6 +115,8 @@ export const useCryptosStore = defineStore('cryptos', () => {
           cryptos, 
           crypto,
           trendingCryptos, 
+          gainersCryptos,
+          losersCryptos,
           totalMarketCapCryptos, 
           fearGreedIndexCryptos, 
           CMC100IndexCryptos, 
@@ -100,6 +124,8 @@ export const useCryptosStore = defineStore('cryptos', () => {
           GetAllCryptos, 
           GetCrypto,
           GetCryptosTrending, 
+          GetCryptosGainers,
+          GetCryptosLosers,
           GetTotalMarketCap, 
           GetFearGreedIndex, 
           GetCMC100Index }

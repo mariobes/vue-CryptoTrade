@@ -97,8 +97,8 @@ const changeTheme = () => {
           {{ t('Header_Title') }}
         </RouterLink>
         <span class="divider-bar">|</span>
-        <RouterLink to="/" class="header-component">{{ t('Header_Component_1') }}</RouterLink>
-        <RouterLink to="/" class="header-component">{{ t('Header_Component_2') }}</RouterLink>
+        <RouterLink to="/cryptoTable" class="header-component">{{ t('Header_Component_1') }}</RouterLink>
+        <RouterLink to="/stockTable" class="header-component">{{ t('Header_Component_2') }}</RouterLink>
         <RouterLink to="/" class="header-component">{{ t('Header_Component_3') }}</RouterLink>
       </nav>
       
@@ -127,7 +127,7 @@ const changeTheme = () => {
             variant="solo"
             hide-details
             single-line
-            bg-color="#ffffff99"
+            bg-color="#ffffffb5"
             rounded="lg"
             flat
             v-model="searchQuery"
@@ -143,7 +143,7 @@ const changeTheme = () => {
               <v-icon>mdi-account-cog</v-icon>
             </v-btn>
           </template>
-          <v-card class="settings-container">
+          <v-card class="settings-container" :class="storeUserPreferences.selectedTheme === 'light' ? 'container-background-light' : 'container-background-dark'">
             <div class="settings-user">
               <v-btn class="settings-user-btn login-btn">{{ t('Header_Select_4') }}</v-btn>
               <v-btn class="settings-user-btn register-btn">{{ t('Header_Select_5') }}</v-btn>
@@ -151,7 +151,7 @@ const changeTheme = () => {
 
             <div class="settings-options">
               <div class="settings-options-buttons-language">
-                <button class="settings-options-btn" @click="openLanguagePopup">
+                <button class="settings-options-btn" @click="openLanguagePopup" :class="storeUserPreferences.selectedTheme === 'light' ? 'container-text-light' : 'container-text-dark'">
                   <span class="settings-options-text">{{ t('Header_Select_1') }}</span>
                   <span class="settings-options-value">
                     {{ languageLabels[locale] }}
@@ -161,7 +161,7 @@ const changeTheme = () => {
               </div>
 
               <div class="settings-options-buttons-currency">
-                <button class="settings-options-btn" @click="openCurrencyPopup">
+                <button class="settings-options-btn" @click="openCurrencyPopup" :class="storeUserPreferences.selectedTheme === 'light' ? 'container-text-light' : 'container-text-dark'">
                   <span class="settings-options-text">{{ t('Header_Select_2') }}</span>
                   <span class="settings-options-value">
                     {{ currencyLabels[selectedCurrency] }}
@@ -171,11 +171,13 @@ const changeTheme = () => {
               </div>
 
               <div class="settings-options-switch">
-                <span class="switch-text">{{ t('Header_Select_3') }}</span>
+                <span class="switch-text" :class="storeUserPreferences.selectedTheme === 'light' ? 'container-text-light' : 'container-text-dark'">
+                  {{ t('Header_Select_3') }}
+                </span>
                 <v-switch
                   v-model="selectedTheme"
                   class="switch-icon"
-                  color="yellow"
+                  color="#FF8C00"
                   @change="changeTheme" 
                   @click.stop      
                   :true-value="'light'"
@@ -190,11 +192,13 @@ const changeTheme = () => {
 
     <!-- Popup selector de idioma -->
     <v-dialog v-model="languageDialog" width="1000px">
-      <v-card class="popup-container">
+      <v-card class="popup-container" :class="storeUserPreferences.selectedTheme === 'light' ? 'container-background-light' : 'container-background-dark'">
         <v-btn icon @click="languageDialog = false" class="popup-close-btn">
           <v-icon>mdi-close</v-icon>
         </v-btn>
-        <v-card-title class="popup-title">{{ t('Header_Popup_Title_1') }}</v-card-title>
+        <v-card-title class="popup-title" :class="storeUserPreferences.selectedTheme === 'light' ? 'container-text-light' : 'container-text-dark'">
+          {{ t('Header_Popup_Title_1') }}
+        </v-card-title>
         <v-card-text>
           <v-row>
             <v-col v-for="(text, value) in languageLabels" :key="value" cols="3">
@@ -202,11 +206,19 @@ const changeTheme = () => {
                 class="popup-text"
                 block
                 @click="changeLanguage(value)"
-                :class="{'selected-value': value === selectedLanguage}"
+                :class="{
+                  'selected-value': value === selectedLanguage,
+                  'container-background-light': storeUserPreferences.selectedTheme === 'light',
+                  'container-background-dark': storeUserPreferences.selectedTheme === 'dark'
+                }"
               >
                 <div class="language-content">
-                  <div class="language-text">{{ text }}</div>
-                  <div class="language-label">{{ value }}</div>
+                  <div class="language-text" :class="storeUserPreferences.selectedTheme === 'light' ? 'container-text-light' : 'container-text-dark'">
+                    {{ text }}
+                  </div>
+                  <div class="language-label">
+                    {{ value }}
+                  </div>
                 </div>
                 <v-icon v-if="value === selectedLanguage" class="selected-icon">mdi-check-circle</v-icon>
               </v-btn>
@@ -218,11 +230,13 @@ const changeTheme = () => {
 
     <!-- Popup selector de moneda -->
     <v-dialog v-model="currencyDialog" width="1000px">
-      <v-card class="popup-container">
+      <v-card class="popup-container" :class="storeUserPreferences.selectedTheme === 'light' ? 'container-background-light' : 'container-background-dark'">
         <v-btn icon @click="currencyDialog = false" class="popup-close-btn">
           <v-icon>mdi-close</v-icon>
         </v-btn>
-        <v-card-title class="popup-title">{{ t('Header_Popup_Title_2') }}</v-card-title>
+        <v-card-title class="popup-title" :class="storeUserPreferences.selectedTheme === 'light' ? 'container-text-light' : 'container-text-dark'">
+          {{ t('Header_Popup_Title_2') }}
+        </v-card-title>
         <v-card-text>
           <v-row>
             <v-col v-for="(text, value) in currencyText" :key="value" cols="3">
@@ -230,11 +244,20 @@ const changeTheme = () => {
                 class="popup-text"
                 block
                 @click="changeCurrency(value)"
-                :class="{'selected-value': value === selectedCurrency}"
+                :class="{
+                  'selected-value': value === selectedCurrency,
+                  'container-background-light': storeUserPreferences.selectedTheme === 'light',
+                  'container-background-dark': storeUserPreferences.selectedTheme === 'dark'
+                }"
               >
+
                 <div class="currency-content">
-                  <div class="currency-text">{{ text }}</div>
-                  <div class="currency-label">{{ currencyLabels[value] }}</div>
+                  <div class="currency-text" :class="storeUserPreferences.selectedTheme === 'light' ? 'container-text-light' : 'container-text-dark'">
+                    {{ text }}
+                  </div>
+                  <div class="currency-label">
+                    {{ currencyLabels[value] }}
+                  </div>
                 </div>
                 <v-icon v-if="value === selectedCurrency" class="selected-icon">mdi-check-circle</v-icon>
               </v-btn>
@@ -263,10 +286,10 @@ const changeTheme = () => {
 }
 
 .header-title {
-  font-size: 22px;
+  font-size: 1.4rem;
   text-decoration: none;
   color: v-bind(textColor);
-  margin-right: 10px;
+  margin-right: 15px;
   padding-left: 10px;
 }
 
@@ -276,14 +299,14 @@ const changeTheme = () => {
 }
 
 .header-component {
-  font-size: 16px;
+  font-size: 1.0rem;
   text-decoration: none;
   color: v-bind(textColor);
   margin: 0 10px;
 }
 
 .header-component:hover {
-  color: #FFD700;
+  color: #FF8C00;
 }
 
 .v-btn {
@@ -292,7 +315,7 @@ const changeTheme = () => {
 }
 
 .header-icons {
-  font-size: 14px; 
+  font-size: 0.8rem; 
   padding: 0 10px;
   border-radius: 8px;
   transition: background-color 0.3s, color 0.3s;
@@ -300,7 +323,7 @@ const changeTheme = () => {
 }
 
 .header-icons-text {
-  font-size: 12px; 
+  font-size: 0.75rem; 
   text-transform: none;
   padding-left: 5px;
   color: v-bind(textColor);
@@ -314,17 +337,41 @@ const changeTheme = () => {
 }
 
 .header-icons-search:hover {
-  background-color: #807979;
+  background-color: #a55a04;
 }
 
 .icon-user {
-  font-size: 20px; 
+  font-size: 1.3rem; 
   margin-right: 10px;
   color: v-bind(textColor);
 }
 
 .btn-icons:hover {
-  background-color: #ffffff22;
+  background-color: #7c4e1983;
+}
+
+.settings-container {
+  width: 300px;
+  margin-top: 10px;
+  border-radius: 10px !important;
+  padding: 10px 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.336) !important;
+}
+
+.container-background-light {
+  background-color: #e9ecef !important;
+}
+
+.container-background-dark {
+  background-color: #232323 !important;
+}
+
+.container-text-light {
+  color: #000000 !important;
+}
+
+.container-text-dark {
+  color: #ffffff !important;
 }
 
 .settings-user {
@@ -343,25 +390,28 @@ const changeTheme = () => {
 .login-btn {
   margin-right: 10px;
   color: #000000;
-  background-color: #FFD700;
-  padding: 0 15px;
+  background-color: #FF8C00;
+  /* #FFD700 */
+  padding: 0 10px;
+  font-size: 0.8rem;
+  box-shadow: none;
+  font-weight: bold;
 }
 
 .register-btn {
-  color: #ffd900;
-  border: solid 1px #FFD700;
+  color: #FF8C00;
+  border: solid 1px #FF8C00;
+  padding: 0 10px;
+  box-shadow: none;
 }
 
 .login-btn:hover {
   background-color: rgb(255, 215, 150);
+  box-shadow: none;
 }
 
-.settings-container {
-  width: 300px;
-  margin-top: 10px;
-  background-color: #232323 !important;
-  border-radius: 10px !important;
-  padding: 10px 20px;
+.register-btn:hover {
+  background-color: rgba(255, 215, 150, 0.13);
 }
 
 .settings-options {
@@ -372,7 +422,7 @@ const changeTheme = () => {
 
 .settings-options-btn {
   color: white;
-  font-size: 14px;
+  font-size: 0.85rem;
   border-radius: 10px;
   padding: 10px 10px;
   display: flex;
@@ -387,11 +437,12 @@ const changeTheme = () => {
 
 .settings-options-arrow {
   color: #808080;
-  font-size: 16px;
+  font-size: 1.0rem;
 }
 
 .settings-options-btn:hover {
   background-color: #ffffff22;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.336);
 }
 
 .settings-options-buttons-currency {
@@ -408,7 +459,7 @@ const changeTheme = () => {
 
 .switch-text {
   color: white;
-  font-size: 14px;
+  font-size: 0.85rem;
   height: 10px;
   margin-left: 12px;
 }
@@ -418,7 +469,6 @@ const changeTheme = () => {
 }
 
 .popup-container {
-  background-color: #232323 !important;
   border-radius: 10px !important;
 }
 
@@ -436,7 +486,7 @@ const changeTheme = () => {
   display: flex;
   justify-content: center;
   margin: 15px 50px 0 50px;
-  font-size: 26px;
+  font-size: 1.65rem;
 }
 
 .popup-text {

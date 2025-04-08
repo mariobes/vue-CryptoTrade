@@ -1,12 +1,19 @@
 <script setup lang="ts">
+import { computed } from "vue";
 import { useStocksStore } from '@/stores/stocks'
+import { useUserPreferencesStore } from '../stores/userPreferences';
 import { useI18n } from 'vue-i18n'
+
+const backgroundTableColor = computed(() => storeUserPreferences.getTheme().background_table)
+const textColor = computed(() => storeUserPreferences.getTheme().text)
+
+const storeUserPreferences = useUserPreferencesStore()
 
 const { t } = useI18n()
 
 const storeStocks = useStocksStore()
 
-// storeStocks.GetStocksTrending()
+//storeStocks.GetStocksTrending()
 
 function getPercentageColor(percentage: number) {
   return percentage > 0 ? 'green' : 'red';
@@ -15,6 +22,10 @@ function getPercentageColor(percentage: number) {
 function getArrowDirection(percentage: number) {
   return percentage > 0 ? 'mdi-menu-up' : 'mdi-menu-down';
 }
+
+const getConvertedPrice = (price: number): string => {
+  return storeUserPreferences.convertFromUSD(price, storeUserPreferences.selectedCurrency)
+}
 </script>
 
 <template>
@@ -22,7 +33,7 @@ function getArrowDirection(percentage: number) {
         <thead>
           <tr>
             <th class="text-left" colspan="2">
-              <v-icon class="mb-2" color="red">mdi-fire</v-icon> 
+              <v-icon class="mb-2" color="#FF8C00">mdi-fire</v-icon> 
               <span class="title-table">{{ t('StocksTrendingTable_Title') }}</span>
             </th>
           </tr>
@@ -33,12 +44,11 @@ function getArrowDirection(percentage: number) {
             :key="stocks.ticker"
           >
             <td>
-              <!-- {{ stocks.image }} -->
               {{ stocks.ticker }}
             </td>
             <td class="stock-info">
               <span class="table-price">
-                {{ stocks.price }} $
+                {{ getConvertedPrice(stocks.price) }}
               </span>
               <span class="table-change">
                 <span 
@@ -58,10 +68,11 @@ function getArrowDirection(percentage: number) {
 
 <style scoped>
 .table-container {
-  background-color: #8080802a;
-  color: white;
+  background-color: v-bind(backgroundTableColor);
+  color: v-bind(textColor);
   border-radius: 20px;
   padding: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.336);
 }
 
 .title-table {

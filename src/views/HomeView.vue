@@ -1,10 +1,16 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import CryptoIndices from '@/components/CryptoIndices.vue'
 import CryptosTrendingTable from '@/components/CryptosTrendingTable.vue'
 import StocksTrendingTable from '@/components/StocksTrendingTable.vue'
 import CryptoTable from '@/components/CryptoTable.vue'
 import StockTable from '@/components/StockTable.vue'
+import { useUserPreferencesStore } from '@/stores/userPreferences'
+
+const textColor = computed(() => storeUserPreferences.getTheme().text)
+
+const storeUserPreferences = useUserPreferencesStore()
 
 const { t } = useI18n()
 </script>
@@ -38,7 +44,7 @@ const { t } = useI18n()
 
 .title-text {
   font-size: 2rem;
-  color: white;
+  color: v-bind(textColor);
 }
 
 .content-container {

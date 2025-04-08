@@ -9,6 +9,21 @@ const router = createRouter({
       name: 'home',
       component: HomeView,
     },
+    {
+      path: '/cryptoTable',
+      name: 'cryptoTable',
+      component: () => import('../views/CryptoTableView.vue')
+    },
+    {
+      path: '/stockTable',
+      name: 'stockTable',
+      component: () => import('../views/StockTableView.vue')
+    },
+    {
+      path: '/cryptoDetails/:id',
+      name: 'cryptoDetails',
+      component: () => import('../views/CryptoDetailsView.vue')
+    },
   ],
 })
 
