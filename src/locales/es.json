@@ -31,14 +31,31 @@
     "StockTable_Title": "Principales Acciones por capitalización de mercado",
     "StockTable_Name": "Nombre",
     "StockTable_Price": "Precio",
+    "StockTable_Change": "Cambio en 24 h",
+    "StockTable_Change_Percentage": "24 h %",
+    "StockTable_Currency": "Moneda",
+    "StockTable_Last_Dividend_Annual": "Último dividendo anual",
     "StockTable_MarketCap": "Capitalización de mercado",
+    "StockTable_Average_Volume": "Volumen promedio",
+    "StockTable_Exchange": "Exchange",
+
+    "AssetTable_See_All": "Ver todas",
 
     "CryptosTrendingTable_Title": "Criptomonedas en tendencia",
+
+    "CryptosGainersTable_Title": "Mayores ganadores",
+
+    "CryptosLosersTable_Title": "Mayores perdedores",
 
     "StocksTrendingTable_Title": "Acciones en tendencia",
 
     "CryptoIndices_Index_1": "Capitalización del Mercado",
     "CryptoIndices_Index_2": "Índice CMC100",
-    "CryptoIndices_Index_3": "Índice de Miedo y Codicia"
+    "CryptoIndices_Index_3": "Índice de Miedo y Codicia",
+    "CryptoIndices_Sentiment_Extreme_Fear": "Miedo extremo",
+    "CryptoIndices_Sentiment_Fear": "Miedo",
+    "CryptoIndices_Sentiment_Neutral": "Neutral",
+    "CryptoIndices_Sentiment_Greed": "Codicia",
+    "CryptoIndices_Sentiment_Extreme_Greed": "Codicia extrema"
 
 }

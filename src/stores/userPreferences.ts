@@ -28,10 +28,12 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
       const themes = {
         light: {
           background: "#f8f9fa",
+          background_table: "#e9ecef",
           text: "#000000",
         },
         dark: {
           background: "#0f0f0f",
+          background_table: "#8080802a",
           text: "#ffffff",
         }
       };
@@ -82,6 +84,12 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
     convertFromUSD(price: number, currency: CurrencyType): string {
       const conversionRate = this.getCurrencyConversionRate(currency);
       let convertedNumber = price * conversionRate;
+
+      // Si el número convertido es 0 o extremadamente cercano a 0, mostramos "0"
+      if (Math.abs(convertedNumber) < 0.00000001) {
+        const symbol = this.getCurrencySymbol(currency);
+        return `0 ${symbol}`;
+      }
     
       // Función para formatear el número según las reglas: miles con punto y decimales con coma
       const formatNumber = (number: number, decimals: number): string => {
@@ -117,38 +125,5 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
       const symbol = this.getCurrencySymbol(currency);
       return `${formattedNumber} ${symbol}`;
     }
-
-    // convertFromUSD(price: number, currency: CurrencyType): string {
-    //   const conversionRate = this.getCurrencyConversionRate(currency);
-    //   let convertedNumber = price * conversionRate;
-    
-    //   // Si el número es extremadamente pequeño, mantener hasta 8 decimales
-    //   if (Math.abs(convertedNumber) < 0.0001) {
-    //     const formattedNumber = convertedNumber.toFixed(8); // Limitar a 8 decimales para valores muy pequeños
-    //     const symbol = this.getCurrencySymbol(currency);
-    //     return `${formattedNumber} ${symbol}`;
-    //   }
-    
-    //   // Si el número es mayor o igual a 10,000, no mostrar decimales
-    //   if (Math.abs(convertedNumber) >= 10000) {
-    //     const formattedNumber = convertedNumber.toFixed(0); // Eliminar los decimales
-    //     const symbol = this.getCurrencySymbol(currency);
-    //     return `${formattedNumber} ${symbol}`;
-    //   }
-    
-    //   // Si el número es mayor o igual a 1, mostrar solo 2 decimales
-    //   if (Math.abs(convertedNumber) >= 1) {
-    //     const formattedNumber = convertedNumber.toFixed(2); // Limitar a 2 decimales para números >= 1
-    //     const symbol = this.getCurrencySymbol(currency);
-    //     return `${formattedNumber} ${symbol}`;
-    //   }
-    
-    //   // Si el número es menor que 1, mostrar hasta 4 decimales significativos
-    //   const formattedNumber = convertedNumber.toPrecision(8); // Esto asegura hasta 8 cifras significativas
-    //   const trimmedNumber = parseFloat(formattedNumber).toString();
-    
-    //   const symbol = this.getCurrencySymbol(currency);
-    //   return `${parseFloat(trimmedNumber).toFixed(4)} ${symbol}`;
-    // }
   }
 });
