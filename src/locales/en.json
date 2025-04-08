@@ -28,17 +28,33 @@
     "CryptoTable_Circulating_Supply": "Circulating Supply",
     "CryptoTable_Last_7_Days": "Last 7 Days",
 
-    "StockTable_Title": "Market Cap",
+    "StockTable_Title": "Top Stocks by Market Cap",
     "StockTable_Name": "Name",
     "StockTable_Price": "Price",
+    "StockTable_Change": "Change in 24 h",
+    "StockTable_Change_Percentage": "24 h %",
+    "StockTable_Currency": "Currency",
+    "StockTable_Last_Dividend_Annual": "Last Annual Dividend",
     "StockTable_MarketCap": "Market Cap",
+    "StockTable_Average_Volume": "Average Volume",
+    "StockTable_Exchange": "Exchange",
+
+    "AssetTable_See_All": "See All",
 
     "CryptosTrendingTable_Title": "Trending Cryptocurrencies",
 
+    "CryptosGainersTable_Title": "Biggest Gainers",
+    "CryptosLosersTable_Title": "Biggest Losers",
+
     "StocksTrendingTable_Title": "Trending Stocks",
 
-    "CryptoIndices_Index_1": "Market Cap Total",
+    "CryptoIndices_Index_1": "Market Cap",
     "CryptoIndices_Index_2": "CMC100 Index",
-    "CryptoIndices_Index_3": "Fear & Greed Index"
+    "CryptoIndices_Index_3": "Fear & Greed Index",
+    "CryptoIndices_Sentiment_Extreme_Fear": "Extreme fear",
+    "CryptoIndices_Sentiment_Fear": "Fear",
+    "CryptoIndices_Sentiment_Neutral": "Neutral",
+    "CryptoIndices_Sentiment_Greed": "Greed",
+    "CryptoIndices_Sentiment_Extreme_Greed": "Extreme greed"
 
 }

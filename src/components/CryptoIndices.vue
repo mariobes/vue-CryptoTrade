@@ -1,7 +1,13 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useCryptosStore } from '@/stores/cryptos'
+import { useUserPreferencesStore } from '../stores/userPreferences';
 import { useI18n } from 'vue-i18n'
+
+const backgroundTableColor = computed(() => storeUserPreferences.getTheme().background_table)
+const textColor = computed(() => storeUserPreferences.getTheme().text)
+
+const storeUserPreferences = useUserPreferencesStore()
 
 const { t } = useI18n()
 
@@ -27,6 +33,23 @@ function getPercentageColor(percentage: number) {
 
 function getCirclePosition(value: number) {
   return `${value}%`;
+}
+
+function getSentimentTranslation(sentiment: string) {
+  switch (sentiment) {
+    case 'Extreme fear':
+      return t('CryptoIndices_Sentiment_Extreme_Fear');
+    case 'Fear':
+      return t('CryptoIndices_Sentiment_Fear');
+    case 'Neutral':
+      return t('CryptoIndices_Sentiment_Neutral');
+    case 'Greed':
+      return t('CryptoIndices_Sentiment_Greed');
+    case 'Extreme greed':
+      return t('CryptoIndices_Sentiment_Extreme_Greed');
+    default:
+      return sentiment;
+  }
 }
 
 // onMounted(() => {
@@ -62,7 +85,7 @@ onMounted(() => {
   <div class="index-container">
     <div class="index-section">
       <div class="index-section-content index-section-content-cap">
-        <p class="title-index">{{ t('CryptoIndices_Index_1') }}</p>
+        <p class="title-index cap-index">{{ t('CryptoIndices_Index_1') }}</p>
         <p class="price-index">${{ totalMarketCap }}</p>
         <p>
           <span
@@ -72,9 +95,9 @@ onMounted(() => {
         </p>
       </div>
 
-      <div class="index-section-content index-section-content-index">
-        <p class="title-index">{{ t('CryptoIndices_Index_2') }}</p>
-        <p class="price-index price-index-cmc100">${{ valueCMC100Index }}</p>
+      <div class="index-section-content">
+        <p class="title-index cap-index">{{ t('CryptoIndices_Index_2') }}</p>
+        <p class="price-index">${{ valueCMC100Index }}</p>
         <p>
           <span
             :style="{ color: CMC100IndexChangePercentage !== null ? getPercentageColor(CMC100IndexChangePercentage) : 'black' }">
@@ -91,43 +114,37 @@ onMounted(() => {
       <!-- Círculo marcador -->
       <div class="fear-greed-circle" :style="{ left: getCirclePosition(fearGreedValue) }"></div>
       <p class="feeling-value">{{ fearGreedValue }}</p>
-      <p class="feeling-text">{{ fearGreedSentiment }}</p>
+      <p class="feeling-text">{{ getSentimentTranslation(fearGreedSentiment) }}</p>
     </div>
   </div>
 </template>
 
 <style scoped>
-.index-container {
-  color: white;
-}
-
 .index-section {
   display: flex;
   height: 50%;
 }
 
 .index-section-content {
-  background-color: #8080802a;
+  background-color: v-bind(backgroundTableColor);
   border-radius: 20px;
   padding: 10px 20px;
   width: 50%;
   margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.336);
 }
 
 .index-section-content-cap {
   margin-right: 20px;
 }
 
-.index-section-content-index {
-  padding-top: 15px;
-}
-
 .index-content {
-  background-color: #8080802a;
+  background-color: v-bind(backgroundTableColor);
   border-radius: 20px;
   padding: 10px 30px;
   text-align: center;
   height: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.336);
 }
 
 .index-content .title-index {
@@ -138,15 +155,17 @@ onMounted(() => {
   font-size: 1.2rem;
   font-weight: bold;
   padding: 5px 0;
+  color: v-bind(textColor);
+}
+
+.cap-index {
+  height: 50%;
 }
 
 .price-index {
   font-size: 1.2rem;
   font-weight: bold;
-}
-
-.price-index-cmc100 {
-  padding-top: 20px;
+  color: v-bind(textColor);
 }
 
 .fear-greed-bar {
@@ -175,10 +194,11 @@ onMounted(() => {
 .feeling-value {
   font-size: 1.4rem;
   font-weight: bold;
+  color: v-bind(textColor);
 }
 
 .feeling-text {
-  color: #808080ea;
+  color: v-bind(textColor);
   font-weight: bold;
   font-size: 1.2rem;
 }

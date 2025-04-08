@@ -13,7 +13,7 @@ const { t } = useI18n()
 
 const storeCryptos = useCryptosStore()
 
-storeCryptos.GetCryptosTrending()
+storeCryptos.GetCryptosLosers()
 
 function getPercentageColor(percentage: number) {
   return percentage > 0 ? 'green' : 'red';
@@ -29,36 +29,35 @@ const getConvertedPrice = (price: number): string => {
 </script>
 
 <template>
-      <!-- v-if="storeCryptos.trendingCryptos.length > 0" -->
       <v-table class="table-container">
         <thead>
           <tr>
             <th class="text-left" colspan="2">
-              <v-icon class="mb-2" color="#FF8C00">mdi-fire</v-icon> 
-              <span class="title-table">{{ t('CryptosTrendingTable_Title') }}</span>
+              <v-icon class="mb-2" color="red">mdi mdi-water</v-icon> 
+              <span class="title-table">{{ t('CryptosLosersTable_Title') }}</span>
             </th>
           </tr>
         </thead>
         <tbody>
           <tr
-            v-for="cryptos in storeCryptos.trendingCryptos.slice(0, 5)"
-            :key="cryptos.item.id"
+            v-for="cryptos in storeCryptos.losersCryptos.slice(0, 5)"
+            :key="cryptos.id"
           >
             <td>
-              {{ cryptos.item.name }}
+              {{ cryptos.name }}
             </td>
             <td class="crypto-info">
               <span class="table-price">
-                {{ getConvertedPrice(cryptos.item.data.price) }}
+                {{ getConvertedPrice(cryptos.current_price) }}
               </span>
               <span class="table-change">
                 <span 
-                  :style="{ color: getPercentageColor(cryptos.item.data.price_change_percentage_24h.usd) }">
-                  {{ cryptos.item.data.price_change_percentage_24h.usd.toFixed(2) }}%
+                  :style="{ color: getPercentageColor(cryptos.price_change_percentage_7d_in_currency) }">
+                  {{ cryptos.price_change_percentage_7d_in_currency.toFixed(2) }}%
                 </span>
                 <v-icon 
-                  :color="getPercentageColor(cryptos.item.data.price_change_percentage_24h.usd)">
-                  {{ getArrowDirection(cryptos.item.data.price_change_percentage_24h.usd) }}
+                  :color="getPercentageColor(cryptos.price_change_percentage_7d_in_currency)">
+                  {{ getArrowDirection(cryptos.price_change_percentage_7d_in_currency) }}
                 </v-icon>
               </span>
             </td>
