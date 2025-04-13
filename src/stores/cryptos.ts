@@ -6,12 +6,14 @@ import type { Crypto } from '@/core/crypto'
 export const useCryptosStore = defineStore('cryptos', () => {
   const cryptos = ref<Crypto[]>([])
   const crypto = ref<Crypto | null>(null)
+  const chartsCryptos = ref<any[]>([])
   const trendingCryptos = ref<any[]>([])
   const gainersCryptos = ref<any[]>([])
   const losersCryptos = ref<any[]>([])
   const totalMarketCapCryptos = ref<any[]>([])
   const fearGreedIndexCryptos = ref<any[]>([])
   const CMC100IndexCryptos = ref<any[]>([])
+  const searchCryptos = ref<any[]>([])
 
   async function GetCryptosApi() {
     try {
@@ -47,7 +49,17 @@ export const useCryptosStore = defineStore('cryptos', () => {
         const cryptoInfo = await response.json()
         crypto.value = cryptoInfo
     } catch (error) {
-        console.error(`Error al obtener la criptomoneda con ID ${id}: `, error)
+        console.error(`Error al obtener la criptomoneda ${id}: `, error)
+    }
+  }
+
+  async function GetCryptoCharts(id: string, days: number) {
+    try {
+        const response = await fetch(`http://localhost:4746/CryptoApi/crypto-charts/${id}?days=${days}`)
+        const cryptoChartsInfo = await response.json()
+        chartsCryptos.value = cryptoChartsInfo
+    } catch (error) {
+        console.error(`Error al obtener las gráficas de la criptomoneda ${id}: `, error)
     }
   }
 
@@ -110,25 +122,40 @@ export const useCryptosStore = defineStore('cryptos', () => {
         console.error('Error al obtener el índice CMC100: ', error)
     }
   }
+
+  async function SearchCrypto(query: string) {
+    try {
+        const response = await fetch(`http://localhost:4746/Cryptos/search-crypto?query=${query}`)
+        const searchCryptosInfo = await response.json()
+        return Array.isArray(searchCryptosInfo) ? searchCryptosInfo : []
+    } catch (error) {
+        console.error('Error al buscar criptomonedas: ', error)
+    }
+  }
     
   return {
           cryptos, 
           crypto,
+          chartsCryptos,
           trendingCryptos, 
           gainersCryptos,
           losersCryptos,
           totalMarketCapCryptos, 
           fearGreedIndexCryptos, 
-          CMC100IndexCryptos, 
+          CMC100IndexCryptos,
+          searchCryptos, 
           GetCryptosApi,
           GetAllCryptos, 
           GetCrypto,
+          GetCryptoCharts,
           GetCryptosTrending, 
           GetCryptosGainers,
           GetCryptosLosers,
           GetTotalMarketCap, 
           GetFearGreedIndex, 
-          GetCMC100Index }
+          GetCMC100Index,
+          SearchCrypto
+        }
 })
 
 

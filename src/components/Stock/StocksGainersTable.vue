@@ -1,31 +1,19 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { useCryptosStore } from '@/stores/cryptos'
-import { useUserPreferencesStore } from '../stores/userPreferences';
+import { useStocksStore } from '@/stores/stocks'
+import { useUserPreferencesStore } from '../../stores/userPreferences';
 import { useI18n } from 'vue-i18n'
 
-const backgroundTableColor = computed(() => storeUserPreferences.getTheme().background_table)
+const backgroundTableColor = computed(() => storeUserPreferences.getTheme().table)
 const textColor = computed(() => storeUserPreferences.getTheme().text)
 
 const storeUserPreferences = useUserPreferencesStore()
 
 const { t } = useI18n()
 
-const storeCryptos = useCryptosStore()
+const storeStocks = useStocksStore()
 
-storeCryptos.GetCryptosGainers()
-
-function getPercentageColor(percentage: number) {
-  return percentage > 0 ? 'green' : 'red';
-}
-
-function getArrowDirection(percentage: number) {
-  return percentage > 0 ? 'mdi-menu-up' : 'mdi-menu-down';
-}
-
-const getConvertedPrice = (price: number): string => {
-  return storeUserPreferences.convertFromUSD(price, storeUserPreferences.selectedCurrency)
-}
+//storeStocks.GetStocksGainers()
 </script>
 
 <template>
@@ -34,30 +22,30 @@ const getConvertedPrice = (price: number): string => {
           <tr>
             <th class="text-left" colspan="2">
               <v-icon class="mb-2" color="green">mdi-chart-line-variant</v-icon> 
-              <span class="title-table">{{ t('CryptosGainersTable_Title') }}</span>
+              <span class="title-table">{{ t('StocksGainersTable_Title') }}</span>
             </th>
           </tr>
         </thead>
         <tbody>
           <tr
-            v-for="cryptos in storeCryptos.gainersCryptos.slice(0, 5)"
-            :key="cryptos.id"
+            v-for="stocks in storeStocks.gainersStocks.slice(0, 5)"
+            :key="stocks.ticker"
           >
             <td>
-              {{ cryptos.name }}
+              {{ stocks.companyName }}
             </td>
-            <td class="crypto-info">
+            <td class="stock-info">
               <span class="table-price">
-                {{ getConvertedPrice(cryptos.current_price) }}
+                {{ storeUserPreferences.convertPrice(stocks.price, storeUserPreferences.selectedCurrency, 'after') }}
               </span>
               <span class="table-change">
                 <span 
-                  :style="{ color: getPercentageColor(cryptos.price_change_percentage_7d_in_currency) }">
-                  {{ cryptos.price_change_percentage_7d_in_currency.toFixed(2) }}%
+                  :style="{ color: storeUserPreferences.getPriceColor(stocks.changesPercentage) }">
+                  {{ parseFloat(stocks.changesPercentage).toFixed(2) }}%
                 </span>
                 <v-icon 
-                  :color="getPercentageColor(cryptos.price_change_percentage_7d_in_currency)">
-                  {{ getArrowDirection(cryptos.price_change_percentage_7d_in_currency) }}
+                  :color="storeUserPreferences.getPriceColor(stocks.changesPercentage)">
+                  {{ storeUserPreferences.getArrowDirection(stocks.changesPercentage) }}
                 </v-icon>
               </span>
             </td>
@@ -81,7 +69,7 @@ const getConvertedPrice = (price: number): string => {
   font-weight: bold;
 }
 
-.crypto-info {
+.stock-info {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -89,7 +77,7 @@ const getConvertedPrice = (price: number): string => {
 }
 
 .table-price {
-  margin-left: 50px;
+  margin-right: 20px;
 }
 
 .table-change {

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import CryptoIndices from '@/components/CryptoIndices.vue'
-import CryptosTrendingTable from '@/components/CryptosTrendingTable.vue'
-import StocksTrendingTable from '@/components/StocksTrendingTable.vue'
-import CryptoTable from '@/components/CryptoTable.vue'
-import StockTable from '@/components/StockTable.vue'
+import CryptoIndices from '@/components/Crypto/CryptoIndices.vue'
+import CryptosTrendingTable from '@/components/Crypto/CryptosTrendingTable.vue'
+import StocksTrendingTable from '@/components/Stock/StocksTrendingTable.vue'
+import CryptoTable from '@/components/Crypto/CryptoTable.vue'
+import StockTable from '@/components/Stock/StockTable.vue'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
 
 const textColor = computed(() => storeUserPreferences.getTheme().text)

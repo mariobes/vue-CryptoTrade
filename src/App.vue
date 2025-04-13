@@ -1,29 +1,28 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
 import { computed } from 'vue'
-import HeaderComponent from '@/components/HeaderComponent.vue'
-import FooterComponent from '@/components/FooterComponent.vue'
+import HeaderComponent from '@/components/Common/HeaderComponent.vue'
+import FooterComponent from '@/components/Common/FooterComponent.vue'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
 
 const storeUserPreferences = useUserPreferencesStore()
 
 const backgroundColor = computed(() => storeUserPreferences.getTheme().background)
-
 </script>
 
 <template>
   <v-app>
-      <header>
-        <HeaderComponent></HeaderComponent>
-      </header>
+    <header>
+      <HeaderComponent></HeaderComponent>
+    </header>
 
-      <main>
-        <RouterView />
-      </main>
+    <main>
+      <RouterView />
+    </main>
 
-      <footer>
-        <FooterComponent></FooterComponent>
-      </footer>
+    <footer>
+      <FooterComponent></FooterComponent>
+    </footer>
   </v-app>
 </template>
 

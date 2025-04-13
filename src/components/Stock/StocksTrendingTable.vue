@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useStocksStore } from '@/stores/stocks'
-import { useUserPreferencesStore } from '../stores/userPreferences';
+import { useUserPreferencesStore } from '../../stores/userPreferences';
 import { useI18n } from 'vue-i18n'
 
-const backgroundTableColor = computed(() => storeUserPreferences.getTheme().background_table)
+const backgroundTableColor = computed(() => storeUserPreferences.getTheme().table)
 const textColor = computed(() => storeUserPreferences.getTheme().text)
 
 const storeUserPreferences = useUserPreferencesStore()
@@ -14,18 +14,6 @@ const { t } = useI18n()
 const storeStocks = useStocksStore()
 
 //storeStocks.GetStocksTrending()
-
-function getPercentageColor(percentage: number) {
-  return percentage > 0 ? 'green' : 'red';
-}
-
-function getArrowDirection(percentage: number) {
-  return percentage > 0 ? 'mdi-menu-up' : 'mdi-menu-down';
-}
-
-const getConvertedPrice = (price: number): string => {
-  return storeUserPreferences.convertFromUSD(price, storeUserPreferences.selectedCurrency)
-}
 </script>
 
 <template>
@@ -48,16 +36,16 @@ const getConvertedPrice = (price: number): string => {
             </td>
             <td class="stock-info">
               <span class="table-price">
-                {{ getConvertedPrice(stocks.price) }}
+                {{ storeUserPreferences.convertPrice(stocks.price, storeUserPreferences.selectedCurrency, 'after') }}
               </span>
               <span class="table-change">
                 <span 
-                  :style="{ color: getPercentageColor(stocks.changesPercentage) }">
+                  :style="{ color: storeUserPreferences.getPriceColor(stocks.changesPercentage) }">
                   {{ parseInt(stocks.changesPercentage).toFixed(2) }}%
                 </span>
                 <v-icon 
-                  :color="getPercentageColor(stocks.changesPercentage)">
-                  {{ getArrowDirection(stocks.changesPercentage) }}
+                  :color="storeUserPreferences.getPriceColor(stocks.changesPercentage)">
+                  {{ storeUserPreferences.getArrowDirection(stocks.changesPercentage) }}
                 </v-icon>
               </span>
             </td>
