@@ -2,13 +2,18 @@
     "HomeView_Title": "Resumen de los mercados",
 
     "Header_Title": "Crypto Trade",
-    "Header_Component_1": "Criptomonedas",
-    "Header_Component_2": "Acciones",
-    "Header_Component_3": "Exchanges",
+    "Header_Component_Cryptos": "Criptomonedas",
+    "Header_Component_Stocks": "Acciones",
+    "Header_Component_Exchanges": "Exchanges",
     "Header_Icon_1": "Portafolio",
     "Header_Icon_2": "Seguimiento",
     "Header_Icon_3": "Billetera DeFi",
     "Header_Search": "Buscar",
+    "Header_Search_Text": "Buscar criptomonedas y acciones por nombre o símbolo",
+    "Header_Search_MarketCap": "CapM",
+    "Header_Search_Volume": "Vol. (24 h)",
+    "Header_Search_Show_More": "Mostrar más",
+    "Header_Search_Show_Less": "Mostrar menos",
     "Header_Select_1": "Idioma",
     "Header_Select_2": "Moneda",
     "Header_Select_3": "Modo oscuro",
@@ -42,12 +47,12 @@
     "AssetTable_See_All": "Ver todas",
 
     "CryptosTrendingTable_Title": "Criptomonedas en tendencia",
-
     "CryptosGainersTable_Title": "Mayores ganadores",
-
     "CryptosLosersTable_Title": "Mayores perdedores",
 
     "StocksTrendingTable_Title": "Acciones en tendencia",
+    "StocksGainersTable_Title": "Mayores ganadores",
+    "StocksLosersTable_Title": "Mayores perdedores",
 
     "CryptoIndices_Index_1": "Capitalización del Mercado",
     "CryptoIndices_Index_2": "Índice CMC100",

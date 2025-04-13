@@ -1,17 +1,19 @@
 export interface Stock {
     id: string
-    name: string
+    companyName: string
     symbol: string
     price: number
-    marketCap: number
+    mktCap: number
     sector: string,
     industry: string,
-    lastAnnualDividend: number,
-    volume: number,
+    lastDiv: number,
+    volAvg: number,
     exchange: string,
     exchangeShortName: string,
     country: string,
     changes: number,
+    changesPercentage: number,
+    currency: string
     isin: string,
     website: string,
     description: string,

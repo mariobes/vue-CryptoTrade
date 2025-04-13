@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router';
 import { ref, computed } from "vue";
-import { useUserPreferencesStore } from '../stores/userPreferences';
+import { useUserPreferencesStore } from '../../stores/userPreferences';
 import { useI18n } from 'vue-i18n'
+import SearchPopup from '@/components/Common/SearchPopup.vue'
 
 const backgroundColor = computed(() => storeUserPreferences.getTheme().background)
 const textColor = computed(() => storeUserPreferences.getTheme().text)
+const backgroundSettings = computed(() => storeUserPreferences.getTheme().settings)
 
 const storeUserPreferences = useUserPreferencesStore()
 
@@ -52,6 +54,7 @@ const currencyLabels = {
 const menu = ref(false);
 const languageDialog = ref(false);
 const currencyDialog = ref(false);
+const searchDialog = ref(false);
 
 const openLanguagePopup = () => {
   languageDialog.value = true;
@@ -97,53 +100,41 @@ const changeTheme = () => {
           {{ t('Header_Title') }}
         </RouterLink>
         <span class="divider-bar">|</span>
-        <RouterLink to="/cryptoTable" class="header-component">{{ t('Header_Component_1') }}</RouterLink>
-        <RouterLink to="/stockTable" class="header-component">{{ t('Header_Component_2') }}</RouterLink>
-        <RouterLink to="/" class="header-component">{{ t('Header_Component_3') }}</RouterLink>
+        <RouterLink to="/cryptoTable" class="header-component">{{ t('Header_Component_Cryptos') }}</RouterLink>
+        <RouterLink to="/stockTable" class="header-component">{{ t('Header_Component_Stocks') }}</RouterLink>
+        <RouterLink to="/" class="header-component">{{ t('Header_Component_Exchanges') }}</RouterLink>
       </nav>
       
       <template v-slot:append>
-        <v-btn class="header-icons btn-icons">
+        <v-btn class="header-icons">
           <v-icon>mdi-chart-pie</v-icon>
           <span class="header-icons-text">{{ t('Header_Icon_1') }}</span> 
         </v-btn>
 
-        <v-btn class="header-icons btn-icons">
+        <v-btn class="header-icons">
           <v-icon>mdi-star</v-icon>
           <span class="header-icons-text">{{ t('Header_Icon_2') }}</span>
         </v-btn>
 
-        <v-btn class="header-icons btn-icons">
+        <v-btn class="header-icons">
           <v-icon>mdi-wallet</v-icon>
           <span class="header-icons-text">{{ t('Header_Icon_3') }}</span>
         </v-btn>
 
-        <v-card-text class="header-icons">
-          <v-text-field
-            class="header-icons-search"
-            prepend-inner-icon="mdi-magnify"
-            density="compact"
-            :placeholder="t('Header_Search')" 
-            variant="solo"
-            hide-details
-            single-line
-            bg-color="#ffffffb5"
-            rounded="lg"
-            flat
-            v-model="searchQuery"
-          ></v-text-field>
-        </v-card-text>
-        <!-- @keydown.enter="searchCrypto" -->
+        <v-btn class="header-icons header-icons-search" @click="searchDialog = true">
+          <v-icon>mdi-magnify</v-icon>
+          <span class="header-icons-search-text">{{ t('Header_Search') }}</span>
+        </v-btn>
 
-        <v-btn class="header-icons btn-icons login-btn">{{ t('Header_Select_4') }}</v-btn>
+        <v-btn class="header-icons login-btn">{{ t('Header_Select_4') }}</v-btn>
 
         <v-menu v-model="menu" offset-y>
           <template v-slot:activator="{ props }">
-            <v-btn v-bind="props" class="header-icons icon-user btn-icons" icon>
+            <v-btn v-bind="props" class="header-icons icon-user" icon>
               <v-icon>mdi-account-cog</v-icon>
             </v-btn>
           </template>
-          <v-card class="settings-container" :class="storeUserPreferences.selectedTheme === 'light' ? 'container-background-light' : 'container-background-dark'">
+          <v-card class="settings-container" :style="{ backgroundColor: backgroundSettings }">
             <div class="settings-user">
               <v-btn class="settings-user-btn login-btn">{{ t('Header_Select_4') }}</v-btn>
               <v-btn class="settings-user-btn register-btn">{{ t('Header_Select_5') }}</v-btn>
@@ -151,7 +142,7 @@ const changeTheme = () => {
 
             <div class="settings-options">
               <div class="settings-options-buttons-language">
-                <button class="settings-options-btn" @click="openLanguagePopup" :class="storeUserPreferences.selectedTheme === 'light' ? 'container-text-light' : 'container-text-dark'">
+                <button class="settings-options-btn" @click="openLanguagePopup" :style="{ color: textColor }">
                   <span class="settings-options-text">{{ t('Header_Select_1') }}</span>
                   <span class="settings-options-value">
                     {{ languageLabels[locale] }}
@@ -161,7 +152,7 @@ const changeTheme = () => {
               </div>
 
               <div class="settings-options-buttons-currency">
-                <button class="settings-options-btn" @click="openCurrencyPopup" :class="storeUserPreferences.selectedTheme === 'light' ? 'container-text-light' : 'container-text-dark'">
+                <button class="settings-options-btn" @click="openCurrencyPopup" :style="{ color: textColor }">
                   <span class="settings-options-text">{{ t('Header_Select_2') }}</span>
                   <span class="settings-options-value">
                     {{ currencyLabels[selectedCurrency] }}
@@ -171,7 +162,7 @@ const changeTheme = () => {
               </div>
 
               <div class="settings-options-switch">
-                <span class="switch-text" :class="storeUserPreferences.selectedTheme === 'light' ? 'container-text-light' : 'container-text-dark'">
+                <span class="switch-text" :style="{ color: textColor }">
                   {{ t('Header_Select_3') }}
                 </span>
                 <v-switch
@@ -190,13 +181,16 @@ const changeTheme = () => {
       </template>
     </v-toolbar>
 
+    <!-- Popup selector de buscador -->
+    <SearchPopup v-model="searchDialog" />
+
     <!-- Popup selector de idioma -->
     <v-dialog v-model="languageDialog" width="1000px">
-      <v-card class="popup-container" :class="storeUserPreferences.selectedTheme === 'light' ? 'container-background-light' : 'container-background-dark'">
-        <v-btn icon @click="languageDialog = false" class="popup-close-btn">
+      <v-card class="popup-container" :style="{ background: backgroundSettings }">
+        <v-btn icon @click="languageDialog = false" class="popup-close-btn" :style="{ color: textColor }">
           <v-icon>mdi-close</v-icon>
         </v-btn>
-        <v-card-title class="popup-title" :class="storeUserPreferences.selectedTheme === 'light' ? 'container-text-light' : 'container-text-dark'">
+        <v-card-title class="popup-title" :style="{ color: textColor }">
           {{ t('Header_Popup_Title_1') }}
         </v-card-title>
         <v-card-text>
@@ -206,14 +200,11 @@ const changeTheme = () => {
                 class="popup-text"
                 block
                 @click="changeLanguage(value)"
-                :class="{
-                  'selected-value': value === selectedLanguage,
-                  'container-background-light': storeUserPreferences.selectedTheme === 'light',
-                  'container-background-dark': storeUserPreferences.selectedTheme === 'dark'
-                }"
+                :class="{ 'selected-value': value === selectedLanguage }"
+                :style="{ background: backgroundSettings }"
               >
                 <div class="language-content">
-                  <div class="language-text" :class="storeUserPreferences.selectedTheme === 'light' ? 'container-text-light' : 'container-text-dark'">
+                  <div class="language-text" :style="{ color: textColor }">
                     {{ text }}
                   </div>
                   <div class="language-label">
@@ -230,11 +221,11 @@ const changeTheme = () => {
 
     <!-- Popup selector de moneda -->
     <v-dialog v-model="currencyDialog" width="1000px">
-      <v-card class="popup-container" :class="storeUserPreferences.selectedTheme === 'light' ? 'container-background-light' : 'container-background-dark'">
-        <v-btn icon @click="currencyDialog = false" class="popup-close-btn">
+      <v-card class="popup-container" :style="{ background: backgroundSettings }">
+        <v-btn icon @click="languageDialog = false" class="popup-close-btn" :style="{ color: textColor }">
           <v-icon>mdi-close</v-icon>
         </v-btn>
-        <v-card-title class="popup-title" :class="storeUserPreferences.selectedTheme === 'light' ? 'container-text-light' : 'container-text-dark'">
+        <v-card-title class="popup-title" :style="{ color: textColor }">
           {{ t('Header_Popup_Title_2') }}
         </v-card-title>
         <v-card-text>
@@ -244,15 +235,12 @@ const changeTheme = () => {
                 class="popup-text"
                 block
                 @click="changeCurrency(value)"
-                :class="{
-                  'selected-value': value === selectedCurrency,
-                  'container-background-light': storeUserPreferences.selectedTheme === 'light',
-                  'container-background-dark': storeUserPreferences.selectedTheme === 'dark'
-                }"
+                :class="{ 'selected-value': value === selectedCurrency }"
+                :style="{ background: backgroundSettings }"
               >
 
                 <div class="currency-content">
-                  <div class="currency-text" :class="storeUserPreferences.selectedTheme === 'light' ? 'container-text-light' : 'container-text-dark'">
+                  <div class="currency-text" :style="{ color: textColor }">
                     {{ text }}
                   </div>
                   <div class="currency-label">
@@ -322,6 +310,11 @@ const changeTheme = () => {
   color: v-bind(textColor);
 }
 
+.header-icons:hover {
+  background-color: #7c4e1983;
+  /* ffffff54 */
+}
+
 .header-icons-text {
   font-size: 0.75rem; 
   text-transform: none;
@@ -333,11 +326,23 @@ const changeTheme = () => {
   width: 200px;
   transition: background-color 0.3s;
   margin-right: 5px;
-  border-radius: 8px;
+  justify-content: start;
+  font-size: 0.9rem;
+  color: #9e9e9e ;
+  background-color: #ffffff22;
+  margin: 0 10px;
+}
+
+.header-icons-search-text {
+  font-size: 0.9rem;
+  color: #9e9e9e;
+  margin-left: 5px;
+  font-weight: normal;
 }
 
 .header-icons-search:hover {
-  background-color: #a55a04;
+  background-color: #a55a0452;
+  /* ffffff54 */
 }
 
 .icon-user {
@@ -346,32 +351,12 @@ const changeTheme = () => {
   color: v-bind(textColor);
 }
 
-.btn-icons:hover {
-  background-color: #7c4e1983;
-}
-
 .settings-container {
   width: 300px;
   margin-top: 10px;
   border-radius: 10px !important;
   padding: 10px 20px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.336) !important;
-}
-
-.container-background-light {
-  background-color: #e9ecef !important;
-}
-
-.container-background-dark {
-  background-color: #232323 !important;
-}
-
-.container-text-light {
-  color: #000000 !important;
-}
-
-.container-text-dark {
-  color: #ffffff !important;
 }
 
 .settings-user {
@@ -406,12 +391,12 @@ const changeTheme = () => {
 }
 
 .login-btn:hover {
-  background-color: rgb(255, 215, 150);
+  background-color: #ffd796;
   box-shadow: none;
 }
 
 .register-btn:hover {
-  background-color: rgba(255, 215, 150, 0.13);
+  background-color: #ffd79621;
 }
 
 .settings-options {
@@ -421,7 +406,6 @@ const changeTheme = () => {
 }
 
 .settings-options-btn {
-  color: white;
   font-size: 0.85rem;
   border-radius: 10px;
   padding: 10px 10px;
@@ -458,7 +442,6 @@ const changeTheme = () => {
 }
 
 .switch-text {
-  color: white;
   font-size: 0.85rem;
   height: 10px;
   margin-left: 12px;
@@ -476,7 +459,6 @@ const changeTheme = () => {
   position: absolute;
   top: 10px;
   right: 10px;
-  color: #ffffff;
   background-color: transparent;
   box-shadow: none;
 }
@@ -533,6 +515,22 @@ const changeTheme = () => {
 .selected-icon {
   color: green;
   padding-left: 30px;
+}
+
+.container-background-light {
+  background-color: #e9ecef !important;
+}
+
+.container-background-dark {
+  background-color: #232323 !important;
+}
+
+.container-text-light {
+  color: #000000 !important;
+}
+
+.container-text-dark {
+  color: #ffffff !important;
 }
 
 

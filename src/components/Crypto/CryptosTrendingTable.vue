@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useCryptosStore } from '@/stores/cryptos'
-import { useUserPreferencesStore } from '../stores/userPreferences';
+import { useUserPreferencesStore } from '../../stores/userPreferences';
 import { useI18n } from 'vue-i18n'
 
-const backgroundTableColor = computed(() => storeUserPreferences.getTheme().background_table)
+const backgroundTableColor = computed(() => storeUserPreferences.getTheme().table)
 const textColor = computed(() => storeUserPreferences.getTheme().text)
 
 const storeUserPreferences = useUserPreferencesStore()
@@ -13,51 +13,40 @@ const { t } = useI18n()
 
 const storeCryptos = useCryptosStore()
 
-storeCryptos.GetCryptosLosers()
-
-function getPercentageColor(percentage: number) {
-  return percentage > 0 ? 'green' : 'red';
-}
-
-function getArrowDirection(percentage: number) {
-  return percentage > 0 ? 'mdi-menu-up' : 'mdi-menu-down';
-}
-
-const getConvertedPrice = (price: number): string => {
-  return storeUserPreferences.convertFromUSD(price, storeUserPreferences.selectedCurrency)
-}
+storeCryptos.GetCryptosTrending()
 </script>
 
 <template>
+      <!-- v-if="storeCryptos.trendingCryptos.length > 0" -->
       <v-table class="table-container">
         <thead>
           <tr>
             <th class="text-left" colspan="2">
-              <v-icon class="mb-2" color="red">mdi mdi-water</v-icon> 
-              <span class="title-table">{{ t('CryptosLosersTable_Title') }}</span>
+              <v-icon class="mb-2" color="#FF8C00">mdi-fire</v-icon> 
+              <span class="title-table">{{ t('CryptosTrendingTable_Title') }}</span>
             </th>
           </tr>
         </thead>
         <tbody>
           <tr
-            v-for="cryptos in storeCryptos.losersCryptos.slice(0, 5)"
-            :key="cryptos.id"
+            v-for="cryptos in storeCryptos.trendingCryptos.slice(0, 5)"
+            :key="cryptos.item.id"
           >
             <td>
-              {{ cryptos.name }}
+              {{ cryptos.item.name }}
             </td>
             <td class="crypto-info">
               <span class="table-price">
-                {{ getConvertedPrice(cryptos.current_price) }}
+                {{ storeUserPreferences.convertPrice(cryptos.item.data.price, storeUserPreferences.selectedCurrency, 'after') }}
               </span>
               <span class="table-change">
                 <span 
-                  :style="{ color: getPercentageColor(cryptos.price_change_percentage_7d_in_currency) }">
-                  {{ cryptos.price_change_percentage_7d_in_currency.toFixed(2) }}%
+                  :style="{ color: storeUserPreferences.getPriceColor(cryptos.item.data.price_change_percentage_24h.usd) }">
+                  {{ cryptos.item.data.price_change_percentage_24h.usd.toFixed(2) }}%
                 </span>
                 <v-icon 
-                  :color="getPercentageColor(cryptos.price_change_percentage_7d_in_currency)">
-                  {{ getArrowDirection(cryptos.price_change_percentage_7d_in_currency) }}
+                  :color="storeUserPreferences.getPriceColor(cryptos.item.data.price_change_percentage_24h.usd)">
+                  {{ storeUserPreferences.getArrowDirection(cryptos.item.data.price_change_percentage_24h.usd) }}
                 </v-icon>
               </span>
             </td>
