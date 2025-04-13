@@ -28,17 +28,36 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
       const themes = {
         light: {
           background: "#f8f9fa",
-          background_table: "#e9ecef",
           text: "#000000",
+          table: "#e9ecef",
+          settings: "#e9ecef"
         },
         dark: {
           background: "#0f0f0f",
-          background_table: "#8080802a",
           text: "#ffffff",
+          table: "#232323",
+          settings: "#232323"
         }
       };
 
       return themes[this.selectedTheme] || themes.light;
+    },
+
+    printTheme(query: 'background' | 'text' | 'table'): string {
+      const theme = this.getTheme(); 
+      return theme[query] || "#ffffff";
+    },
+
+    getPriceColor(price: number): string {
+      return price > 0 ? 'green' : 'red'
+    },
+
+    getArrowDirection(price: number): string {
+      return price > 0 ? 'mdi-menu-up' : 'mdi-menu-down';
+    },
+
+    getArrowDirectionReverse(price: number): string {
+      return price > 0 ? 'mdi-menu-down' : 'mdi-menu-up';
     },
 
     getCurrencyConversionRate(currency: CurrencyType) {
@@ -80,6 +99,65 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
 
       return currencySymbols[currency] || "$";
     },
+
+    formatCurrency(value: string, currency: CurrencyType, position: 'before' | 'after' = 'after'): string {
+      const symbol = this.getCurrencySymbol(currency);
+      return position === 'before' ? `${symbol}${value}` : `${value} ${symbol}`;
+    },
+
+    convertPrice(price: number, currency: CurrencyType, symbolPosition: 'before' | 'after' = 'after'): string {
+      const conversionRate = this.getCurrencyConversionRate(currency);
+      const converted = price * conversionRate;
+
+      if (Math.abs(converted) < 0.00000001) return this.formatCurrency('0', currency, symbolPosition);
+
+      const formatNumber = (value: number, decimals: number): string => {
+        return new Intl.NumberFormat('de-DE', {
+          minimumFractionDigits: decimals,
+          maximumFractionDigits: decimals,
+        }).format(value);
+      };
+
+      let formatted: string;
+      if (Math.abs(converted) < 0.0001) {
+        formatted = formatNumber(converted, 8);
+      } else if (Math.abs(converted) >= 10000) {
+        formatted = formatNumber(converted, 0);
+      } else if (Math.abs(converted) >= 1) {
+        formatted = formatNumber(converted, 2);
+      } else {
+        formatted = formatNumber(converted, 4);
+      }
+
+      return this.formatCurrency(formatted, currency, symbolPosition);
+    },
+
+    convertLargeNumber(value: number, currency: CurrencyType, symbolPosition: 'before' | 'after' = 'after'): string {
+      const rate = this.getCurrencyConversionRate(currency);
+      const converted = value * rate;
+      const formatted = converted.toLocaleString('en-US', { maximumFractionDigits: 0 });
+      return this.formatCurrency(formatted, currency, symbolPosition);
+    },
+
+    convertToAbbreviated(value: number, currency: CurrencyType, symbolPosition: 'before' | 'after' = 'after'): string {
+      const rate = this.getCurrencyConversionRate(currency);
+      const converted = value * rate;
+    
+      let formatted: string;
+      if (converted >= 1e12) {
+        formatted = (converted / 1e12).toFixed(2) + 'T';
+      } else if (converted >= 1e9) {
+        formatted = (converted / 1e9).toFixed(2) + 'B';
+      } else if (converted >= 1e6) {
+        formatted = (converted / 1e6).toFixed(2) + 'M';
+      } else if (converted >= 1e3) {
+        formatted = (converted / 1e3).toFixed(2) + 'K';
+      } else {
+        formatted = converted.toFixed(2); // mostrar 2 decimales si es menor a 1000
+      }
+    
+      return this.formatCurrency(formatted, currency, symbolPosition);
+    },    
 
     convertFromUSD(price: number, currency: CurrencyType): string {
       const conversionRate = this.getCurrencyConversionRate(currency);

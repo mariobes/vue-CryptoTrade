@@ -5,7 +5,7 @@ import { useRoute } from 'vue-router'
 import { useCryptosStore } from '@/stores/cryptos'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
 import { useI18n } from 'vue-i18n'
-import CryptoSparkline from '../components/CryptoSparkline.vue'
+import CryptoSparkline from '../Crypto/CryptoSparkline.vue'
 
 const backgroundColor = computed(() => storeUserPreferences.getTheme().background)
 const textColor = computed(() => storeUserPreferences.getTheme().text)
@@ -48,7 +48,7 @@ const toggleSort = (newSortBy: number) => {
 const updateCryptoDatabase = async () => {
   await storeCryptos.GetCrypto('bitcoin');
 
-  if (storeCryptos.crypto && new Date(storeCryptos.crypto.lastUpdated).toDateString() !== new Date().toDateString()) {
+  if ((storeCryptos.crypto === null) || (new Date(storeCryptos.crypto.lastUpdated).toDateString() !== new Date().toDateString())) {
     await storeCryptos.GetCryptosApi();
   }
 };
@@ -57,22 +57,7 @@ updateCryptoDatabase();
 
 storeCryptos.GetAllCryptos(sortBy.value ?? 0, order.value)
 
-const getConvertedPrice = (price: number): string => {
-  return storeUserPreferences.convertFromUSD(price, storeUserPreferences.selectedCurrency)
-}
-
-const getConvertedMarketCap = (marketCap: number): string => {
-  const rate = storeUserPreferences.getCurrencyConversionRate(storeUserPreferences.selectedCurrency);
-  const symbol = storeUserPreferences.getCurrencySymbol(storeUserPreferences.selectedCurrency);
-  const convertedValue = marketCap * rate;
-
-  return `${formatMarketCap(convertedValue)} ${symbol}`;
-};
-
-const formatMarketCap = (marketCap: number): string => {
-  return marketCap.toLocaleString('en-US', { maximumFractionDigits: 0 });
-}
-
+window.scrollTo({ top: 0 });
 </script>
 
 <template>
@@ -87,55 +72,55 @@ const formatMarketCap = (marketCap: number): string => {
           <span :class="{'cursor-pointer': sortable}" @click="sortable ? toggleSort(1) : null">
             #
           </span>
-          <v-icon v-if="sortBy !== null && sortBy === 1">{{ order === 0 ? 'mdi-menu-down' : 'mdi-menu-up' }}</v-icon>
+          <v-icon v-if="sortBy !== null && sortBy === 1">{{ storeUserPreferences.getArrowDirection(order) }}</v-icon>
         </th>
         <th class="text-left column-fixed">
           <span :class="{'cursor-pointer': sortable}" @click="sortable ? toggleSort(2) : null">
             {{ t('CryptoTable_Name') }}
           </span>
-          <v-icon v-if="sortBy !== null && sortBy === 2">{{ order === 0 ? 'mdi-menu-down' : 'mdi-menu-up' }}</v-icon>
+          <v-icon v-if="sortBy !== null && sortBy === 2">{{ storeUserPreferences.getArrowDirection(order) }}</v-icon>
         </th>
         <th class="text-right">
           <span :class="{'cursor-pointer': sortable}" @click="sortable ? toggleSort(3) : null">
             {{ t('CryptoTable_Price') }}
           </span>
-          <v-icon v-if="sortBy !== null && sortBy === 3">{{ order === 0 ? 'mdi-menu-down' : 'mdi-menu-up' }}</v-icon>
+          <v-icon v-if="sortBy !== null && sortBy === 3">{{ storeUserPreferences.getArrowDirection(order) }}</v-icon>
         </th>
         <th class="text-right">
           <span :class="{'cursor-pointer': sortable}" @click="sortable ? toggleSort(4) : null">
             {{ t('CryptoTable_1h') }}
           </span>
-          <v-icon v-if="sortBy !== null && sortBy === 4">{{ order === 1 ? 'mdi-menu-down' : 'mdi-menu-up' }}</v-icon>
+          <v-icon v-if="sortBy !== null && sortBy === 4">{{ storeUserPreferences.getArrowDirectionReverse(order) }}</v-icon>
         </th> 
         <th class="text-right">
           <span :class="{'cursor-pointer': sortable}" @click="sortable ? toggleSort(5) : null">
             {{ t('CryptoTable_24h') }}
           </span>
-          <v-icon v-if="sortBy !== null && sortBy === 5">{{ order === 1 ? 'mdi-menu-down' : 'mdi-menu-up' }}</v-icon>
+          <v-icon v-if="sortBy !== null && sortBy === 5">{{ storeUserPreferences.getArrowDirectionReverse(order) }}</v-icon>
         </th> 
         <th class="text-right">
           <span :class="{'cursor-pointer': sortable}" @click="sortable ? toggleSort(6) : null">
             {{ t('CryptoTable_7d') }}
           </span>
-          <v-icon v-if="sortBy !== null && sortBy === 6">{{ order === 0 ? 'mdi-menu-down' : 'mdi-menu-up' }}</v-icon>
+          <v-icon v-if="sortBy !== null && sortBy === 6">{{ storeUserPreferences.getArrowDirectionReverse(order) }}</v-icon>
         </th> 
         <th class="text-right">
           <span :class="{'cursor-pointer': sortable}" @click="sortable ? toggleSort(0) : null">
             {{ t('CryptoTable_MarketCap') }}
           </span>
-          <v-icon v-if="sortBy !== null && sortBy === 0">{{ order === 0 ? 'mdi-menu-down' : 'mdi-menu-up' }}</v-icon>
+          <v-icon v-if="sortBy !== null && sortBy === 0">{{ storeUserPreferences.getArrowDirection(order) }}</v-icon>
         </th>
         <th class="text-right">
           <span :class="{'cursor-pointer': sortable}" @click="sortable ? toggleSort(7) : null">
             {{ t('CryptoTable_Volume_24h') }}
           </span>
-          <v-icon v-if="sortBy !== null && sortBy === 7">{{ order === 0 ? 'mdi-menu-down' : 'mdi-menu-up' }}</v-icon>
+          <v-icon v-if="sortBy !== null && sortBy === 7">{{ storeUserPreferences.getArrowDirection(order) }}</v-icon>
         </th> 
         <th class="text-right" v-if="sortable">
           <span :class="{'cursor-pointer': sortable}" @click="sortable ? toggleSort(8) : null">
             {{ t('CryptoTable_Circulating_Supply') }}
           </span>
-          <v-icon v-if="sortBy !== null && sortBy === 8">{{ order === 0 ? 'mdi-menu-down' : 'mdi-menu-up' }}</v-icon>
+          <v-icon v-if="sortBy !== null && sortBy === 8">{{ storeUserPreferences.getArrowDirection(order) }}</v-icon>
         </th> 
         <th class="text-right">
           <span>{{ t('CryptoTable_Last_7_Days') }}</span>
@@ -167,19 +152,27 @@ const formatMarketCap = (marketCap: number): string => {
               <span class="crypto-symbol">{{ crypto.symbol.toUpperCase() }}</span>
             </div>
           </td>
-          <td class="text-right">{{ getConvertedPrice(crypto.current_price) }}</td>
-          <td :style="{ color: crypto.price_change_percentage_7d_in_currency < 0 ? 'red' : 'green' }" class="text-right">
+          <td class="text-right">
+            {{ storeUserPreferences.convertPrice(crypto.current_price, storeUserPreferences.selectedCurrency, 'after') }}
+          </td>
+          <td :style="{ color: storeUserPreferences.getPriceColor(crypto.price_change_percentage_1h_in_currency) }" class="text-right">
             {{ crypto.price_change_percentage_1h_in_currency.toFixed(2) }}%
           </td>
-          <td :style="{ color: crypto.price_change_percentage_7d_in_currency < 0 ? 'red' : 'green' }" class="text-right">
+          <td :style="{ color: storeUserPreferences.getPriceColor(crypto.price_change_percentage_24h) }" class="text-right">
             {{ crypto.price_change_percentage_24h.toFixed(2) }}%
           </td>
-          <td :style="{ color: crypto.price_change_percentage_7d_in_currency < 0 ? 'red' : 'green' }" class="text-right">
+          <td :style="{ color: storeUserPreferences.getPriceColor(crypto.price_change_percentage_7d_in_currency) }" class="text-right">
             {{ crypto.price_change_percentage_7d_in_currency.toFixed(2) }}%
           </td>
-          <td class="text-right">{{ getConvertedMarketCap(crypto.market_cap) }}</td>
-          <td class="text-right">{{ getConvertedMarketCap(crypto.total_volume) }}</td>
-          <td class="text-right" v-if="sortable">{{ getConvertedMarketCap(crypto.circulating_supply) }}</td>
+          <td class="text-right">
+            {{ storeUserPreferences.convertLargeNumber(crypto.market_cap, storeUserPreferences.selectedCurrency, 'after') }}
+          </td>
+          <td class="text-right">
+            {{ storeUserPreferences.convertLargeNumber(crypto.total_volume, storeUserPreferences.selectedCurrency, 'after') }}
+          </td>
+          <td class="text-right" v-if="sortable">
+            {{ storeUserPreferences.convertLargeNumber(crypto.circulating_supply, storeUserPreferences.selectedCurrency, 'after') }}
+          </td>
           <td class="text-right">
             <CryptoSparkline v-if="crypto.sparkline_in_7d?.price?.length" :prices="crypto.sparkline_in_7d.price" />
           </td>
@@ -187,7 +180,14 @@ const formatMarketCap = (marketCap: number): string => {
     </tbody>
   </v-table>
   <div v-if="!sortable" class="cryptos-see-all-container">
-    <RouterLink to="/cryptoTable" class="cryptos-see-all" :style="'color: white'">{{ t('AssetTable_See_All') }}</RouterLink>
+    <RouterLink 
+      to="/cryptoTable" 
+      class="cryptos-see-all" 
+      :style="'color: white'"
+    >
+      <!-- target="_blank" -->
+      {{ t('AssetTable_See_All') }}
+    </RouterLink>
   </div>
 </template>
 
@@ -243,7 +243,6 @@ const formatMarketCap = (marketCap: number): string => {
   width: 30px;
   height: 30px;
   margin-right: 10px;
-  align-items: center;
   border-radius: 50%;
 }
 

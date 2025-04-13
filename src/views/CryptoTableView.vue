@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import CryptoIndices from '@/components/CryptoIndices.vue'
-import CryptosTrendingTable from '@/components/CryptosTrendingTable.vue'
-import CryptosGainersTable from '@/components/CryptosGainersTable.vue'
-import CryptosLosersTable from '@/components/CryptosLosersTable.vue'
-import CryptoTable from '@/components/CryptoTable.vue'
+import CryptoIndices from '@/components/Crypto/CryptoIndices.vue'
+import CryptosTrendingTable from '@/components/Crypto/CryptosTrendingTable.vue'
+import CryptosGainersTable from '@/components/Crypto/CryptosGainersTable.vue'
+import CryptosLosersTable from '@/components/Crypto/CryptosLosersTable.vue'
+import CryptoTable from '@/components/Crypto/CryptoTable.vue'
 
 </script>
 

@@ -47,7 +47,7 @@ const toggleSort = (newSortBy: number) => {
 const updateStockDatabase = async () => {
   await storeStocks.GetStock('aapl');
 
-  if (storeStocks.stock && new Date(storeStocks.stock.lastUpdated).toDateString() !== new Date().toDateString()) {
+  if ((storeStocks.stock === null) || (new Date(storeStocks.stock.lastUpdated).toDateString() !== new Date().toDateString())) {
     await storeStocks.GetStocksApi();
   }
 };
@@ -56,26 +56,7 @@ updateStockDatabase();
 
 storeStocks.GetAllStocks(sortBy.value, order.value) 
 
-const getConvertedPrice = (price: number): string => {
-  return storeUserPreferences.convertFromUSD(price, storeUserPreferences.selectedCurrency)
-}
-
-const getConvertedMarketCap = (marketCap: number): string => {
-  const rate = storeUserPreferences.getCurrencyConversionRate(storeUserPreferences.selectedCurrency);
-  const symbol = storeUserPreferences.getCurrencySymbol(storeUserPreferences.selectedCurrency);
-  const convertedValue = marketCap * rate;
-
-  return `${formatMarketCap(convertedValue)} ${symbol}`;
-};
-
-const formatMarketCap = (marketCap: number): string => {
-  return marketCap.toLocaleString('en-US', { maximumFractionDigits: 0 });
-}
-
-const changePricePercentage = (price: number, changes: number): string => {
-  return ((changes / (price + changes)) * 100).toFixed(2);
-}
-
+window.scrollTo({ top: 0 });
 </script>
 
 <template>
@@ -90,55 +71,55 @@ const changePricePercentage = (price: number, changes: number): string => {
           <span :class="{'cursor-pointer': sortable}" @click="sortable ? toggleSort(1) : null">
             #
           </span>
-          <v-icon v-if="sortBy !== null && sortBy === 1">{{ order === 0 ? 'mdi-menu-down' : 'mdi-menu-up' }}</v-icon>
+          <v-icon v-if="sortBy !== null && sortBy === 1">{{ storeUserPreferences.getArrowDirection(order) }}</v-icon>
         </th>
         <th class="text-left column-fixed">
           <span :class="{'cursor-pointer': sortable}" @click="sortable ? toggleSort(2) : null">
             {{ t('StockTable_Name') }}
           </span>
-          <v-icon v-if="sortBy !== null && sortBy === 2">{{ order === 0 ? 'mdi-menu-down' : 'mdi-menu-up' }}</v-icon>
+          <v-icon v-if="sortBy !== null && sortBy === 2">{{ storeUserPreferences.getArrowDirection(order) }}</v-icon>
         </th>
         <th class="text-right">
           <span :class="{'cursor-pointer': sortable}" @click="sortable ? toggleSort(3) : null">
             {{ t('StockTable_Price') }}
           </span>
-          <v-icon v-if="sortBy !== null && sortBy === 3">{{ order === 0 ? 'mdi-menu-down' : 'mdi-menu-up' }}</v-icon>
+          <v-icon v-if="sortBy !== null && sortBy === 3">{{ storeUserPreferences.getArrowDirection(order) }}</v-icon>
         </th>
         <th class="text-right">
           <span :class="{'cursor-pointer': sortable}" @click="sortable ? toggleSort(4) : null">
             {{ t('StockTable_Change') }}
           </span>
-          <v-icon v-if="sortBy !== null && sortBy === 4">{{ order === 1 ? 'mdi-menu-down' : 'mdi-menu-up' }}</v-icon>
+          <v-icon v-if="sortBy !== null && sortBy === 4">{{ storeUserPreferences.getArrowDirectionReverse(order) }}</v-icon>
         </th>
         <th class="text-right">
           <span :class="{'cursor-pointer': sortable}" @click="sortable ? toggleSort(5) : null">
             {{ t('StockTable_Change_Percentage') }}
           </span>
-          <v-icon v-if="sortBy !== null && sortBy === 5">{{ order === 1 ? 'mdi-menu-down' : 'mdi-menu-up' }}</v-icon>
+          <v-icon v-if="sortBy !== null && sortBy === 5">{{ storeUserPreferences.getArrowDirectionReverse(order) }}</v-icon>
         </th>
         <th class="text-right">
           <span :class="{'cursor-pointer': sortable}" @click="sortable ? toggleSort(6) : null">
             {{ t('StockTable_Currency') }}
           </span>
-          <v-icon v-if="sortBy !== null && sortBy === 6">{{ order === 0 ? 'mdi-menu-down' : 'mdi-menu-up' }}</v-icon>
+          <v-icon v-if="sortBy !== null && sortBy === 6">{{ storeUserPreferences.getArrowDirection(order) }}</v-icon>
         </th>
         <th class="text-right" v-if="sortable">
           <span :class="{'cursor-pointer': sortable}" @click="sortable ? toggleSort(7) : null">
             {{ t('StockTable_Last_Dividend_Annual') }}
           </span>
-          <v-icon v-if="sortBy !== null && sortBy === 7">{{ order === 0 ? 'mdi-menu-down' : 'mdi-menu-up' }}</v-icon>
+          <v-icon v-if="sortBy !== null && sortBy === 7">{{ storeUserPreferences.getArrowDirection(order) }}</v-icon>
         </th>
         <th class="text-right">
           <span :class="{'cursor-pointer': sortable}" @click="sortable ? toggleSort(0) : null">
             {{ t('StockTable_MarketCap') }}
           </span>
-          <v-icon v-if="sortBy !== null && sortBy === 0">{{ order === 0 ? 'mdi-menu-down' : 'mdi-menu-up' }}</v-icon>
+          <v-icon v-if="sortBy !== null && sortBy === 0">{{ storeUserPreferences.getArrowDirection(order) }}</v-icon>
         </th>
         <th class="text-right">
           <span :class="{'cursor-pointer': sortable}" @click="sortable ? toggleSort(8) : null">
             {{ t('StockTable_Average_Volume') }}
           </span>
-          <v-icon v-if="sortBy !== null && sortBy === 8">{{ order === 0 ? 'mdi-menu-down' : 'mdi-menu-up' }}</v-icon>
+          <v-icon v-if="sortBy !== null && sortBy === 8">{{ storeUserPreferences.getArrowDirection(order) }}</v-icon>
         </th>
         <th class="text-right">
           <span>
@@ -162,7 +143,7 @@ const changePricePercentage = (price: number, changes: number): string => {
         </td>
         <td>
           <span>
-            <!-- {{ stock.marketCapRank }} -->1
+            {{ stock.marketCapRank }}
           </span>
         </td>
         <td>
@@ -172,23 +153,37 @@ const changePricePercentage = (price: number, changes: number): string => {
             <span class="stock-symbol">{{ stock.symbol.toUpperCase() }}</span>
           </div>
         </td>
-        <td class="text-right">{{ getConvertedPrice(stock.price) }}</td>
-        <td :style="{ color: stock.changes < 0 ? 'red' : 'green' }" class="text-right">
-          {{ getConvertedPrice(stock.changes) }}
+        <td class="text-right">
+          {{ storeUserPreferences.convertPrice(stock.price, storeUserPreferences.selectedCurrency, 'after') }}
         </td>
-        <td :style="{ color: changePricePercentage(stock.price, stock.changes) < 0 ? 'red' : 'green' }" class="text-right">
-          {{ changePricePercentage(stock.price, stock.changes) }}%
+        <td :style="{ color: storeUserPreferences.getPriceColor(stock.changes) }" class="text-right">
+          {{ storeUserPreferences.convertPrice(stock.changes, storeUserPreferences.selectedCurrency, 'after') }}
+        </td>
+        <td :style="{ color: storeUserPreferences.getPriceColor(stock.changesPercentage) }" class="text-right">
+          {{ stock.changesPercentage.toFixed(2) }}%
         </td>
         <td class="text-right">{{ stock.currency }}</td>
-        <td class="text-right" v-if="sortable">{{ getConvertedPrice(stock.lastDiv) }}</td>
-        <td class="text-right">{{ getConvertedMarketCap(stock.mktCap) }}</td>
-        <td class="text-right">{{ getConvertedMarketCap(stock.volAvg) }}</td>
+        <td class="text-right" v-if="sortable">
+          {{ storeUserPreferences.convertPrice(stock.lastDiv, storeUserPreferences.selectedCurrency, 'after') }}
+        </td>
+        <td class="text-right">
+          {{ storeUserPreferences.convertLargeNumber(stock.mktCap, storeUserPreferences.selectedCurrency, 'after') }}
+        </td>
+        <td class="text-right">
+          {{ storeUserPreferences.convertLargeNumber(stock.volAvg, storeUserPreferences.selectedCurrency, 'after') }}
+        </td>
         <td class="text-right">{{ stock.exchangeShortName }}</td>
       </tr>
     </tbody>
   </v-table>
   <div v-if="!sortable" class="stocks-see-all-container">
-    <RouterLink to="/stockTable" class="stocks-see-all" :style="'color: white'">{{ t('AssetTable_See_All') }}</RouterLink>
+    <RouterLink 
+      to="/stockTable" 
+      class="stocks-see-all" 
+      :style="'color: white'"
+    >
+      {{ t('AssetTable_See_All') }}
+    </RouterLink>
   </div>
 </template>
 
@@ -244,8 +239,9 @@ const changePricePercentage = (price: number, changes: number): string => {
   width: 30px;
   height: 30px;
   margin-right: 10px;
-  align-items: center;
   border-radius: 50%;
+  background-color: #0f0f0f38;
+  border: solid 1px #0f0f0f38;
 }
 
 .stock-name {

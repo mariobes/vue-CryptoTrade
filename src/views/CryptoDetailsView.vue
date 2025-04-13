@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
+import CryptoCharts from '@/components/Crypto/CryptoCharts.vue'
 
 const route = useRoute()
 const cryptoId = route.params.id
+
 
 </script>
 
 <template>
 
-<div>Detalles de la criptomoneda {{ cryptoId }}</div>
+<CryptoCharts :cryptoId="cryptoId" :key="cryptoId" />
 
 </template>
 

@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import StocksTrendingTable from '@/components/StocksTrendingTable.vue'
-import StockTable from '@/components/StockTable.vue'
+import StocksTrendingTable from '@/components/Stock/StocksTrendingTable.vue'
+import StockTable from '@/components/Stock/StockTable.vue'
+import StocksGainersTable from '@/components/Stock/StocksGainersTable.vue';
+import StocksLosersTable from '@/components/Stock/StocksLosersTable.vue';
 
 </script>
 
@@ -10,8 +12,8 @@ import StockTable from '@/components/StockTable.vue'
     <div class="content-container"> 
       <StocksTrendingTable class="content-item"></StocksTrendingTable>
       <StocksTrendingTable class="content-item"></StocksTrendingTable>
-      <StocksTrendingTable class="content-item"></StocksTrendingTable>
-      <StocksTrendingTable class="content-item"></StocksTrendingTable>
+      <StocksGainersTable class="content-item"></StocksGainersTable>
+      <StocksLosersTable class="content-item"></StocksLosersTable>
     </div>
 
     <StockTable></StockTable>
