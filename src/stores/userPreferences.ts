@@ -60,6 +60,62 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
       return price > 0 ? 'mdi-menu-down' : 'mdi-menu-up';
     },
 
+    getLanguages(): LanguageType[] {
+      return ["ES", "EN"];
+    },
+    
+    getLanguageLabel(language: LanguageType): string {
+      const languageLabels: { [key in LanguageType]: string } = {
+        ES: "Español",
+        EN: "English",
+      };
+      return languageLabels[language] || language;
+    },
+
+    getCurrencies(): CurrencyType[] {
+      return ["USD", "EUR", "GBP", "JPY", "CAD", "AUD", "CHF", "CNY", "MXN", "BRL", "INR", "RUB", "ZAR"];
+    },
+
+    getCurrencyText(currency: CurrencyType): string {
+      const currencyTexts: { [key in CurrencyType]: string } = {
+        USD: "United States Dollar",
+        EUR: "Euro",
+        GBP: "Pound Sterling",
+        JPY: "Japanese Yen",
+        CAD: "Canadian Dollar",
+        AUD: "Australian Dollar",
+        CHF: "Swiss Franc",
+        CNY: "Chinese Yuan",
+        MXN: "Mexican Peso",
+        BRL: "Brazilian Real",
+        INR: "Indian Rupee",
+        RUB: "Russian Ruble",
+        ZAR: "South African Rand",
+      };
+
+      return currencyTexts[currency] || "$";
+    },
+
+    getCurrencyLabel(currency: CurrencyType): string {
+      const currencyLabels: { [key in CurrencyType]: string } = {
+        USD: "$ USD",
+        EUR: "€ EUR",
+        GBP: "£ GBP",
+        JPY: "¥ JPY",
+        CAD: "CA$ CAD",
+        AUD: "A$ AUD",
+        CHF: "CHF CHF",
+        CNY: "¥ CNY",
+        MXN: "$ MXN",
+        BRL: "R$ BRL",
+        INR: "₹ INR",
+        RUB: "₽ RUB",
+        ZAR: "R ZAR",
+      };
+
+      return currencyLabels[currency] || "$";
+    },
+
     getCurrencyConversionRate(currency: CurrencyType) {
       const currencies = {
         USD: 1,
@@ -202,6 +258,6 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
       const formattedNumber = formatNumber(convertedNumber, 4); // Limitar a 4 decimales para números menores a 1
       const symbol = this.getCurrencySymbol(currency);
       return `${formattedNumber} ${symbol}`;
-    }
+    },
   }
 });

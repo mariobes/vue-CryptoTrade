@@ -50,6 +50,7 @@ const updateCryptoDatabase = async () => {
 
   if ((storeCryptos.crypto === null) || (new Date(storeCryptos.crypto.lastUpdated).toDateString() !== new Date().toDateString())) {
     await storeCryptos.GetCryptosApi();
+    storeCryptos.GetAllCryptos(sortBy.value ?? 0, order.value)
   }
 };
 

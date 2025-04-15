@@ -39,8 +39,4 @@ html, body, #app, .v-application {
   font-family: 'Roboto', sans-serif;
   /* font-family: 'Montserrat', sans-serif; */
 }
-
-
-
-
 </style>

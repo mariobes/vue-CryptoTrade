@@ -21,6 +21,8 @@
     "Header_Select_5": "Sign up",
     "Header_Popup_Title_1": "Language",
     "Header_Popup_Title_2": "Currency",
+    "Header_Popup_Auth_Login": "Sign In",
+    "Header_Popup_Auth_Register": "Sign Up",
 
     "CryptoTable_Title": "Top Cryptocurrencies by Market Cap",
     "CryptoTable_Name": "Name",
