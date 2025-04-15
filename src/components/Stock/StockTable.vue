@@ -14,7 +14,7 @@ const { t } = useI18n()
 const storeStocks = useStocksStore()
 const storeUserPreferences = useUserPreferencesStore()
 
-const sortBy = ref(0)
+const sortBy = ref<number | null>(null)
 const order = ref(0)
 
 const sortable = ref(false)
@@ -49,12 +49,13 @@ const updateStockDatabase = async () => {
 
   if ((storeStocks.stock === null) || (new Date(storeStocks.stock.lastUpdated).toDateString() !== new Date().toDateString())) {
     await storeStocks.GetStocksApi();
+    storeStocks.GetAllStocks(sortBy.value ?? 0, order.value) 
   }
 };
 
 updateStockDatabase();
 
-storeStocks.GetAllStocks(sortBy.value, order.value) 
+storeStocks.GetAllStocks(sortBy.value ?? 0, order.value) 
 
 window.scrollTo({ top: 0 });
 </script>
@@ -148,7 +149,7 @@ window.scrollTo({ top: 0 });
         </td>
         <td>
           <div class="stock-container">
-            <img :src="stock.image" alt="Stock Logo" class="stock-image">
+            <img :src="stock.image" alt="Stock Logo" class="stock-image" :class="{ 'stock-image-light': storeUserPreferences.selectedTheme === 'light' }">
             <span class="stock-name">{{ stock.companyName }}</span>
             <span class="stock-symbol">{{ stock.symbol.toUpperCase() }}</span>
           </div>
@@ -240,6 +241,10 @@ window.scrollTo({ top: 0 });
   height: 30px;
   margin-right: 10px;
   border-radius: 50%;
+
+}
+
+.stock-image-light {
   background-color: #0f0f0f38;
   border: solid 1px #0f0f0f38;
 }

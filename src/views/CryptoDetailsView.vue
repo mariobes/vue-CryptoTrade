@@ -1,9 +1,10 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import CryptoCharts from '@/components/Crypto/CryptoCharts.vue'
 
 const route = useRoute()
-const cryptoId = route.params.id
+const cryptoId = computed(() => route.params.id)
 
 
 </script>
