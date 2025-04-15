@@ -3,58 +3,24 @@ import { RouterLink } from 'vue-router';
 import { ref, computed } from "vue";
 import { useUserPreferencesStore } from '../../stores/userPreferences';
 import { useI18n } from 'vue-i18n'
+import SettingsMenu from '@/components/Common/SettingsMenu.vue'
 import SearchPopup from '@/components/Common/SearchPopup.vue'
+import LanguagePopup from '@/components/Common/LanguagePopup.vue'
+import CurrencyPopup from '@/components/Common/CurrencyPopup.vue'
+import AuthPopup from '@/components/Common/AuthPopup.vue'
 
 const backgroundColor = computed(() => storeUserPreferences.getTheme().background)
 const textColor = computed(() => storeUserPreferences.getTheme().text)
-const backgroundSettings = computed(() => storeUserPreferences.getTheme().settings)
 
 const storeUserPreferences = useUserPreferencesStore()
 
-const { t, locale } = useI18n()
+const { t } = useI18n()
 
-const languages: Array<'ES' | 'EN'> = ['ES', 'EN']
-const languageLabels: { [key in typeof languages[number]]: string } = {
-  ES: 'Español',
-  EN: 'English',
-}
-
-const currencyText = {
-  USD: "United States Dollar",
-  EUR: "Euro",
-  GBP: "Pound Sterling",
-  JPY: "Japanese Yen",
-  CAD: "Canadian Dollar",
-  AUD: "Australian Dollar",
-  CHF: "Swiss Franc",
-  CNY: "Chinese Yuan",
-  MXN: "Mexican Peso",
-  BRL: "Brazilian Real",
-  INR: "Indian Rupee",
-  RUB: "Russian Ruble",
-  ZAR: "South African Rand",
-};
-
-const currencyLabels = {
-  USD: "$ USD",
-  EUR: "€ EUR",
-  GBP: "£ GBP",
-  JPY: "¥ JPY",
-  CAD: "CA$ CAD",
-  AUD: "A$ AUD",
-  CHF: "CHF CHF",
-  CNY: "¥ CNY",
-  MXN: "$ MXN",
-  BRL: "R$ BRL",
-  INR: "₹ INR",
-  RUB: "₽ RUB",
-  ZAR: "R ZAR",
-};
-
-const menu = ref(false);
 const languageDialog = ref(false);
 const currencyDialog = ref(false);
 const searchDialog = ref(false);
+const authDialog = ref(false);
+const selectedTab = ref<'login' | 'register'>('login')
 
 const openLanguagePopup = () => {
   languageDialog.value = true;
@@ -64,27 +30,15 @@ const openCurrencyPopup = () => {
   currencyDialog.value = true;
 };
 
-const selectedLanguage = ref(storeUserPreferences.selectedLanguage);
-const selectedCurrency = ref(storeUserPreferences.selectedCurrency);
-const selectedTheme = ref(storeUserPreferences.selectedTheme);
-
-const changeLanguage = (language: 'ES' | 'EN') => {
-  selectedLanguage.value = language;
-  storeUserPreferences.setSelectedLanguage(selectedLanguage.value);
-  locale.value = language;
-  languageDialog.value = false;
+const openLogin = () => {
+  selectedTab.value = 'login';
+  authDialog.value = true;
 };
 
-const changeCurrency = (currency: string) => {
-  selectedCurrency.value = currency;
-  storeUserPreferences.setSelectedCurrency(selectedCurrency.value);
-  currencyDialog.value = false;
+const openRegister = () => {
+  selectedTab.value = 'register';
+  authDialog.value = true;
 };
-
-const changeTheme = () => {
-  storeUserPreferences.setSelectedTheme(selectedTheme.value);
-};
-
 </script>
 
 <template>
@@ -126,58 +80,16 @@ const changeTheme = () => {
           <span class="header-icons-search-text">{{ t('Header_Search') }}</span>
         </v-btn>
 
-        <v-btn class="header-icons login-btn">{{ t('Header_Select_4') }}</v-btn>
+        <v-btn class="header-icons login-btn" @click="authDialog = true; selectedTab = 'login'">
+          {{ t('Header_Select_4') }}
+        </v-btn>
 
-        <v-menu v-model="menu" offset-y>
-          <template v-slot:activator="{ props }">
-            <v-btn v-bind="props" class="header-icons icon-user" icon>
-              <v-icon>mdi-account-cog</v-icon>
-            </v-btn>
-          </template>
-          <v-card class="settings-container" :style="{ backgroundColor: backgroundSettings }">
-            <div class="settings-user">
-              <v-btn class="settings-user-btn login-btn">{{ t('Header_Select_4') }}</v-btn>
-              <v-btn class="settings-user-btn register-btn">{{ t('Header_Select_5') }}</v-btn>
-            </div>
-
-            <div class="settings-options">
-              <div class="settings-options-buttons-language">
-                <button class="settings-options-btn" @click="openLanguagePopup" :style="{ color: textColor }">
-                  <span class="settings-options-text">{{ t('Header_Select_1') }}</span>
-                  <span class="settings-options-value">
-                    {{ languageLabels[locale] }}
-                    <v-icon class="pt-1 settings-options-arrow">mdi-chevron-right</v-icon> 
-                  </span>
-                </button>
-              </div>
-
-              <div class="settings-options-buttons-currency">
-                <button class="settings-options-btn" @click="openCurrencyPopup" :style="{ color: textColor }">
-                  <span class="settings-options-text">{{ t('Header_Select_2') }}</span>
-                  <span class="settings-options-value">
-                    {{ currencyLabels[selectedCurrency] }}
-                    <v-icon class="pt-1 settings-options-arrow">mdi-chevron-right</v-icon> 
-                  </span>
-                </button>
-              </div>
-
-              <div class="settings-options-switch">
-                <span class="switch-text" :style="{ color: textColor }">
-                  {{ t('Header_Select_3') }}
-                </span>
-                <v-switch
-                  v-model="selectedTheme"
-                  class="switch-icon"
-                  color="#FF8C00"
-                  @change="changeTheme" 
-                  @click.stop      
-                  :true-value="'light'"
-                  :false-value="'dark'"   
-                ></v-switch>
-              </div>
-            </div>
-          </v-card>
-        </v-menu>
+        <SettingsMenu 
+          @open-language-popup="openLanguagePopup"
+          @open-currency-popup="openCurrencyPopup"
+          @open-auth-login="openLogin"
+          @open-auth-register="openRegister"
+        />
       </template>
     </v-toolbar>
 
@@ -185,75 +97,13 @@ const changeTheme = () => {
     <SearchPopup v-model="searchDialog" />
 
     <!-- Popup selector de idioma -->
-    <v-dialog v-model="languageDialog" width="1000px">
-      <v-card class="popup-container" :style="{ background: backgroundSettings }">
-        <v-btn icon @click="languageDialog = false" class="popup-close-btn" :style="{ color: textColor }">
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
-        <v-card-title class="popup-title" :style="{ color: textColor }">
-          {{ t('Header_Popup_Title_1') }}
-        </v-card-title>
-        <v-card-text>
-          <v-row>
-            <v-col v-for="(text, value) in languageLabels" :key="value" cols="3">
-              <v-btn
-                class="popup-text"
-                block
-                @click="changeLanguage(value)"
-                :class="{ 'selected-value': value === selectedLanguage }"
-                :style="{ background: backgroundSettings }"
-              >
-                <div class="language-content">
-                  <div class="language-text" :style="{ color: textColor }">
-                    {{ text }}
-                  </div>
-                  <div class="language-label">
-                    {{ value }}
-                  </div>
-                </div>
-                <v-icon v-if="value === selectedLanguage" class="selected-icon">mdi-check-circle</v-icon>
-              </v-btn>
-            </v-col>
-          </v-row>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
+    <LanguagePopup v-model="languageDialog" />
 
     <!-- Popup selector de moneda -->
-    <v-dialog v-model="currencyDialog" width="1000px">
-      <v-card class="popup-container" :style="{ background: backgroundSettings }">
-        <v-btn icon @click="languageDialog = false" class="popup-close-btn" :style="{ color: textColor }">
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
-        <v-card-title class="popup-title" :style="{ color: textColor }">
-          {{ t('Header_Popup_Title_2') }}
-        </v-card-title>
-        <v-card-text>
-          <v-row>
-            <v-col v-for="(text, value) in currencyText" :key="value" cols="3">
-              <v-btn
-                class="popup-text"
-                block
-                @click="changeCurrency(value)"
-                :class="{ 'selected-value': value === selectedCurrency }"
-                :style="{ background: backgroundSettings }"
-              >
+    <CurrencyPopup v-model="currencyDialog" />
 
-                <div class="currency-content">
-                  <div class="currency-text" :style="{ color: textColor }">
-                    {{ text }}
-                  </div>
-                  <div class="currency-label">
-                    {{ currencyLabels[value] }}
-                  </div>
-                </div>
-                <v-icon v-if="value === selectedCurrency" class="selected-icon">mdi-check-circle</v-icon>
-              </v-btn>
-            </v-col>
-          </v-row>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
+    <!-- Popup selector de auth -->
+    <AuthPopup v-model="authDialog" v-model:selected-tab="selectedTab" />
 
   </v-card>
 </template>
@@ -342,196 +192,20 @@ const changeTheme = () => {
 
 .header-icons-search:hover {
   background-color: #a55a0452;
-  /* ffffff54 */
-}
-
-.icon-user {
-  font-size: 1.3rem; 
-  margin-right: 10px;
-  color: v-bind(textColor);
-}
-
-.settings-container {
-  width: 300px;
-  margin-top: 10px;
-  border-radius: 10px !important;
-  padding: 10px 20px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.336) !important;
-}
-
-.settings-user {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 10px;
-}
-
-.settings-user-btn {
-  background-color: transparent;
-  border-radius: 10px;
-  padding: 0 15px;
-  margin-top: 5px;
 }
 
 .login-btn {
   margin-right: 10px;
   color: #000000;
   background-color: #FF8C00;
-  /* #FFD700 */
   padding: 0 10px;
   font-size: 0.8rem;
   box-shadow: none;
   font-weight: bold;
 }
 
-.register-btn {
-  color: #FF8C00;
-  border: solid 1px #FF8C00;
-  padding: 0 10px;
-  box-shadow: none;
-}
-
 .login-btn:hover {
   background-color: #ffd796;
   box-shadow: none;
 }
-
-.register-btn:hover {
-  background-color: #ffd79621;
-}
-
-.settings-options {
-  padding: 10px 0 20px 0;
-  margin-top: 20px;
-  border-top: solid 1px #8080803a;
-}
-
-.settings-options-btn {
-  font-size: 0.85rem;
-  border-radius: 10px;
-  padding: 10px 10px;
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-}
-
-.settings-options-value {
-  display: flex;
-  color: #808080;
-}
-
-.settings-options-arrow {
-  color: #808080;
-  font-size: 1.0rem;
-}
-
-.settings-options-btn:hover {
-  background-color: #ffffff22;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.336);
-}
-
-.settings-options-buttons-currency {
-  padding-top: 5px;
-}
-
-.settings-options-switch, .v-switch {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 20px;
-  margin-top: 10px;
-}
-
-.switch-text {
-  font-size: 0.85rem;
-  height: 10px;
-  margin-left: 12px;
-}
-
-.switch-icon {
-  margin-right: 10px;
-}
-
-.popup-container {
-  border-radius: 10px !important;
-}
-
-.popup-close-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background-color: transparent;
-  box-shadow: none;
-}
-
-.popup-title {
-  color: #ffffff;
-  display: flex;
-  justify-content: center;
-  margin: 15px 50px 0 50px;
-  font-size: 1.65rem;
-}
-
-.popup-text {
-  color: #ffffff;
-  background-color: #232323;
-  box-shadow: none;
-  padding: 30px 0;
-}
-
-.selected-value {
-  background-color: #4b4a4a;
-}
-
-.currency-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.currency-text {
-  color: #ffffff;
-}
-
-.currency-label {
-  color: #808080;
-  margin-top: 5px;
-}
-
-.language-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.language-text {
-  color: #ffffff;
-}
-
-.language-label {
-  color: #808080;
-  margin-top: 5px;
-}
-
-.selected-icon {
-  color: green;
-  padding-left: 30px;
-}
-
-.container-background-light {
-  background-color: #e9ecef !important;
-}
-
-.container-background-dark {
-  background-color: #232323 !important;
-}
-
-.container-text-light {
-  color: #000000 !important;
-}
-
-.container-text-dark {
-  color: #ffffff !important;
-}
-
-
 </style>

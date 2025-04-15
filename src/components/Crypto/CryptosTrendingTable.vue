@@ -78,7 +78,7 @@ storeCryptos.GetCryptosTrending()
 }
 
 .table-price {
-  margin-left: 50px;
+  margin-left: 20px;
 }
 
 .table-change {

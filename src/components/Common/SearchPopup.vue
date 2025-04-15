@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useCryptosStore } from '../../stores/cryptos';
@@ -29,6 +29,9 @@ const cryptoResults = ref([])
 const stockResults = ref([])
 const showAllCryptos = ref(false)
 const showAllStocks = ref(false)
+const searchInput = ref<HTMLInputElement | null>(null)
+const cryptoScrollContainer = ref<HTMLElement | null>(null)
+const stockScrollContainer = ref<HTMLElement | null>(null)
 
 const props = defineProps<{
   modelValue: boolean
@@ -41,16 +44,6 @@ const emit = defineEmits<{
 const searchDialog = computed({
   get: () => props.modelValue,
   set: (value: boolean) => emit('update:modelValue', value)
-})
-
-watch(() => props.modelValue, (newVal) => {
-  if (newVal) {
-    searchQuery.value = ''
-    cryptoResults.value = []
-    stockResults.value = []
-    showAllCryptos.value = false
-    showAllStocks.value = false
-  }
 })
 
 watch(searchQuery, async (newQuery) => {
@@ -72,6 +65,35 @@ watch(searchQuery, async (newQuery) => {
   }
 })
 
+let savedCryptoScrollTop = 0;
+let savedStockScrollTop = 0;
+
+watch(() => props.modelValue, (newVal) => {
+  if (!newVal) {
+    const containerCrypto = cryptoScrollContainer.value
+		const containerStock = stockScrollContainer.value
+    if (containerCrypto) savedCryptoScrollTop = containerCrypto.scrollTop
+    if (containerStock) savedStockScrollTop = containerStock.scrollTop
+  } else {
+    // Restauramos el scroll al abrir
+    nextTick(() => {
+      const containerCrypto = cryptoScrollContainer.value
+			const containerStock = stockScrollContainer.value
+      if (containerCrypto) containerCrypto.scrollTop = savedCryptoScrollTop
+			if (containerStock) containerStock.scrollTop = savedStockScrollTop
+    })
+		nextTick(() => {
+		const inputEl = searchInput.value?.$el?.querySelector('input') as HTMLInputElement
+		if (inputEl) {
+			inputEl.focus()
+			if (searchQuery.value.trim()) {
+				inputEl.select()
+			}
+		}
+	})
+  }
+})
+
 const goToCrypto = (id: string) => {
   router.push({ name: 'cryptoDetails', params: { id } })
   searchDialog.value = false
@@ -86,10 +108,11 @@ const goToStock = (id: string) => {
 <template>
 	<!-- <v-dialog v-model="searchDialog" width="800px" height="dialogHeight"> -->
 	<v-dialog v-model="searchDialog" width="800px" height="900px">
-		<v-card class="popup-container" :style="{ backgroundColor: backgroundSettings }">
+		<v-card rounded="lg" :style="{ backgroundColor: backgroundSettings }">
 			<div class="popup-content">
 				<v-card-text>
 					<v-text-field
+						ref="searchInput"
 						class="popup-search"
 						v-model="searchQuery"
 						:placeholder="t('Header_Search_Text')"
@@ -111,6 +134,7 @@ const goToStock = (id: string) => {
 						{{ t('Header_Component_Cryptos') }}
 					</p>
 					<div 
+					 	ref="cryptoScrollContainer"
 						class="popup-results-content"
 						:style="{ backgroundColor: backgroundSettings, color: textColor }"
 					>
@@ -182,6 +206,7 @@ const goToStock = (id: string) => {
 						{{ t('Header_Component_Stocks') }}
 					</p>
 					<div 
+					 	ref="stockScrollContainer"
 						class="popup-results-content"
 						:style="{ backgroundColor: backgroundSettings, color: textColor }"
 					>
@@ -258,10 +283,6 @@ const goToStock = (id: string) => {
 
 ::v-deep(.popup-search .v-field__prepend-inner) {
   margin-right: 10px;
-}
-
-.popup-container {
-  border-radius: 10px !important;
 }
 
 .popup-content {
