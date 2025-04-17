@@ -56,23 +56,37 @@ const openRegister = () => {
         <span class="divider-bar">|</span>
         <RouterLink to="/cryptoTable" class="header-component">{{ t('Header_Component_Cryptos') }}</RouterLink>
         <RouterLink to="/stockTable" class="header-component">{{ t('Header_Component_Stocks') }}</RouterLink>
-        <RouterLink to="/" class="header-component">{{ t('Header_Component_Exchanges') }}</RouterLink>
+        <RouterLink to="/" target="_blank" class="header-component">CryptoTrade Wallet</RouterLink>
+
+        <v-menu open-on-hover class="header-component-menu">
+          <template v-slot:activator="{ props }">
+            <RouterLink to="" class="header-component" v-bind="props">API</RouterLink>
+          </template>
+          <v-list class="menu-container">
+            <v-list-item class="menu-container-items">
+              <a href="https://www.coingecko.com/en/api" target="_blank">
+                <v-list-item-title>CoinGeko API</v-list-item-title>
+              </a>
+              <a href="https://coinmarketcap.com/api" target="_blank">
+                <v-list-item-title>CoinMarketCap API</v-list-item-title>
+              </a>
+              <a href="https://site.financialmodelingprep.com/developer/docs" target="_blank">
+                <v-list-item-title>Financial Modeling Prep API</v-list-item-title>
+              </a>
+            </v-list-item>
+          </v-list>
+        </v-menu>
       </nav>
       
       <template v-slot:append>
         <v-btn class="header-icons">
           <v-icon>mdi-chart-pie</v-icon>
-          <span class="header-icons-text">{{ t('Header_Icon_1') }}</span> 
+          <span class="header-icons-text">{{ t('Header_Icon_Portfolio') }}</span> 
         </v-btn>
 
         <v-btn class="header-icons">
           <v-icon>mdi-star</v-icon>
-          <span class="header-icons-text">{{ t('Header_Icon_2') }}</span>
-        </v-btn>
-
-        <v-btn class="header-icons">
-          <v-icon>mdi-wallet</v-icon>
-          <span class="header-icons-text">{{ t('Header_Icon_3') }}</span>
+          <span class="header-icons-text">{{ t('Header_Icon_Watchlist') }}</span>
         </v-btn>
 
         <v-btn class="header-icons header-icons-search" @click="searchDialog = true">
@@ -84,7 +98,7 @@ const openRegister = () => {
           {{ t('Header_Select_4') }}
         </v-btn>
 
-        <SettingsMenu 
+        <SettingsMenu
           @open-language-popup="openLanguagePopup"
           @open-currency-popup="openCurrencyPopup"
           @open-auth-login="openLogin"
@@ -112,7 +126,6 @@ const openRegister = () => {
 .header-container {
   height: 65px;
   background-color: v-bind(backgroundColor);
-  /* position: fixed; */
   border-bottom: solid 1px #80808050;
 }
 
@@ -127,7 +140,7 @@ const openRegister = () => {
   font-size: 1.4rem;
   text-decoration: none;
   color: v-bind(textColor);
-  margin-right: 15px;
+  margin-right: 20px;
   padding-left: 10px;
 }
 
@@ -137,14 +150,31 @@ const openRegister = () => {
 }
 
 .header-component {
-  font-size: 1.0rem;
+  font-size: 1.1rem;
   text-decoration: none;
   color: v-bind(textColor);
-  margin: 0 10px;
+  margin: 0 20px;
 }
 
 .header-component:hover {
   color: #FF8C00;
+}
+
+a {
+  text-decoration: none;
+  color: v-bind(textColor);
+}
+
+.header-component-menu {
+
+}
+
+.menu-container {
+
+}
+
+.menu-container-items {
+
 }
 
 .v-btn {
@@ -153,7 +183,7 @@ const openRegister = () => {
 }
 
 .header-icons {
-  font-size: 0.8rem; 
+  font-size: 0.85rem; 
   padding: 0 10px;
   border-radius: 8px;
   transition: background-color 0.3s, color 0.3s;
@@ -162,18 +192,17 @@ const openRegister = () => {
 
 .header-icons:hover {
   background-color: #7c4e1983;
-  /* ffffff54 */
 }
 
 .header-icons-text {
-  font-size: 0.75rem; 
+  font-size: 0.8rem; 
   text-transform: none;
   padding-left: 5px;
   color: v-bind(textColor);
 }
 
 .header-icons-search {
-  width: 200px;
+  width: 250px;
   transition: background-color 0.3s;
   margin-right: 5px;
   justify-content: start;

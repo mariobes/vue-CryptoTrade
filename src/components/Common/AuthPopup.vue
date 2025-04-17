@@ -33,17 +33,35 @@ const selectedTab = computed({
 })
 
 const name = ref('')
-const birthDate = ref('')
+const birthDate = ref<Date | null>(null)
 const email = ref('')
 const password = ref('')
 const phone = ref('')
 const dni = ref('')
 const nationality = ref('')
 const focusedField = ref('')
+const birthDateMenu = ref(false)
+
+const formattedBirthDate = computed(() => {
+  if (birthDate.value) {
+    const date = new Date(birthDate.value)
+    const day = String(date.getDate()).padStart(2, '0')
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const year = date.getFullYear()
+
+    return `${day}-${month}-${year}`
+  }
+  return 'Selecciona fecha'
+})
+
+const handleBirthDate = (val: Date) => {
+  birthDate.value = val
+  birthDateMenu.value = false
+}
 
 const clearForm = () => {
   name.value = ''
-  birthDate.value = ''
+  birthDate.value = null
   email.value = ''
   password.value = ''
   phone.value = ''
@@ -72,7 +90,6 @@ const removeFocus = () => {
 <template>
   <v-dialog v-model="authDialog" width="500px" :class="['auth-container', { 'auth-container-login': selectedTab === 'login' }]">
     <v-card rounded="xl" :style="{ backgroundColor: backgroundSettings, color: textColor }">
-      <!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
       <div class="auth-titles">
         <span 
           class="auth-title auth-title-login"
@@ -110,7 +127,7 @@ const removeFocus = () => {
           @blur="removeFocus"
         />
 
-        <div class="auth-form-text" v-if="selectedTab === 'register'">Fecha de nacimiento</div>
+        <!-- <div class="auth-form-text" v-if="selectedTab === 'register'">Fecha de nacimiento</div>
         <v-text-field
           v-if="selectedTab === 'register'"
           v-model="birthDate"
@@ -121,7 +138,49 @@ const removeFocus = () => {
           rounded="lg"
           @focus="setFocus('birthDate')"
           @blur="removeFocus"
-        />
+        /> -->
+
+        <div class="auth-form-text" v-if="selectedTab === 'register'">Fecha de nacimiento</div>
+        <v-menu
+          v-if="selectedTab === 'register'"
+          v-model="birthDateMenu"
+          :close-on-content-click="false"
+          transition="scale-transition"
+          offset-y
+        >
+          <template #activator="{ props }">
+            <div class="auth-form-calendar">
+              <v-btn
+                icon
+                v-bind="props"
+                class="auth-form-calendar-icon"
+              >
+                <v-icon>mdi-calendar</v-icon>
+              </v-btn>
+              <div class="auth-form-calendar-text">
+                {{ formattedBirthDate }}
+              </div>
+            </div>
+          </template>
+          <v-container>
+            <v-row justify="center">
+              <v-date-picker 
+                v-model="birthDate"
+                @update:modelValue="handleBirthDate"
+                :style="{ background: backgroundSettings, color: textColor }"
+                color="#FF8C00"
+                width="400"
+              ></v-date-picker>
+            </v-row>
+          </v-container>
+        </v-menu>
+<!-- 
+        v-model="birthDate"
+        @update:modelValue="birthDateMenu = false"
+        width="400"
+        color="orange-darken-2"
+        show-adjacent-months 
+        -->
 
         <div class="auth-form-text">Dirección de correo electrónico</div>
         <v-text-field
@@ -266,7 +325,7 @@ const removeFocus = () => {
 }
 
 ::v-deep(.auth-form-field input:focus) {
-  box-shadow: 0 0 3px 2px rgba(255, 140, 0, 0.6) !important;
+  box-shadow: 0 0 3px 2px #ff8c0099 !important;
   border-radius: 8px;
 }
 
@@ -285,5 +344,27 @@ const removeFocus = () => {
   background-color: #ffd796;
 }
 
+.auth-form-calendar {
+  display: flex;
+  align-items: center;
+  margin: 10px 0 15px 0;
+}
 
+.auth-form-calendar-icon {
+  margin-right: 20px;
+  background-color: transparent;
+  color: v-bind(textColor);
+  box-shadow: none;
+}
+
+.auth-form-calendar-icon:hover {
+  color: #ff8c0099;
+  border: solid 1px #ff8c0099;
+  box-shadow: 0 0 3px 2px #ff8c0099 !important;
+}
+
+.auth-form-calendar-text {
+  font-weight: bold;
+  color: v-bind(textColor);
+}
 </style>

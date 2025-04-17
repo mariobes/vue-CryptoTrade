@@ -46,7 +46,6 @@ onMounted(() => {
   CMC100IndexChangePercentage.value = -3.9
 })
 
-const getPercentageColor = (percentage: number) => percentage > 0 ? 'green' : 'red'
 const getCirclePosition = (value: number | null) => `${value ?? 0}%`
 const getSentimentTranslation = (sentiment: string | null) => {
   const map: Record<string, string> = {
@@ -70,7 +69,7 @@ const getSentimentTranslation = (sentiment: string | null) => {
         </p>
         <p>
           <span
-            :style="{ color: marketCapChangePercentage !== null ? getPercentageColor(marketCapChangePercentage) : 'black' }">
+            :style="{ color: storeUserPreferences.getPriceColor(marketCapChangePercentage) }">
             {{ marketCapChangePercentage }}%
           </span>
         </p>
@@ -83,7 +82,7 @@ const getSentimentTranslation = (sentiment: string | null) => {
         </p>
         <p>
           <span
-            :style="{ color: CMC100IndexChangePercentage !== null ? getPercentageColor(CMC100IndexChangePercentage) : 'black' }">
+            :style="{ color: storeUserPreferences.getPriceColor(CMC100IndexChangePercentage) }">
             {{ CMC100IndexChangePercentage }}%
           </span>
         </p>
