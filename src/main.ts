@@ -12,6 +12,8 @@ import * as directives from 'vuetify/directives'
 
 import { createI18n } from 'vue-i18n';
 
+import type { LanguageType } from './stores/userPreferences'
+
 import ES from './locales/es.json'
 import EN from './locales/en.json'
 
@@ -22,7 +24,7 @@ const messages = {
 
 const i18n = createI18n({
   legacy: false,
-  locale: 'ES',
+  locale: localStorage.getItem('language') as LanguageType || 'ES',
   fallbackLocale: 'ES',
   messages
 })

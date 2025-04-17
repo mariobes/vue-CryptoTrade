@@ -6,22 +6,25 @@ export type ThemeType = "light" | "dark";
 
 export const useUserPreferencesStore = defineStore('userPreferences', {
   state: () => ({
-    selectedLanguage: "ES" as LanguageType, 
-    selectedCurrency: "USD" as CurrencyType,
-    selectedTheme: "dark" as ThemeType,
+    selectedLanguage: localStorage.getItem('language') as LanguageType || "ES",
+    selectedCurrency: localStorage.getItem('currency') as CurrencyType || "USD",
+    selectedTheme: localStorage.getItem('theme') as ThemeType || "light",
   }),
 
   actions: {
     setSelectedLanguage(language: LanguageType) {
       this.selectedLanguage = language;
+      localStorage.setItem('language', language);
     },
 
     setSelectedCurrency(currency: CurrencyType) {
       this.selectedCurrency = currency;
+      localStorage.setItem('currency', currency);
     },
 
     setSelectedTheme(theme: ThemeType) {
       this.selectedTheme = theme;
+      localStorage.setItem('theme', theme);
     },
 
     getTheme() {

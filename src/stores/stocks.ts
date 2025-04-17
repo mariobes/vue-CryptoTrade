@@ -90,20 +90,20 @@ export const useStocksStore = defineStore('stocks', () => {
   }
     
   return {
-          stocks, 
-          stock,
-          trendingStocks,  
-          gainersStocks,
-          losersStocks,
-          searchStocks,
-          GetStocksApi,
-          GetAllStocks, 
-          GetStock,
-          GetStocksTrending, 
-          GetStocksGainers,
-          GetStocksLosers,
-          SearchStock
-        }
+    stocks, 
+    stock,
+    trendingStocks,  
+    gainersStocks,
+    losersStocks,
+    searchStocks,
+    GetStocksApi,
+    GetAllStocks, 
+    GetStock,
+    GetStocksTrending, 
+    GetStocksGainers,
+    GetStocksLosers,
+    SearchStock
+  }
 })
 
 
