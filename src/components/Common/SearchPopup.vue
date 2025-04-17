@@ -6,14 +6,6 @@ import { useCryptosStore } from '../../stores/cryptos';
 import { useStocksStore } from '../../stores/stocks';
 import { useUserPreferencesStore } from '@/stores/userPreferences'
 
-// const hasResults = computed(() => cryptoResults.value.length > 0 || stockResults.value.length > 0)
-
-// const dialogHeight = computed(() => {
-//   if (!searchQuery.value.trim()) return '300px'
-//   if (!hasResults.value) return '350px'
-//   return '900px'
-// })
-
 const textColor = computed(() => storeUserPreferences.getTheme().text)
 const backgroundSettings = computed(() => storeUserPreferences.getTheme().settings)
 
@@ -51,6 +43,8 @@ watch(searchQuery, async (newQuery) => {
 
   cryptoResults.value = []
   stockResults.value = []
+	showAllCryptos.value = false
+	showAllStocks.value = false
 
   if (trimmedQuery) {
     const [cryptos, stocks] = await Promise.all([
@@ -106,9 +100,8 @@ const goToStock = (id: string) => {
 </script>
 
 <template>
-	<!-- <v-dialog v-model="searchDialog" width="800px" height="dialogHeight"> -->
-	<v-dialog v-model="searchDialog" width="800px" height="900px">
-		<v-card rounded="lg" :style="{ backgroundColor: backgroundSettings }">
+	<v-dialog v-model="searchDialog" class="search-container">
+		<v-card rounded="lg" :style="{ backgroundColor: backgroundSettings, color: textColor }">
 			<div class="popup-content">
 				<v-card-text>
 					<v-text-field
@@ -133,13 +126,12 @@ const goToStock = (id: string) => {
 					<p class="popup-title">
 						{{ t('Header_Component_Cryptos') }}
 					</p>
-					<div 
-					 	ref="cryptoScrollContainer"
-						class="popup-results-content"
-						:style="{ backgroundColor: backgroundSettings, color: textColor }"
-					>
+					<div v-if="cryptoResults.length === 0 && searchQuery.trim() !== ''" class="popup-no-results-text">
+						{{ t('Header_Search_No_Results') }}
+					</div>
+					<div ref="cryptoScrollContainer" class="popup-results-content">
 						<button
-							v-for="crypto in showAllCryptos ? cryptoResults : cryptoResults.slice(0, 5)"
+							v-for="crypto in (searchQuery.trim() === '' ? storeCryptos.cryptos.slice(0, 5) : (showAllCryptos ? cryptoResults : cryptoResults.slice(0, 5)))"
 							:key="crypto.id"
 							@click="goToCrypto(crypto.id)"
 							class="popup-results-btn"
@@ -189,15 +181,14 @@ const goToStock = (id: string) => {
 							</div>
 						</button>
 					</div>
-					<div v-if="cryptoResults.length > 5" class="popup-show-more-btn-container" :style="{ backgroundColor: backgroundSettings }">
-							<v-btn
-								class="popup-show-more-btn"
-								variant="text"
-								@click="showAllCryptos = !showAllCryptos; showAllStocks = false"
-							>
-								{{ showAllCryptos ? t('Header_Search_Show_Less') : t('Header_Search_Show_More') }}
-							</v-btn>
-						</div>
+					<v-btn 
+						v-if="cryptoResults.length > 5" 
+						class="popup-show-more-btn"
+						variant="text"
+						@click="showAllCryptos = !showAllCryptos"
+					>
+						{{ showAllCryptos ? t('Header_Search_Show_Less') : t('Header_Search_Show_More') }}
+					</v-btn>
 				</div>
 
 				<!-- Sección de resultados de acciones -->
@@ -205,13 +196,12 @@ const goToStock = (id: string) => {
 					<p class="popup-title">
 						{{ t('Header_Component_Stocks') }}
 					</p>
-					<div 
-					 	ref="stockScrollContainer"
-						class="popup-results-content"
-						:style="{ backgroundColor: backgroundSettings, color: textColor }"
-					>
+					<div v-if="stockResults.length === 0 && searchQuery.trim() !== ''" class="popup-no-results-text">
+						{{ t('Header_Search_No_Results') }}
+					</div>
+					<div ref="stockScrollContainer" class="popup-results-content">
 						<button
-							v-for="stock in showAllStocks ? stockResults : stockResults.slice(0, 5)"
+      				v-for="stock in (searchQuery.trim() === '' ? storeStocks.stocks.slice(0, 5) : (showAllStocks ? stockResults : stockResults.slice(0, 5)))"
 							:key="stock.id"
 							@click="goToStock(stock.id)"
 							class="popup-results-btn"
@@ -261,15 +251,14 @@ const goToStock = (id: string) => {
 							</div>
 						</button>
 					</div>
-					<div v-if="stockResults.length > 5" class="popup-show-more-btn-container" :style="{ backgroundColor: backgroundSettings }">
-							<v-btn
-								class="popup-show-more-btn"
-								variant="text"
-								@click="showAllStocks = !showAllStocks; showAllCryptos = false"
-							>
-								{{ showAllStocks ? t('Header_Search_Show_Less') : t('Header_Search_Show_More') }}
-							</v-btn>
-						</div>
+					<v-btn 
+						v-if="stockResults.length > 5" 
+						class="popup-show-more-btn"
+						variant="text"
+						@click="showAllStocks = !showAllStocks"
+					>
+						{{ showAllStocks ? t('Header_Search_Show_Less') : t('Header_Search_Show_More') }}
+					</v-btn>
 				</div>
 			</div>
 		</v-card>
@@ -277,6 +266,11 @@ const goToStock = (id: string) => {
 </template>
 
 <style scoped>
+.search-container {
+	align-items: flex-start;
+	width: 800px;
+}
+
 .v-card-text  {
 	padding: 5px !important;
 }
@@ -320,7 +314,12 @@ const goToStock = (id: string) => {
 	color: #808080;
 	font-weight: bold;
 	margin-left: 15px;
-	margin-top: 5px;
+}
+
+.popup-no-results-text {
+	font-size: 0.9rem;
+	color: #808080;
+	margin: 15px 0 0 15px
 }
 
 .popup-results-btn {
@@ -335,8 +334,11 @@ const goToStock = (id: string) => {
 	padding: 10px;
 	border-radius: 10px;
 	background-color: #363535;
-	margin-bottom: 10px;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.336) !important;
+}
+
+.popup-results-btn:not(:last-child) {
+	margin-bottom: 10px;
 }
 
 .popup-results-btn:hover {
@@ -429,16 +431,12 @@ const goToStock = (id: string) => {
 	align-items: center;
 }
 
-.popup-show-more-btn-container {
-	max-height: 5px;
-}
-
 .popup-show-more-btn {
   font-size: 0.9rem;
   color: #a55a04;
   text-transform: none;
 	padding: 5px;
-	margin-left: 15px;
+	margin: 10px 15px;
 }
 
 .popup-show-more-btn:hover {

@@ -43,11 +43,6 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
       return themes[this.selectedTheme] || themes.light;
     },
 
-    printTheme(query: 'background' | 'text' | 'table'): string {
-      const theme = this.getTheme(); 
-      return theme[query] || "#ffffff";
-    },
-
     getPriceColor(price: number): string {
       return price > 0 ? 'green' : 'red'
     },
