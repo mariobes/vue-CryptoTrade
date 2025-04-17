@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import { useRouter } from 'vue-router'
-import { useI18n } from 'vue-i18n'
+import router from '@/router'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
+import { useAuthStore } from '@/stores/auth'
+import { useI18n } from 'vue-i18n'
 
 const textColor = computed(() => storeUserPreferences.getTheme().text)
 const backgroundSettings = computed(() => storeUserPreferences.getTheme().settings)
 
 const { t } = useI18n()
-const router = useRouter()
 
 const storeUserPreferences = useUserPreferencesStore()
+const storeAuth = useAuthStore()
 
 const props = defineProps<{
   modelValue: boolean
@@ -51,7 +52,7 @@ const formattedBirthDate = computed(() => {
 
     return `${day}-${month}-${year}`
   }
-  return 'Selecciona fecha'
+  return t('Header_Popup_Auth_Birthday_Text')
 })
 
 const handleBirthDate = (val: Date) => {
@@ -85,6 +86,28 @@ const setFocus = (field: string) => {
 const removeFocus = () => {
   focusedField.value = ''
 }
+
+const handleAuth = async () => {
+  let success
+  if (selectedTab.value === 'login') {
+    success = await storeAuth.login(email.value, password.value)
+  } else {
+    success = await storeAuth.register(
+      name.value,
+      birthDate.value,
+      email.value,
+      password.value,
+      phone.value,
+      dni.value,
+      nationality.value
+    )
+    if (success) await storeAuth.login(email.value, password.value)
+  }
+  if (success) {
+    authDialog.value = false
+    router.push({ name: 'userPrivate', params: { id: storeAuth.getUserId() } })
+  }
+}
 </script>
 
 <template>
@@ -113,34 +136,21 @@ const removeFocus = () => {
         <v-icon>mdi-close</v-icon>
       </v-btn>
 
-      <v-card-text class="auth-form">
-        <div class="auth-form-text" v-if="selectedTab === 'register'">Nombre</div>
+      <v-card-text class="auth-form" @keyup.enter="handleAuth" tabindex="0">
+        <div class="auth-form-text" v-if="selectedTab === 'register'">{{ t('Header_Popup_Auth_Name') }}</div>
         <v-text-field
           v-if="selectedTab === 'register'"
           v-model="name"
           class="auth-form-field"
           :class="{ 'auth-form-field-focus': focusedField === 'name' }"
-          :placeholder="t('Ingresa tu nombre')"
+          :placeholder="t('Header_Popup_Auth_Placeholder_Name')"
           variant="outlined"
           rounded="lg"
           @focus="setFocus('name')"
           @blur="removeFocus"
         />
 
-        <!-- <div class="auth-form-text" v-if="selectedTab === 'register'">Fecha de nacimiento</div>
-        <v-text-field
-          v-if="selectedTab === 'register'"
-          v-model="birthDate"
-          class="auth-form-field"
-          :class="{ 'auth-form-field-focus': focusedField === 'birthDate' }"
-          :placeholder="t('Ingresa tu fecha de nacimiento')"
-          variant="outlined"
-          rounded="lg"
-          @focus="setFocus('birthDate')"
-          @blur="removeFocus"
-        /> -->
-
-        <div class="auth-form-text" v-if="selectedTab === 'register'">Fecha de nacimiento</div>
+        <div class="auth-form-text" v-if="selectedTab === 'register'">{{ t('Header_Popup_Auth_Birthday') }}</div>
         <v-menu
           v-if="selectedTab === 'register'"
           v-model="birthDateMenu"
@@ -174,32 +184,25 @@ const removeFocus = () => {
             </v-row>
           </v-container>
         </v-menu>
-<!-- 
-        v-model="birthDate"
-        @update:modelValue="birthDateMenu = false"
-        width="400"
-        color="orange-darken-2"
-        show-adjacent-months 
-        -->
 
-        <div class="auth-form-text">Dirección de correo electrónico</div>
+        <div class="auth-form-text">{{ t('Header_Popup_Auth_Email') }}</div>
         <v-text-field
           v-model="email"
           class="auth-form-field"
           :class="{ 'auth-form-field-focus': focusedField === 'email' }"
-          :placeholder="t('Ingresa tu dirección de correo electrónico')"
+          :placeholder="t('Header_Popup_Auth_Placeholder_Email')"
           variant="outlined"
           rounded="lg"
           @focus="setFocus('email')"
           @blur="removeFocus"
         />
 
-        <div class="auth-form-text">Contraseña</div>
+        <div class="auth-form-text">{{ t('Header_Popup_Auth_Password') }}</div>
         <v-text-field
           v-model="password"
           class="auth-form-field"
           :class="{ 'auth-form-field-focus': focusedField === 'password' }"
-          :placeholder="t('Ingresa tu contraseña')"
+          :placeholder="t('Header_Popup_Auth_Placeholder_Password')"
           type="password"
           variant="outlined"
           rounded="lg"
@@ -207,49 +210,49 @@ const removeFocus = () => {
           @blur="removeFocus"
         />
 
-        <div class="auth-form-text" v-if="selectedTab === 'register'">Télefono</div>
+        <div class="auth-form-text" v-if="selectedTab === 'register'">{{ t('Header_Popup_Auth_Phone') }}</div>
         <v-text-field
           v-if="selectedTab === 'register'"
           v-model="phone"
           class="auth-form-field"
           :class="{ 'auth-form-field-focus': focusedField === 'phone' }"
-          :placeholder="t('Ingresa tu número de teléfono')"
+          :placeholder="t('Header_Popup_Auth_Placeholder_Phone')"
           variant="outlined"
           rounded="lg"
           @focus="setFocus('phone')"
           @blur="removeFocus"
         />
 
-        <div class="auth-form-text" v-if="selectedTab === 'register'">DNI</div>
+        <div class="auth-form-text" v-if="selectedTab === 'register'">{{ t('Header_Popup_Auth_DNI') }}</div>
         <v-text-field
           v-if="selectedTab === 'register'"
           v-model="dni"
           class="auth-form-field"
           :class="{ 'auth-form-field-focus': focusedField === 'dni' }"
-          :placeholder="t('Ingresa tu DNI')"
+          :placeholder="t('Header_Popup_Auth_Placeholder_DNI')"
           variant="outlined"
           rounded="lg"
           @focus="setFocus('dni')"
           @blur="removeFocus"
         />
 
-        <div class="auth-form-text" v-if="selectedTab === 'register'">Nacionalidad</div>
+        <div class="auth-form-text" v-if="selectedTab === 'register'">{{ t('Header_Popup_Auth_Nationality') }}</div>
         <v-text-field
           v-if="selectedTab === 'register'"
           v-model="nationality"
           class="auth-form-field"
           :class="{ 'auth-form-field-focus': focusedField === 'nationality' }"
-          :placeholder="t('Ingresa tu lugar de nacimiento')"
+          :placeholder="t('Header_Popup_Auth_Placeholder_Nationality')"
           variant="outlined"
           rounded="lg"
           @focus="setFocus('nationality')"
           @blur="removeFocus"
         />
-        <v-btn variant="flat" block rounded="lg" class="auth-form-btn">
+        <v-btn variant="flat" block rounded="lg" class="auth-form-btn" @click="handleAuth">
           {{ selectedTab === 'login' ? t('Header_Popup_Auth_Login') : t('Header_Popup_Auth_Register') }}
         </v-btn>
-      </v-card-text>
 
+      </v-card-text>
     </v-card>
   </v-dialog>
 </template>

@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
+import router from '@/router'
 import { useUserPreferencesStore } from '../../stores/userPreferences';
+import { useAuthStore } from '@/stores/auth'
 import { useI18n } from 'vue-i18n'
 
 const textColor = computed(() => storeUserPreferences.getTheme().text)
 const backgroundSettings = computed(() => storeUserPreferences.getTheme().settings)
 
 const storeUserPreferences = useUserPreferencesStore()
+const storeAuth = useAuthStore()
 
 const { t, locale } = useI18n()
 
@@ -53,6 +56,11 @@ const openAuthLogin = () => {
 const openAuthRegister = () => {
 	emit('open-auth-register');
 }
+
+const handleLogout = async () => {
+  storeAuth.logout();
+  router.push('/')
+}
 </script>
 
 <template>
@@ -64,10 +72,26 @@ const openAuthRegister = () => {
 		</template>
 		<v-card class="settings-container" :style="{ backgroundColor: backgroundSettings, color: textColor }">
 			<div class="settings-user">
-				<v-btn class="settings-user-btn login-btn" @click="() => { openAuthLogin(); selectedTab = 'login'; }">
+        <v-btn 
+          v-if="storeAuth.isLoggedIn()"
+          class="header-icons login-btn" 
+          @click="handleLogout()"
+        >
+        {{ t('Header_Popup_Auth_Logout') }}
+        </v-btn>
+
+				<v-btn 
+          v-if="!storeAuth.isLoggedIn()"
+          class="settings-user-btn login-btn" 
+          @click="() => { openAuthLogin(); selectedTab = 'login'; }"
+        >
 					{{ t('Header_Select_4') }}
 				</v-btn>
-				<v-btn class="settings-user-btn register-btn" @click="() => { openAuthRegister(); selectedTab = 'register'; }">
+				<v-btn 
+          v-if="!storeAuth.isLoggedIn()"
+          class="settings-user-btn register-btn" 
+          @click="() => { openAuthRegister(); selectedTab = 'register'; }"
+        >
 					{{ t('Header_Select_5') }}
 				</v-btn>
 			</div>
@@ -103,8 +127,8 @@ const openAuthRegister = () => {
 						color="#FF8C00"
 						@change="changeTheme" 
 						@click.stop      
-						:true-value="'light'"
-						:false-value="'dark'"   
+						:true-value="'dark'"
+						:false-value="'light'"   
 					></v-switch>
 				</div>
 			</div>

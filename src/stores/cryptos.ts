@@ -134,28 +134,28 @@ export const useCryptosStore = defineStore('cryptos', () => {
   }
     
   return {
-          cryptos, 
-          crypto,
-          chartsCryptos,
-          trendingCryptos, 
-          gainersCryptos,
-          losersCryptos,
-          totalMarketCapCryptos, 
-          fearGreedIndexCryptos, 
-          CMC100IndexCryptos,
-          searchCryptos, 
-          GetCryptosApi,
-          GetAllCryptos, 
-          GetCrypto,
-          GetCryptoCharts,
-          GetCryptosTrending, 
-          GetCryptosGainers,
-          GetCryptosLosers,
-          GetTotalMarketCap, 
-          GetFearGreedIndex, 
-          GetCMC100Index,
-          SearchCrypto
-        }
+    cryptos, 
+    crypto,
+    chartsCryptos,
+    trendingCryptos, 
+    gainersCryptos,
+    losersCryptos,
+    totalMarketCapCryptos, 
+    fearGreedIndexCryptos, 
+    CMC100IndexCryptos,
+    searchCryptos, 
+    GetCryptosApi,
+    GetAllCryptos, 
+    GetCrypto,
+    GetCryptoCharts,
+    GetCryptosTrending, 
+    GetCryptosGainers,
+    GetCryptosLosers,
+    GetTotalMarketCap, 
+    GetFearGreedIndex, 
+    GetCMC100Index,
+    SearchCrypto
+  }
 })
 
 
