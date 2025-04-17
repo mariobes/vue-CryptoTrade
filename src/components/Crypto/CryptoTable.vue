@@ -140,6 +140,9 @@ window.scrollTo({ top: 0 });
           <td>
             <span class="mdi mdi-star-outline"></span>
             <!-- <span class="mdi mdi-star"></span> -->
+            <!-- <RouterLink to="/stockTable" @click.stop>
+              <span class="mdi mdi-star-outline"></span>
+            </RouterLink> -->
           </td>
           <td>
             <span>

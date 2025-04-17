@@ -2,7 +2,6 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { Stock } from '@/core/stock'
 
-
 export const useStocksStore = defineStore('stocks', () => {
   const stocks = ref<Stock[]>([])
   const stock = ref<Stock | null>(null)
@@ -82,6 +81,7 @@ export const useStocksStore = defineStore('stocks', () => {
   async function SearchStock(query: string) {
     try {
         const response = await fetch(`http://localhost:4746/Stocks/search-stock?query=${query}`)
+        if (!response.ok) return []
         const searchStocksInfo = await response.json()
         return Array.isArray(searchStocksInfo) ? searchStocksInfo : []
     } catch (error) {

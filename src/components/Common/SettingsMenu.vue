@@ -62,7 +62,7 @@ const openAuthRegister = () => {
 				<v-icon>mdi-account-cog</v-icon>
 			</v-btn>
 		</template>
-		<v-card class="settings-container" :style="{ backgroundColor: backgroundSettings }">
+		<v-card class="settings-container" :style="{ backgroundColor: backgroundSettings, color: textColor }">
 			<div class="settings-user">
 				<v-btn class="settings-user-btn login-btn" @click="() => { openAuthLogin(); selectedTab = 'login'; }">
 					{{ t('Header_Select_4') }}
@@ -74,7 +74,7 @@ const openAuthRegister = () => {
 
 			<div class="settings-options">
 				<div class="settings-options-buttons-language">
-					<button class="settings-options-btn" @click="openLanguagePopup" :style="{ color: textColor }">
+					<button class="settings-options-btn" @click="openLanguagePopup">
 						<span class="settings-options-text">{{ t('Header_Select_1') }}</span>
 						<span class="settings-options-value">
 							{{ languageLabels[locale] }}
@@ -84,7 +84,7 @@ const openAuthRegister = () => {
 				</div>
 
 				<div class="settings-options-buttons-currency">
-					<button class="settings-options-btn" @click="openCurrencyPopup" :style="{ color: textColor }">
+					<button class="settings-options-btn" @click="openCurrencyPopup">
 						<span class="settings-options-text">{{ t('Header_Select_2') }}</span>
 						<span class="settings-options-value">
 							{{ currencyLabels[selectedCurrency] }}
@@ -94,7 +94,7 @@ const openAuthRegister = () => {
 				</div>
 
 				<div class="settings-options-switch">
-					<span class="switch-text" :style="{ color: textColor }">
+					<span class="switch-text">
 						{{ t('Header_Select_3') }}
 					</span>
 					<v-switch
@@ -116,6 +116,18 @@ const openAuthRegister = () => {
 .v-btn {
   color: white;
   text-transform: none;
+}
+
+.header-icons {
+  font-size: 0.8rem; 
+  padding: 0 10px;
+  border-radius: 8px;
+  transition: background-color 0.3s, color 0.3s;
+  color: v-bind(textColor);
+}
+
+.header-icons:hover {
+  background-color: #7c4e1983;
 }
 
 .icon-user {

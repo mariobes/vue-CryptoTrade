@@ -2,7 +2,6 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { Crypto } from '@/core/crypto'
 
-
 export const useCryptosStore = defineStore('cryptos', () => {
   const cryptos = ref<Crypto[]>([])
   const crypto = ref<Crypto | null>(null)
@@ -126,6 +125,7 @@ export const useCryptosStore = defineStore('cryptos', () => {
   async function SearchCrypto(query: string) {
     try {
         const response = await fetch(`http://localhost:4746/Cryptos/search-crypto?query=${query}`)
+        if (!response.ok) return []
         const searchCryptosInfo = await response.json()
         return Array.isArray(searchCryptosInfo) ? searchCryptosInfo : []
     } catch (error) {
