@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router';
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
+import { useRoute } from 'vue-router'
+import router from '@/router'
 import { useUserPreferencesStore } from '../../stores/userPreferences';
+import { useAuthStore } from '@/stores/auth'
 import { useI18n } from 'vue-i18n'
 import SettingsMenu from '@/components/Common/SettingsMenu.vue'
 import SearchPopup from '@/components/Common/SearchPopup.vue'
@@ -13,8 +16,10 @@ const backgroundColor = computed(() => storeUserPreferences.getTheme().backgroun
 const textColor = computed(() => storeUserPreferences.getTheme().text)
 
 const storeUserPreferences = useUserPreferencesStore()
+const storeAuth = useAuthStore()
 
 const { t } = useI18n()
+const route = useRoute()
 
 const languageDialog = ref(false);
 const currencyDialog = ref(false);
@@ -39,6 +44,34 @@ const openRegister = () => {
   selectedTab.value = 'register';
   authDialog.value = true;
 };
+
+const handlePortfolioClick = () => {
+  if (storeAuth.isLoggedIn()) {
+    router.push({ name: 'userPrivate', params: { id: storeAuth.getUserId() } })
+  } else {
+    selectedTab.value = 'login'
+    authDialog.value = true
+  }
+}
+
+const handleWatchlistClick= () => {
+  if (storeAuth.isLoggedIn()) {
+    router.push({ name: 'watchlistTable', params: { id: storeAuth.getUserId() } })
+  } else {
+    selectedTab.value = 'login'
+    authDialog.value = true
+  }
+}
+
+watch(
+  () => route.query.auth,
+  (newVal) => {
+    if (newVal === 'true') {
+      authDialog.value = true
+    }
+  },
+  { immediate: true }
+)
 </script>
 
 <template>
@@ -79,12 +112,12 @@ const openRegister = () => {
       </nav>
       
       <template v-slot:append>
-        <v-btn class="header-icons">
+        <v-btn class="header-icons" @click="handlePortfolioClick">
           <v-icon>mdi-chart-pie</v-icon>
           <span class="header-icons-text">{{ t('Header_Icon_Portfolio') }}</span> 
         </v-btn>
 
-        <v-btn class="header-icons">
+        <v-btn class="header-icons" @click="handleWatchlistClick">
           <v-icon>mdi-star</v-icon>
           <span class="header-icons-text">{{ t('Header_Icon_Watchlist') }}</span>
         </v-btn>
@@ -94,7 +127,11 @@ const openRegister = () => {
           <span class="header-icons-search-text">{{ t('Header_Search') }}</span>
         </v-btn>
 
-        <v-btn class="header-icons login-btn" @click="authDialog = true; selectedTab = 'login'">
+        <v-btn 
+          v-if="!storeAuth.isLoggedIn()"
+          class="header-icons login-btn" 
+          @click="authDialog = true; selectedTab = 'login'"
+        >
           {{ t('Header_Select_4') }}
         </v-btn>
 

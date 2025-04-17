@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import guard from '@/stores/guards';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -28,6 +29,18 @@ const router = createRouter({
       path: '/stockDetails/:id',
       name: 'stockDetails',
       component: () => import('../views/StockDetailsView.vue')
+    },
+    {
+      path: '/userPrivate/:id',
+      name: 'userPrivate',
+      component: () => import('../views/UserPrivateView.vue'),
+      beforeEnter: guard
+    },
+    {
+      path: '/watchlistTable/:id',
+      name: 'watchlistTable',
+      component: () => import('../views/WatchlistTableView.vue'),
+      beforeEnter: guard
     }
   ],
 })
