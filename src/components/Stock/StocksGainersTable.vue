@@ -17,41 +17,50 @@ const storeStocks = useStocksStore()
 </script>
 
 <template>
-      <v-table class="table-container">
-        <thead>
-          <tr>
-            <th class="text-left" colspan="2">
-              <v-icon class="mb-2" color="green">mdi-chart-line-variant</v-icon> 
-              <span class="title-table">{{ t('StocksGainersTable_Title') }}</span>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="stocks in storeStocks.gainersStocks.slice(0, 5)"
-            :key="stocks.ticker"
-          >
-            <td>
-              {{ stocks.companyName }}
-            </td>
-            <td class="stock-info">
-              <span class="table-price">
-                {{ storeUserPreferences.convertPrice(stocks.price, storeUserPreferences.selectedCurrency, 'after') }}
+  <v-table class="table-container">
+    <thead>
+      <tr>
+        <th class="text-left" colspan="2">
+          <v-icon class="mb-2" color="green">mdi-chart-line-variant</v-icon> 
+          <span class="title-table">{{ t('StocksGainersTable_Title') }}</span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        v-for="stocks in storeStocks.gainersStocks.slice(0, 5)"
+        :key="stocks.ticker"
+        class="stock-link"
+        :class="storeUserPreferences.selectedTheme === 'light' ? 'hover-light' : 'hover-dark'"
+        @click="$router.push({ name: 'stockDetails', params: { id: stocks.ticker } })"
+        style="cursor: pointer"
+      >
+        <td>
+          <div class="table-content-name">
+            <img :src="stocks.image" alt="Stock Logo" class="stock-image" />
+            <span class="stock-name mt-1">{{ stocks.companyName }}</span>
+          </div>
+        </td>
+        <td>
+          <div class="table-content-price">
+            <span class="stock-price">
+              {{ storeUserPreferences.convertPrice(stocks.price, storeUserPreferences.selectedCurrency, 'after') }}
+            </span>
+            <span class="stock-change">
+              <span 
+                :style="{ color: storeUserPreferences.getPriceColor(stocks.changesPercentage) }">
+                {{ parseFloat(stocks.changesPercentage).toFixed(2) }}%
               </span>
-              <span class="table-change">
-                <span 
-                  :style="{ color: storeUserPreferences.getPriceColor(stocks.changesPercentage) }">
-                  {{ parseFloat(stocks.changesPercentage).toFixed(2) }}%
-                </span>
-                <v-icon 
-                  :color="storeUserPreferences.getPriceColor(stocks.changesPercentage)">
-                  {{ storeUserPreferences.getArrowDirection(stocks.changesPercentage) }}
-                </v-icon>
-              </span>
-            </td>
-          </tr>
-        </tbody>
-      </v-table>
+              <v-icon 
+                :color="storeUserPreferences.getPriceColor(stocks.changesPercentage)">
+                {{ storeUserPreferences.getArrowDirection(stocks.changesPercentage) }}
+              </v-icon>
+            </span>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </v-table>
 </template>
 
 <style scoped>
@@ -69,20 +78,54 @@ const storeStocks = useStocksStore()
   font-weight: bold;
 }
 
-.stock-info {
+.stock-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.hover-light:hover {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.336);
+}
+
+.hover-dark:hover {
+  background-color: #444343 !important;
+}
+
+.table-content-name {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+}
+
+.stock-image {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  border-radius: 50%;
+}
+
+.stock-name {
+  max-width: 150px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.table-content-price {
+  display: flex;
+  justify-content: end;
   align-items: center;
   white-space: nowrap;
 }
 
-.table-price {
-  margin-right: 20px;
+.stock-price {
+  margin-right: 30px;
 }
 
-.table-change {
+.stock-change {
   display: flex;
   align-items: center;
+  max-width: 58px;
+  justify-content: end;
 }
 
 </style>

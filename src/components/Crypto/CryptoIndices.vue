@@ -148,6 +148,7 @@ const getSentimentTranslation = (sentiment: string | null) => {
   font-size: 1.2rem;
   font-weight: bold;
   color: v-bind(textColor);
+  margin-top: 5px;
 }
 
 .fear-greed-bar {

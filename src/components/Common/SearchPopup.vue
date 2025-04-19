@@ -59,6 +59,9 @@ watch(searchQuery, async (newQuery) => {
   }
 })
 
+storeCryptos.GetAllCryptos(0, 0) 
+storeStocks.GetAllStocks(0, 0) 
+
 let savedCryptoScrollTop = 0;
 let savedStockScrollTop = 0;
 
@@ -116,8 +119,15 @@ const goToStock = (id: string) => {
 						flat
 						:bg-color="storeUserPreferences.selectedTheme === 'light' ? '#e9ecef' : '#232323'"
 					/>
-					<v-btn icon @click="searchDialog = false" class="popup-close-btn" :style="{ color: textColor }">
-						<v-icon>mdi-close</v-icon>
+					<v-btn 
+						icon 
+						@click="searchDialog = false" 
+						class="popup-close-btn" 
+						:style="{ color: textColor }"
+						:ripple="false"
+						density="compact"
+					>
+						<v-icon size="25">mdi-close</v-icon>
 					</v-btn>
 				</v-card-text>
 
@@ -287,10 +297,19 @@ const goToStock = (id: string) => {
 
 .popup-close-btn {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 20px;
+  right: 20px;
   background-color: transparent;
   box-shadow: none;
+}
+
+.popup-close-btn:hover {
+	box-shadow: none !important;
+	background-color: transparent !important;
+}
+
+::v-deep(.popup-close-btn .v-btn__overlay) {
+  background-color: transparent !important;
 }
 
 .popup-search {
@@ -383,7 +402,9 @@ const goToStock = (id: string) => {
 	max-width: 200px;
   overflow: hidden;
   white-space: nowrap;
+	text-overflow: ellipsis;
 	margin-right: 3px;
+	max-width: 180px;
 }
 
 .popup-asset-rank {

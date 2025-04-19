@@ -132,8 +132,15 @@ const handleAuth = async () => {
         </span>
       </div>
 
-      <v-btn icon @click="authDialog = false" class="popup-close-btn" :style="{ color: textColor }">
-        <v-icon>mdi-close</v-icon>
+      <v-btn 
+        icon 
+        @click="authDialog = false" 
+        class="popup-close-btn" 
+        :style="{ color: textColor }"
+        :ripple="false"
+        density="compact"
+      >
+        <v-icon size="25">mdi-close</v-icon>
       </v-btn>
 
       <v-card-text class="auth-form" @keyup.enter="handleAuth" tabindex="0">
@@ -161,15 +168,16 @@ const handleAuth = async () => {
           <template #activator="{ props }">
             <div class="auth-form-calendar">
               <v-btn
-                icon
+                rounded
                 v-bind="props"
-                class="auth-form-calendar-icon"
+                class="auth-form-calendar-btn"
               >
                 <v-icon>mdi-calendar</v-icon>
+                <p class="auth-form-calendar-text">{{ formattedBirthDate }}</p>
               </v-btn>
-              <div class="auth-form-calendar-text">
+              <!-- <div class="auth-form-calendar-text">
                 {{ formattedBirthDate }}
-              </div>
+              </div> -->
             </div>
           </template>
           <v-container>
@@ -299,10 +307,19 @@ const handleAuth = async () => {
 
 .popup-close-btn {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 20px;
+  right: 20px;
   background-color: transparent;
   box-shadow: none;
+}
+
+.popup-close-btn:hover {
+  box-shadow: none !important;
+  background-color: transparent !important;
+}
+
+::v-deep(.popup-close-btn .v-btn__overlay) {
+  background-color: transparent !important;
 }
 
 .v-btn {
@@ -353,21 +370,22 @@ const handleAuth = async () => {
   margin: 10px 0 15px 0;
 }
 
-.auth-form-calendar-icon {
+.auth-form-calendar-btn {
   margin-right: 20px;
   background-color: transparent;
   color: v-bind(textColor);
   box-shadow: none;
+  padding: 5px 10px;
 }
 
-.auth-form-calendar-icon:hover {
+.auth-form-calendar-btn:hover {
   color: #ff8c0099;
   border: solid 1px #ff8c0099;
   box-shadow: 0 0 3px 2px #ff8c0099 !important;
 }
 
 .auth-form-calendar-text {
-  font-weight: bold;
-  color: v-bind(textColor);
+  margin-left: 8px;
+  padding-top: 1px;
 }
 </style>

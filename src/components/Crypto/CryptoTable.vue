@@ -230,7 +230,6 @@ window.scrollTo({ top: 0 });
 }
 
 .hover-light:hover {
-  background-color: #e9ecef !important;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.336);
 }
 
@@ -256,6 +255,7 @@ window.scrollTo({ top: 0 });
   max-width: 120px;
   overflow: hidden;
   white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .crypto-symbol {

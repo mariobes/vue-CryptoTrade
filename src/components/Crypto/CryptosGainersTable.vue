@@ -17,41 +17,50 @@ storeCryptos.GetCryptosGainers()
 </script>
 
 <template>
-      <v-table class="table-container">
-        <thead>
-          <tr>
-            <th class="text-left" colspan="2">
-              <v-icon class="mb-2" color="green">mdi-chart-line-variant</v-icon> 
-              <span class="title-table">{{ t('CryptosGainersTable_Title') }}</span>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="cryptos in storeCryptos.gainersCryptos.slice(0, 5)"
-            :key="cryptos.id"
-          >
-            <td>
-              {{ cryptos.name }}
-            </td>
-            <td class="crypto-info">
-              <span class="table-price">
-                {{ storeUserPreferences.convertPrice(cryptos.current_price, storeUserPreferences.selectedCurrency, 'after') }}
+  <v-table class="table-container">
+    <thead>
+      <tr>
+        <th class="text-left" colspan="2">
+          <v-icon class="mb-2" color="green">mdi-chart-line-variant</v-icon> 
+          <span class="title-table">{{ t('CryptosGainersTable_Title') }}</span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        v-for="cryptos in storeCryptos.gainersCryptos.slice(0, 5)"
+        :key="cryptos.id"
+        class="crypto-link"
+        :class="storeUserPreferences.selectedTheme === 'light' ? 'hover-light' : 'hover-dark'"
+        @click="$router.push({ name: 'cryptoDetails', params: { id: cryptos.id } })"
+        style="cursor: pointer"
+      >
+        <td>
+          <div class="table-content-name">
+            <img :src="cryptos.image" alt="Crypto Logo" class="crypto-image" />
+            <span class="crypto-name mt-1">{{ cryptos.name }}</span>
+          </div>
+        </td>
+        <td>
+          <div class="table-content-price">
+            <span class="crypto-price">
+              {{ storeUserPreferences.convertPrice(cryptos.current_price, storeUserPreferences.selectedCurrency, 'after') }}
+            </span>
+            <span class="crypto-change">
+              <span 
+                :style="{ color: storeUserPreferences.getPriceColor(cryptos.price_change_percentage_7d_in_currency) }">
+                {{ cryptos.price_change_percentage_7d_in_currency.toFixed(2) }}%
               </span>
-              <span class="table-change">
-                <span 
-                  :style="{ color: storeUserPreferences.getPriceColor(cryptos.price_change_percentage_7d_in_currency) }">
-                  {{ cryptos.price_change_percentage_7d_in_currency.toFixed(2) }}%
-                </span>
-                <v-icon 
-                  :color="storeUserPreferences.getPriceColor(cryptos.price_change_percentage_7d_in_currency)">
-                  {{ storeUserPreferences.getArrowDirection(cryptos.price_change_percentage_7d_in_currency) }}
-                </v-icon>
-              </span>
-            </td>
-          </tr>
-        </tbody>
-      </v-table>
+              <v-icon 
+                :color="storeUserPreferences.getPriceColor(cryptos.price_change_percentage_7d_in_currency)">
+                {{ storeUserPreferences.getArrowDirection(cryptos.price_change_percentage_7d_in_currency) }}
+              </v-icon>
+            </span>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </v-table>
 </template>
 
 <style scoped>
@@ -69,20 +78,54 @@ storeCryptos.GetCryptosGainers()
   font-weight: bold;
 }
 
-.crypto-info {
+.crypto-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.hover-light:hover {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.336);
+}
+
+.hover-dark:hover {
+  background-color: #444343 !important;
+}
+
+.table-content-name {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+}
+
+.crypto-image {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  border-radius: 50%;
+}
+
+.crypto-name {
+  max-width: 150px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.table-content-price {
+  display: flex;
+  justify-content: end;
   align-items: center;
   white-space: nowrap;
 }
 
-.table-price {
-  margin-left: 50px;
+.crypto-price {
+  margin-right: 30px;
 }
 
-.table-change {
+.crypto-change {
   display: flex;
   align-items: center;
+  max-width: 58px;
+  justify-content: end;
 }
 
 </style>

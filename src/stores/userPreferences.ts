@@ -33,13 +33,17 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
           background: "#f8f9fa",
           text: "#000000",
           table: "#e9ecef",
-          settings: "#e9ecef"
+          settings: "#e9ecef",
+          colorGray: "#e9ecef",
+          colorDarkGray: "#d6d2d2"
         },
         dark: {
           background: "#0f0f0f",
           text: "#ffffff",
           table: "#232323",
-          settings: "#232323"
+          settings: "#232323",
+          colorGray: "#80808062",
+          colorDarkGray: "#232323"
         }
       };
 
