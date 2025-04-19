@@ -6,6 +6,7 @@
     "Header_Component_Stocks": "Acciones",
     "Header_Icon_Portfolio": "Portafolio",
     "Header_Icon_Watchlist": "Seguimiento",
+
     "Header_Search": "Buscar",
     "Header_Search_Text": "Buscar criptomonedas y acciones por nombre o símbolo",
     "Header_Search_No_Results": "Su búsqueda no coincide con ningún registro",
@@ -13,15 +14,19 @@
     "Header_Search_Volume": "Vol. (24 h)",
     "Header_Search_Show_More": "Mostrar más",
     "Header_Search_Show_Less": "Mostrar menos",
+
     "Header_Select_1": "Idioma",
     "Header_Select_2": "Moneda",
     "Header_Select_3": "Modo oscuro",
     "Header_Select_4": "Iniciar sesión",
     "Header_Select_5": "Registrarse",
+
     "Header_Popup_Title_1": "Idioma",
     "Header_Popup_Title_2": "Moneda",
+    
     "Header_Popup_Auth_Login": "Iniciar sesión",
     "Header_Popup_Auth_Register": "Registrarse",
+    "Header_Popup_Auth_Settings": "Ajustes",
     "Header_Popup_Auth_Logout": "Cerrar sesión",
     "Header_Popup_Auth_Email": "Dirección de correo electrónico",
     "Header_Popup_Auth_Placeholder_Email": "Ingresa tu dirección de correo electrónico",

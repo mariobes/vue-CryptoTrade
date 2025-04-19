@@ -50,9 +50,16 @@ const changeCurrency = (currency: string) => {
 <template>
 	<v-dialog v-model="currencyDialog" width="1000px">
 		<v-card class="popup-container" :style="{ background: backgroundSettings }">
-			<v-btn icon @click="currencyDialog = false" class="popup-close-btn" :style="{ color: textColor }">
-				<v-icon>mdi-close</v-icon>
-			</v-btn>
+      <v-btn 
+        icon 
+        @click="currencyDialog = false" 
+        class="popup-close-btn" 
+        :style="{ color: textColor }"
+        :ripple="false"
+        density="compact"
+      >
+        <v-icon size="25">mdi-close</v-icon>
+      </v-btn>
 			<v-card-title class="popup-title" :style="{ color: textColor }">
 				{{ t('Header_Popup_Title_2') }}
 			</v-card-title>
@@ -89,16 +96,24 @@ const changeCurrency = (currency: string) => {
 }
 
 .v-btn {
-  color: white;
   text-transform: none;
 }
 
 .popup-close-btn {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 20px;
+  right: 20px;
   background-color: transparent;
   box-shadow: none;
+}
+
+.popup-close-btn:hover {
+  box-shadow: none !important;
+  background-color: transparent !important;
+}
+
+::v-deep(.popup-close-btn .v-btn__overlay) {
+  background-color: transparent !important;
 }
 
 .popup-title {

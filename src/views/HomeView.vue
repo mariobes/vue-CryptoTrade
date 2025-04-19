@@ -17,6 +17,10 @@ const { t } = useI18n()
 
 <template>
 
+
+<!-- {{ Math.abs(crypto.price_change_percentage_7d_in_currency).toFixed(2) }}% -->
+
+
   <div class="main-container">
     <div class="title-container">
       <p class="title-text">{{ t('HomeView_Title') }}</p>
