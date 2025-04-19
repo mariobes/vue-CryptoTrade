@@ -6,6 +6,7 @@
     "Header_Component_Stocks": "Stocks",
     "Header_Icon_Portfolio": "Portfolio",
     "Header_Icon_Watchlist": "Watchlist",
+
     "Header_Search": "Search",
     "Header_Search_Text": "Search cryptocurrencies and stocks by name or symbol",
     "Header_Search_No_Results": "Your search didn't match any records",
@@ -13,15 +14,19 @@
     "Header_Search_Volume": "Vol. (24 h)",
     "Header_Search_Show_More": "Show more",
     "Header_Search_Show_Less": "Show less",
+
     "Header_Select_1": "Language",
     "Header_Select_2": "Currency",
     "Header_Select_3": "Dark mode",
     "Header_Select_4": "Login",
     "Header_Select_5": "Sign up",
+
     "Header_Popup_Title_1": "Language",
     "Header_Popup_Title_2": "Currency",
+    
     "Header_Popup_Auth_Login": "Sign In",
     "Header_Popup_Auth_Register": "Sign Up",
+    "Header_Popup_Auth_Settings": "Settings",
     "Header_Popup_Auth_Logout": "Log Out",
     "Header_Popup_Auth_Email": "Email address",
     "Header_Popup_Auth_Placeholder_Email": "Enter your email address",

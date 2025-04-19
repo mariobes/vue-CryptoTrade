@@ -13,6 +13,7 @@ import CurrencyPopup from '@/components/Common/CurrencyPopup.vue'
 import AuthPopup from '@/components/Common/AuthPopup.vue'
 
 const backgroundColor = computed(() => storeUserPreferences.getTheme().background)
+const backgroundSettings = computed(() => storeUserPreferences.getTheme().settings)
 const textColor = computed(() => storeUserPreferences.getTheme().text)
 
 const storeUserPreferences = useUserPreferencesStore()
@@ -90,22 +91,28 @@ watch(
         <RouterLink to="/cryptoTable" class="header-component">{{ t('Header_Component_Cryptos') }}</RouterLink>
         <RouterLink to="/stockTable" class="header-component">{{ t('Header_Component_Stocks') }}</RouterLink>
         <RouterLink to="/" target="_blank" class="header-component">CryptoTrade Wallet</RouterLink>
-
-        <v-menu open-on-hover class="header-component-menu">
+        
+        <v-menu open-on-hover content-class="header-component-menu" :style="{ color: backgroundSettings }">
           <template v-slot:activator="{ props }">
             <RouterLink to="" class="header-component" v-bind="props">API</RouterLink>
           </template>
-          <v-list class="menu-container">
-            <v-list-item class="menu-container-items">
-              <a href="https://www.coingecko.com/en/api" target="_blank">
-                <v-list-item-title>CoinGeko API</v-list-item-title>
-              </a>
-              <a href="https://coinmarketcap.com/api" target="_blank">
-                <v-list-item-title>CoinMarketCap API</v-list-item-title>
-              </a>
-              <a href="https://site.financialmodelingprep.com/developer/docs" target="_blank">
-                <v-list-item-title>Financial Modeling Prep API</v-list-item-title>
-              </a>
+          <v-list class="menu-container" :style="{ background: backgroundSettings, color: textColor }">
+            <v-list-item>
+                <v-list-item-title class="menu-container-item">
+                  <a href="https://www.coingecko.com/en/api" target="_blank" class="menu-container-item-link">
+                    CoinGeko API
+                  </a>
+                </v-list-item-title>
+                <v-list-item-title class="menu-container-item">
+                  <a href="https://coinmarketcap.com/api" target="_blank" class="menu-container-item-link">
+                    CoinMarketCap API
+                  </a>
+                </v-list-item-title>
+                <v-list-item-title class="menu-container-item">
+                  <a href="https://site.financialmodelingprep.com/developer/docs" target="_blank" class="menu-container-item-link">
+                    Financial Modeling Prep API
+                  </a>
+                </v-list-item-title>
             </v-list-item>
           </v-list>
         </v-menu>
@@ -202,20 +209,38 @@ a {
   color: v-bind(textColor);
 }
 
-.header-component-menu {
-
+::v-deep(.header-component-menu)::before {
+  content: "";
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 11px solid;
+  z-index: 1;
 }
 
 .menu-container {
-
+  border-radius: 10px !important;
+  margin-top: 15px;
+  padding: 5px 0;
 }
 
-.menu-container-items {
+.menu-container-item {
+  padding: 5px 0px;
+  font-size: 0.9rem;
+}
 
+.menu-container-item-link {
+  display: inline-block;
+  width: 100%;
+}
+
+.menu-container-item-link:hover {
+  color: #FF8C00;
 }
 
 .v-btn {
-  color: white;
   text-transform: none;
 }
 
@@ -247,6 +272,7 @@ a {
   color: #9e9e9e ;
   background-color: #ffffff22;
   margin: 0 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .header-icons-search-text {

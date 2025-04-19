@@ -71,24 +71,14 @@ const handleLogout = async () => {
 			</v-btn>
 		</template>
 		<v-card class="settings-container" :style="{ backgroundColor: backgroundSettings, color: textColor }">
-			<div class="settings-user">
-        <v-btn 
-          v-if="storeAuth.isLoggedIn()"
-          class="header-icons login-btn" 
-          @click="handleLogout()"
-        >
-        {{ t('Header_Popup_Auth_Logout') }}
-        </v-btn>
-
+			<div class="settings-user-auth" v-if="!storeAuth.isLoggedIn()">
 				<v-btn 
-          v-if="!storeAuth.isLoggedIn()"
           class="settings-user-btn login-btn" 
           @click="() => { openAuthLogin(); selectedTab = 'login'; }"
         >
 					{{ t('Header_Select_4') }}
 				</v-btn>
 				<v-btn 
-          v-if="!storeAuth.isLoggedIn()"
           class="settings-user-btn register-btn" 
           @click="() => { openAuthRegister(); selectedTab = 'register'; }"
         >
@@ -97,9 +87,9 @@ const handleLogout = async () => {
 			</div>
 
 			<div class="settings-options">
-				<div class="settings-options-buttons-language">
+				<div>
 					<button class="settings-options-btn" @click="openLanguagePopup">
-						<span class="settings-options-text">{{ t('Header_Select_1') }}</span>
+						<span>{{ t('Header_Select_1') }}</span>
 						<span class="settings-options-value">
 							{{ languageLabels[locale] }}
 							<v-icon class="pt-1 settings-options-arrow">mdi-chevron-right</v-icon> 
@@ -107,9 +97,9 @@ const handleLogout = async () => {
 					</button>
 				</div>
 
-				<div class="settings-options-buttons-currency">
+				<div class="pt-1">
 					<button class="settings-options-btn" @click="openCurrencyPopup">
-						<span class="settings-options-text">{{ t('Header_Select_2') }}</span>
+						<span>{{ t('Header_Select_2') }}</span>
 						<span class="settings-options-value">
 							{{ currencyLabels[selectedCurrency] }}
 							<v-icon class="pt-1 settings-options-arrow">mdi-chevron-right</v-icon> 
@@ -132,13 +122,22 @@ const handleLogout = async () => {
 					></v-switch>
 				</div>
 			</div>
+
+      <div class="settings-user-logged" v-if="storeAuth.isLoggedIn()">
+        <button class="settings-options-btn">
+          {{ t('Header_Popup_Auth_Settings') }}
+        </button>
+
+        <button class="settings-options-btn pt-3" @click="handleLogout()">
+          {{ t('Header_Popup_Auth_Logout') }}
+        </button>
+			</div>
 		</v-card>
 	</v-menu>
 </template>
 
 <style scoped>
 .v-btn {
-  color: white;
   text-transform: none;
 }
 
@@ -168,10 +167,18 @@ const handleLogout = async () => {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.336) !important;
 }
 
-.settings-user {
+.settings-user-auth {
   display: flex;
   justify-content: center;
   margin-bottom: 10px;
+  padding-bottom: 20px;
+  border-bottom: solid 1px #8080803a;
+}
+
+.settings-user-logged {
+  margin-top: 5px;
+  padding-top: 10px;
+  border-top: solid 1px #8080803a;
 }
 
 .settings-user-btn {
@@ -208,9 +215,7 @@ const handleLogout = async () => {
 }
 
 .settings-options {
-  padding: 10px 0 20px 0;
-  margin-top: 20px;
-  border-top: solid 1px #8080803a;
+  padding-bottom: 20px;
 }
 
 .settings-options-btn {
@@ -235,10 +240,6 @@ const handleLogout = async () => {
 .settings-options-btn:hover {
   background-color: #ffffff22;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.336);
-}
-
-.settings-options-buttons-currency {
-  padding-top: 5px;
 }
 
 .settings-options-switch, .v-switch {
