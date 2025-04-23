@@ -4,6 +4,7 @@ export interface Stock {
     symbol: string
     price: number
     mktCap: number
+    marketCapRank: number
     sector: string,
     industry: string,
     lastDiv: number,

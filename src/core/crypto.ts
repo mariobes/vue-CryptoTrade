@@ -5,7 +5,8 @@ export interface Crypto {
     image: string
     current_price: number
     market_cap: number
-    fullyDilutedValuation: number
+    marketCapRank: number
+    fully_diluted_valuation: number
     total_volume: number
     high24h: number
     low24h: number
@@ -14,16 +15,16 @@ export interface Crypto {
     price_change_percentage_1h_in_currency: number
     price_change_percentage_7d_in_currency: number
     marketCapChange24h: number
-    marketCapChangePercentage24h: number
+    market_cap_change_percentage_24h: number
     circulating_supply: number
-    totalSupply: number
-    maxSupply: number
+    total_supply: number
+    max_supply: number
     ath: number
-    athChangePercentage: number
-    athDate: Date
+    ath_change_percentage: number
+    ath_date: Date
     atl: number
-    atlChangePercentage: number
-    atlDate: Date
+    atl_change_percentage: number
+    atl_date: Date
     sparkline_in_7d: string
     lastUpdated: Date
 }

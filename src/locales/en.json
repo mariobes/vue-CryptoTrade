@@ -4,6 +4,8 @@
     "Header_Title": "Crypto Trade",
     "Header_Component_Cryptos": "Cryptocurrencies",
     "Header_Component_Stocks": "Stocks",
+    "Header_Component_Wallet": "CryptoTrade Wallet",
+    "Header_Component_Documentation": "Documentation",
     "Header_Icon_Portfolio": "Portfolio",
     "Header_Icon_Watchlist": "Watchlist",
 
@@ -82,6 +84,28 @@
     "CryptoIndices_Sentiment_Fear": "Fear",
     "CryptoIndices_Sentiment_Neutral": "Neutral",
     "CryptoIndices_Sentiment_Greed": "Greed",
-    "CryptoIndices_Sentiment_Extreme_Greed": "Extreme greed"
+    "CryptoIndices_Sentiment_Extreme_Greed": "Extreme greed",
+
+    "CryptoInfoTable_MarketCap": "Market cap",
+    "CryptoInfoTable_Volume": "Volume (24h)",
+    "CryptoInfoTable_FDV": "FDV",
+    "CryptoInfoTable_Vol/MktCap": "Vol/Mkt Cap (24h)",
+    "CryptoInfoTable_Total_Supply": "Total supply",
+    "CryptoInfoTable_MaxSupply": "Max. supply",
+    "CryptoInfoTable_CirculatingSupply": "Circulating supply",
+
+    "CryptoInfoTable_Website": "Website",
+    "CryptoInfoTable_Socials": "Socials",
+    "CryptoInfoTable_Explorers": "Explorers",
+
+    "CryptoInfoTable_Ath": "All-time high",
+    "CryptoInfoTable_Atl": "All-time low",
+    "CryptoInfoTable_Converter_1": "Converter from",
+    "CryptoInfoTable_Converter_2": "to",
+
+    "CryptoChart_Title_1": "What is",
+    "CryptoChart_Title_2": "?",
+
+    "CryptoChart_Price": "Price"
 
 }
