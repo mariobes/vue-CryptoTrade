@@ -253,7 +253,7 @@ const handleLogout = async () => {
 .switch-text {
   font-size: 0.85rem;
   height: 10px;
-  margin-left: 12px;
+  margin-left: 10px;
 }
 
 .switch-icon {

@@ -5,6 +5,7 @@ import type { Crypto } from '@/core/crypto'
 export const useCryptosStore = defineStore('cryptos', () => {
   const cryptos = ref<Crypto[]>([])
   const crypto = ref<Crypto | null>(null)
+  const cryptoDetails = ref<Crypto | null>(null)
   const chartsCryptos = ref<any[]>([])
   const trendingCryptos = ref<any[]>([])
   const gainersCryptos = ref<any[]>([])
@@ -49,6 +50,16 @@ export const useCryptosStore = defineStore('cryptos', () => {
         crypto.value = cryptoInfo
     } catch (error) {
         console.error(`Error al obtener la criptomoneda ${id}: `, error)
+    }
+  }
+
+  async function GetCryptoDetails(id: string) {
+    try {
+        const response = await fetch(`http://localhost:4746/CryptoApi/crypto-details/${id}`)
+        const cryptoDetailsInfo = await response.json()
+        cryptoDetails.value = cryptoDetailsInfo
+    } catch (error) {
+        console.error(`Error al obtener los detalles de la criptomoneda ${id}: `, error)
     }
   }
 
@@ -136,6 +147,7 @@ export const useCryptosStore = defineStore('cryptos', () => {
   return {
     cryptos, 
     crypto,
+    cryptoDetails,
     chartsCryptos,
     trendingCryptos, 
     gainersCryptos,
@@ -147,6 +159,7 @@ export const useCryptosStore = defineStore('cryptos', () => {
     GetCryptosApi,
     GetAllCryptos, 
     GetCrypto,
+    GetCryptoDetails,
     GetCryptoCharts,
     GetCryptosTrending, 
     GetCryptosGainers,

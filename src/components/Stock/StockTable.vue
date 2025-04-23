@@ -260,6 +260,7 @@ window.scrollTo({ top: 0 });
   padding-top: 2px;
   font-size: 0.85rem;
   color: #808080;
+  white-space: nowrap;
 }
 
 .stocks-see-all-container {

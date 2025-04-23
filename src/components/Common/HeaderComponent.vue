@@ -90,11 +90,11 @@ watch(
         <span class="divider-bar">|</span>
         <RouterLink to="/cryptoTable" class="header-component">{{ t('Header_Component_Cryptos') }}</RouterLink>
         <RouterLink to="/stockTable" class="header-component">{{ t('Header_Component_Stocks') }}</RouterLink>
-        <RouterLink to="/" target="_blank" class="header-component">CryptoTrade Wallet</RouterLink>
+        <RouterLink to="/" target="_blank" class="header-component">{{ t('Header_Component_Wallet') }}</RouterLink>
         
         <v-menu open-on-hover content-class="header-component-menu" :style="{ color: backgroundSettings }">
           <template v-slot:activator="{ props }">
-            <RouterLink to="" class="header-component" v-bind="props">API</RouterLink>
+            <RouterLink to="" class="header-component" v-bind="props">{{ t('Header_Component_Documentation') }}</RouterLink>
           </template>
           <v-list class="menu-container" :style="{ background: backgroundSettings, color: textColor }">
             <v-list-item>
@@ -245,7 +245,7 @@ a {
 }
 
 .header-icons {
-  font-size: 0.85rem; 
+  font-size: 0.8rem; 
   padding: 0 10px;
   border-radius: 8px;
   transition: background-color 0.3s, color 0.3s;
@@ -257,7 +257,7 @@ a {
 }
 
 .header-icons-text {
-  font-size: 0.8rem; 
+  font-size: 0.75rem; 
   text-transform: none;
   padding-left: 5px;
   color: v-bind(textColor);

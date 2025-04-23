@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { useCryptosStore } from '@/stores/cryptos'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
 import CryptoInfoTable from '@/components/Crypto/CryptoInfoTable.vue'
 import CryptoCharts from '@/components/Crypto/CryptoCharts.vue'
@@ -8,7 +9,10 @@ import TransactionComponent from '@/components/Transaction/TransactionComponent.
 
 const textColor = computed(() => storeUserPreferences.getTheme().text)
 
+const storeCryptos = useCryptosStore()
 const storeUserPreferences = useUserPreferencesStore()
+
+const cryptoDetails = computed(() => storeCryptos.cryptoDetails)
 
 const route = useRoute()
 const cryptoId = computed(() => route.params.id)
@@ -19,7 +23,7 @@ const cryptoId = computed(() => route.params.id)
 <template>
 	<div class="main-container">
 		<CryptoInfoTable class="container-details" :cryptoId="cryptoId" :key="cryptoId"></CryptoInfoTable>
-		<CryptoCharts class="container-chart" :cryptoId="cryptoId" :key="cryptoId"></CryptoCharts>
+		<CryptoCharts class="container-chart" :cryptoId="cryptoId" :cryptoDetails="cryptoDetails" :key="cryptoId"></CryptoCharts>
 		<TransactionComponent class="container-transactions"></TransactionComponent>
 	</div>
 </template>
@@ -27,26 +31,28 @@ const cryptoId = computed(() => route.params.id)
 <style scoped>
 .main-container {
 	display: flex;
+	max-height: 100vh;
+	overflow: hidden;
 }
 
 .container-details {
 	width: 25vw;
 	color: v-bind(textColor);
 	border-right: solid 1px #80808050;
-	height: 100vh;
 }
 
 .container-chart {
-	width: 50vw;
-	border-bottom: solid 1px #80808050;
-	height: 50vh;
+	width: 55vw;
+	overflow-y: auto;
+	scroll-behavior: smooth;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
 }
 
 .container-transactions {
-	width: 25vw;
+	width: 20vw;
 	color: v-bind(textColor);
 	border-left: solid 1px #80808050;
-	height: 100vh;
 }
 
 
