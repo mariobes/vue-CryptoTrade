@@ -1,34 +1,40 @@
 <script setup lang="ts">
-import { useCryptosStore } from '@/stores/cryptos'
 import { ref, onMounted, computed, watch } from 'vue'
+import { useCryptosStore } from '@/stores/cryptos'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
+import { useI18n } from 'vue-i18n'
 import { Chart as ChartJS, Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, TimeScale, PointElement, Filler } from 'chart.js'
 import { Line } from 'vue-chartjs'
 import 'chartjs-adapter-date-fns'
 import annotationPlugin from 'chartjs-plugin-annotation'
 
+ChartJS.register(Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, TimeScale, PointElement, Filler, annotationPlugin)
+
+const backgroundColor = computed(() => storeUserPreferences.getTheme().background)
 const backgroundSettings = computed(() => storeUserPreferences.getTheme().settings)
 const textColor = computed(() => storeUserPreferences.getTheme().text)
 const colorGray = computed(() => storeUserPreferences.getTheme().colorGray)
 const colorDarkGray = computed(() => storeUserPreferences.getTheme().colorDarkGray)
 
+const props = defineProps<{
+  cryptoId: string
+  cryptoDetails: any
+}>()
+
+const storeCryptos = useCryptosStore()
 const storeUserPreferences = useUserPreferencesStore()
+
+const { t } = useI18n()
 
 const selectedType = ref('Precio')
 const selectedTime = ref('1D')
-
-const selectType = (type: string) => {
-  selectedType.value = type
-}
-
-const selectTime = (time: string) => {
-  selectedTime.value = time
-}
+const isLoading = ref(true)
 
 const timeToDays = {
   '1D': 1,
   '7D': 7,
   '1M': 30,
+  '3M': 90,
   '1Y': 365,
 } as const
 
@@ -40,216 +46,167 @@ const fetchChartData = async () => {
 }
 
 onMounted(fetchChartData)
+watch(selectedTime, fetchChartData)
 
-// Observa cuando cambia el tiempo seleccionado
-watch(selectedTime, async () => {
-  await fetchChartData()
-})
-
-ChartJS.register(Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, TimeScale, PointElement, Filler, annotationPlugin)
-
-const props = defineProps<{ cryptoId: string }>()
-
-const storeCryptos = useCryptosStore()
-const isLoading = ref(true)
-
-// const chartData = computed(() => {
-//   const chart = storeCryptos.chartsCryptos
-
-//   if (!chart || !Array.isArray(chart.prices) || chart.prices.length === 0) {
-//     return {
-//       labels: [],
-//       datasets: [],
-//     }
-//   }
-
-//   const isMarketCap = selectedType.value === 'Market cap'
-//   const rawData = isMarketCap ? chart.market_caps : chart.prices
-//   const baseline = chart.prices[0][1]
-
-//   if (isMarketCap) {
-//     return {
-//       datasets: [
-//         {
-//           label: 'Market cap',
-//           data: rawData.map((item: number[]) => ({
-//             x: item[0],
-//             y: item[1],
-//           })),
-//           borderColor: '#3b82f6',
-//           backgroundColor: 'rgba(59, 130, 246, 0.05)',
-//           borderWidth: 2,
-//           pointRadius: 0,
-//           pointHoverRadius: 0,
-//           tension: 0,
-//         },
-//       ],
-//     }
-//   }
-
-//   const segments = []
-
-//   for (let i = 0; i < rawData.length - 1; i++) {
-//     const [x0, y0] = rawData[i]
-//     const [x1, y1] = rawData[i + 1]
-
-//     const above0 = y0 >= baseline
-//     const above1 = y1 >= baseline
-
-//     if (above0 === above1) {
-//       // Mismo lado del baseline
-//       segments.push({
-//         data: [
-//           { x: x0, y: y0 },
-//           { x: x1, y: y1 },
-//         ],
-//         borderColor: above0 ? '#4ade80' : '#ef4444',
-//         backgroundColor: above0 ? 'rgba(74, 222, 128, 0.2)' : 'rgba(239, 68, 68, 0.2)',
-//       })
-//     } else {
-//       // Cruza el baseline, calculamos el punto de cruce
-//       const t = (baseline - y0) / (y1 - y0)
-//       const xCross = x0 + t * (x1 - x0)
-
-//       segments.push({
-//         data: [
-//           { x: x0, y: y0 },
-//           { x: xCross, y: baseline },
-//         ],
-//         borderColor: y0 >= baseline ? '#4ade80' : '#ef4444',
-//         backgroundColor: y0 >= baseline ? 'rgba(74, 222, 128, 0.2)' : 'rgba(239, 68, 68, 0.2)',
-//       })
-
-//       segments.push({
-//         data: [
-//           { x: xCross, y: baseline },
-//           { x: x1, y: y1 },
-//         ],
-//         borderColor: y1 >= baseline ? '#4ade80' : '#ef4444',
-//         backgroundColor: y1 >= baseline ? 'rgba(74, 222, 128, 0.2)' : 'rgba(239, 68, 68, 0.2)',
-//       })
-//     }
-//   }
-
-//   return {
-//     datasets: segments.map(segment => ({
-//       label: selectedType.value,
-//       data: segment.data,
-//       borderColor: segment.borderColor,
-//       backgroundColor: segment.backgroundColor,
-//       borderWidth: 2,
-//       pointRadius: 0,
-//       pointHoverRadius: 0,
-//       tension: 0,
-//       fill: {
-//         target: {
-//           value: baseline,
-//         },
-//         above: segment.backgroundColor,
-//         below: segment.backgroundColor,
-//       },
-//     })),
-//   }
-// })
+const selectType = (type: string) => selectedType.value = type
+const selectTime = (time: string) => selectedTime.value = time
 
 const chartData = computed(() => {
   const chart = storeCryptos.chartsCryptos
-
-  if (!chart || !Array.isArray(chart.prices) || chart.prices.length === 0) {
-    return {
-      labels: [],
-      datasets: [],
-    }
-  }
+  if (!chart || !chart.prices?.length) return { labels: [], datasets: [] }
 
   const isMarketCap = selectedType.value === 'Market cap'
   const rawData = isMarketCap ? chart.market_caps : chart.prices
   const baseline = chart.prices[0][1]
 
   if (isMarketCap) {
-    return {
-      datasets: [
-        {
-          label: 'Market cap',
-          data: rawData.map((item: number[]) => ({ x: item[0], y: item[1] })),
-          borderColor: '#3b82f6',
-          backgroundColor: 'rgba(59, 130, 246, 0.1)',
-          borderWidth: 2,
-          pointRadius: 0,
-          pointHoverRadius: 0,
-          tension: 0,
-        }
-      ]
-    }
-  }
-
-  const unifiedData = rawData.map(([x, y]: number[]) => ({ x, y }))
-
   return {
-    datasets: [
-      {
-        label: selectedType.value,
-        data: unifiedData,
-        borderWidth: 2,
-        pointRadius: 0,
-        pointHoverRadius: 0,
-        tension: 0,
-        fill: {
-          target: {
-            value: baseline,
-          },
-          above: (ctx) => {
-            const { ctx: canvasCtx, chartArea, scales } = ctx.chart
-            if (!chartArea) return 'rgba(74, 222, 128, 0.2)'
-
-            const gradient = canvasCtx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom)
-            gradient.addColorStop(0, 'rgba(74, 222, 128, 0.3)')
-            gradient.addColorStop(1, 'rgba(74, 222, 128, 0)')
-            return gradient
-          },
-          below: (ctx) => {
-            const { ctx: canvasCtx, chartArea, scales } = ctx.chart
-            if (!chartArea) return 'rgba(239, 68, 68, 0.2)'
-
-            const gradient = canvasCtx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom)
-            gradient.addColorStop(0, 'rgba(239, 68, 68, 0.3)')
-            gradient.addColorStop(1, 'rgba(239, 68, 68, 0)')
-            return gradient
-          }
-        },
-        segment: {
-          borderColor: ctx => {
-            const current = ctx.p0.parsed.y
-            return current >= baseline ? '#4ade80' : '#ef4444'
-          },
-        }
-      }
-    ]
+    datasets: [{
+      label: 'Market cap',
+      data: rawData.map(([x, y]: number[]) => ({ x, y })),
+      borderColor: '#3b82f6',
+      backgroundColor: 'rgba(59, 130, 246, 0.1)',
+      borderWidth: 2,
+      pointRadius: 0,
+      pointHoverRadius: 5,
+      pointHoverBorderWidth: 1.5,
+      pointHoverBorderColor: 'white',
+      pointHoverBackgroundColor: '#3b82f6',
+      tension: 0,
+    }]
   }
+}
+
+  const data = rawData.map(([x, y]: number[]) => ({ x, y }))
+  const datasets = []
+  let segment = []
+  let previousPoint = null
+
+  for (let i = 0; i < data.length; i++) {
+    const point = data[i]
+    if (previousPoint) {
+      const crossed = (previousPoint.y - baseline) * (point.y - baseline) < 0
+      if (crossed) {
+        const ratio = (baseline - previousPoint.y) / (point.y - previousPoint.y)
+        const xCross = previousPoint.x + ratio * (point.x - previousPoint.x)
+        const crossingPoint = { x: xCross, y: baseline }
+        segment.push(crossingPoint)
+        datasets.push(createSegment(segment, previousPoint.y >= baseline ? 'green' : 'red', baseline))
+        segment = [crossingPoint]
+      }
+    }
+    segment.push(point)
+    previousPoint = point
+  }
+
+  if (segment.length > 1 && previousPoint) {
+    datasets.push(createSegment(segment, previousPoint.y >= baseline ? 'green' : 'red', baseline))
+  }
+
+  return { datasets }
+})
+
+function createSegment(data, color, baseline) {
+  const isGreen = color === 'green'
+  return {
+    data,
+    borderColor: isGreen ? '#4ade80' : '#ef4444',
+    backgroundColor: (ctx) => createGradient(ctx, color),
+    borderWidth: 2,
+    fill: { target: { value: baseline } },
+    pointRadius: 0,
+    pointHoverRadius: 5,
+    pointHoverBorderWidth: 1.5,
+    pointHoverBorderColor: 'white',
+    pointHoverBackgroundColor: isGreen ? '#4ade80' : '#ef4444',
+    tension: 0,
+  }
+}
+
+function createGradient(ctx, color) {
+  const { ctx: canvasCtx, chartArea } = ctx.chart
+  if (!chartArea) return
+  const gradient = canvasCtx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom)
+  if (color === 'green') {
+    gradient.addColorStop(0, 'rgba(74, 222, 128, 0.3)')
+    gradient.addColorStop(1, 'rgba(74, 222, 128, 0)')
+  } else {
+    gradient.addColorStop(0, 'rgba(239, 68, 68, 0.3)')
+    gradient.addColorStop(1, 'rgba(239, 68, 68, 0)')
+  }
+  return gradient
+}
+
+const gridColor = computed(() => {
+  return storeUserPreferences.selectedTheme === 'dark' ? '#3a3535' : '#d3d3d3';
 })
 
 const chartOptions = computed(() => {
   const chart = storeCryptos.chartsCryptos
-  if (!chart || !Array.isArray(chart.prices) || chart.prices.length === 0) {
-    return {}
-  }
+  if (!chart?.prices?.length) return {}
 
-  const firstTimestamp = chart.prices[0][0]
-  const lastTimestamp = chart.prices[chart.prices.length - 1][0]
-
-  const startDate = new Date(firstTimestamp)
-  const endDate = new Date(lastTimestamp)
-
-  if (selectedTime.value === '1D') {
-    startDate.setHours(startDate.getHours(), 0, 0, 0)
-  } else if (selectedTime.value === '7D') {
-    startDate.setHours(startDate.getHours(), 0, 0, 0)
-  }
+  const first = new Date(chart.prices[0][0])
+  const last = new Date(chart.prices[chart.prices.length - 1][0])
 
   return {
     responsive: true,
     animation: { duration: 0 },
+    interaction: {
+      mode: 'nearest',
+      intersect: false,
+      axis: 'x'
+    },
     plugins: {
+      tooltip: {
+        enabled: true,
+        intersect: false,
+        mode: 'nearest',
+        axis: 'x',
+        backgroundColor: backgroundColor.value,
+        titleColor: textColor.value,
+        bodyColor: textColor.value,
+        padding: 10,
+        displayColors: false,
+        callbacks: {
+          title: (context) => {
+            const date = new Date(context[0].parsed.x)
+            return date.toLocaleString('es-ES', {
+              day: '2-digit',
+              month: 'short',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+              hour12: false
+            })
+          },
+          label: (context) => {
+            const isMarketCap = selectedType.value === 'Market cap'
+            const value = context.parsed.y
+            let price
+            if (isMarketCap) {
+              price = storeUserPreferences.convertToAbbreviated(value, storeUserPreferences.selectedCurrency, 'after')
+              return `Market Cap: ${price}`
+            } else {
+              price = storeUserPreferences.convertPrice(value, storeUserPreferences.selectedCurrency, 'after')
+              return `${t('CryptoChart_Price')}: ${price}`
+            }  
+          },
+          afterLabel: (context) => {
+            const chart = storeCryptos.chartsCryptos
+            const timestamp = context.parsed.x
+
+            // Buscar volumen correspondiente al timestamp más cercano
+            if (!chart?.total_volumes?.length) return ''
+
+            let closest = chart.total_volumes.reduce((prev, curr) => {
+              return Math.abs(curr[0] - timestamp) < Math.abs(prev[0] - timestamp) ? curr : prev
+            })
+
+            const volume = storeUserPreferences.convertToAbbreviated(closest[1], storeUserPreferences.selectedCurrency, 'after')
+            return `Vol. 24 h: ${volume}`
+          }
+        }
+      },
       legend: { display: false },
       annotation: {
         annotations: selectedType.value !== 'Market cap' ? {
@@ -260,90 +217,193 @@ const chartOptions = computed(() => {
             borderColor: textColor.value,
             borderWidth: 1,
             borderDash: [1, 3],
-            label: { enabled: false },
+          },
+          currentPrice: {
+            type: 'label',
+            xValue: chart.prices[chart.prices.length - 1][0],
+            yValue: chart.prices[chart.prices.length - 1][1],
+            backgroundColor: () => {
+              const last = chart.prices[chart.prices.length - 1][1]
+              const first = chart.prices[0][1]
+              return last >= first ? '#4ade80' : '#ef4444'
+            },
+            color: 'white',
+            content: [
+              storeUserPreferences.convertPrice(chart.prices[chart.prices.length - 1][1], storeUserPreferences.selectedCurrency)
+            ],
+            font: {
+              weight: 'bold',
+              size: 11
+            },
+            position: {
+              x: 'end',
+              y: 'center'
+            },
+            xAdjust: 0,
+            yAdjust: 0,
+            padding: 5,
+            borderRadius: 6,
+          },
+          initialPriceBox: {
+            type: 'label',
+            xValue: chart.prices[0][0],
+            yValue: chart.prices[0][1],
+            backgroundColor: '#d6d2d2',
+            color: '#232323',
+            content: [
+              storeUserPreferences.convertPrice(chart.prices[0][1], storeUserPreferences.selectedCurrency)
+            ],
+            font: {
+              weight: 'bold',
+              size: 11
+            },
+            position: {
+              x: 'start',
+              y: 'center'
+            },
+            xAdjust: 5,
+            yAdjust: 0,
+            padding: 4,
+            borderRadius: 6,
           }
-        } : {}
+        } : {
+          marketCapLabel: {
+            type: 'label',
+            xValue: chart.market_caps[chart.market_caps.length - 1][0],
+            yValue: chart.market_caps[chart.market_caps.length - 1][1],
+            backgroundColor: '#3b82f6',
+            color: 'white',
+            content: [
+              storeUserPreferences.convertToAbbreviated(chart.market_caps[chart.market_caps.length - 1][1], storeUserPreferences.selectedCurrency)
+            ],
+            font: {
+              weight: 'bold',
+              size: 11
+            },
+            position: {
+              x: 'end',
+              y: 'center'
+            },
+            xAdjust: 0,
+            yAdjust: 0,
+            padding: 5,
+            borderRadius: 6,
+          }
+        }
       }
     },
     scales: {
       x: {
         type: 'time',
-        min: startDate.getTime(),
-        max: endDate.getTime(),
+        min: first.getTime(),
+        max: last.getTime(),
         time: {
-          unit: selectedTime.value === '1Y' ? 'month' : 
-                selectedTime.value === '1M' ? 'day' : 'hour', // Asegúrate de que "1M" usa "day"
+          unit: selectedTime.value === '1Y' ? 'month' :
+                selectedTime.value === '1M' ? 'day' :
+                selectedTime.value === '3M' ? 'day' : 'hour',
           stepSize: selectedTime.value === '1D' ? 2 :
-                    selectedTime.value === '7D' ? 12 : 1,
-          tooltipFormat: selectedTime.value === '1Y'
-            ? 'MMM yyyy'
-            : selectedTime.value === '1M'
-              ? 'dd MMM'
-              : 'HH:mm dd MMM',
+                    selectedTime.value === '7D' ? 12 :
+                    selectedTime.value === '3M' ? 14 : 1,
+          tooltipFormat: selectedTime.value === '1Y' ? 'MMM yyyy' :
+                         selectedTime.value === '1M' ? 'dd MMM' :
+                         selectedTime.value === '3M' ? 'dd MMM' : 'HH:mm dd MMM',
           displayFormats: {
             hour: 'HH:mm',
-            day: (context) => {
-              if (selectedTime.value === '1D' || selectedTime.value === '7D') {
-                const date = new Date(context.value)
-                // Si la hora es 00:00, muestra solo día y mes
-                if (date.getHours() === 0) {
-                  return 'dd MMM' // Solo Día y Mes
-                }
-              }
-              return 'HH:mm dd MMM' // Para las otras horas, muestra Hora, Día y Mes
-            },
-            month: 'MMM yyyy', // Formato correcto para "1Y"
-          },
+            day: 'dd MMM',
+            month: 'MMM yyyy',
+          }
         },
         ticks: {
           autoSkip: false,
-          maxTicksLimit:  selectedTime.value === '1D' ? 12 :
-                          selectedTime.value === '7D' ? 15 :
-                          selectedTime.value === '1M' ? 16 : undefined,
+          maxTicksLimit: selectedTime.value === '1D' ? 12 :
+                         selectedTime.value === '7D' ? 15 :
+                         selectedTime.value === '1M' ? 16 :
+                         selectedTime.value === '3M' ? 14 : undefined,
           maxRotation: 0,
           minRotation: 0,
-          callback: function (value: any, index: number, values: any) {
-            const date = new Date(value); // Usar el valor directamente como un timestamp
+          callback: function (value) {
+            const date = new Date(value)
 
-            const hours = date.getHours();
-            const minutes = date.getMinutes();
-
-            // Mostrar solo día y mes si es medianoche
-            if (hours === 0 && minutes === 0 && (selectedTime.value === '1D' || selectedTime.value === '7D')) {
-              return date.toLocaleDateString('es-ES', {
-                day: '2-digit',
-                month: 'short',
-              });
+            const formatMonth = (d: Date) => {
+              const month = d.toLocaleDateString('es-ES', { month: 'short' })
+              return month.charAt(0).toUpperCase() + month.slice(1)
             }
 
-            // Para los intervalos "1M" y "1Y", no cambiar la hora
-            if (selectedTime.value === '1M' || selectedTime.value === '1Y') {
-              return date.toLocaleDateString('es-ES', {
-                day: '2-digit',
-                month: 'short',
-              });
+            if (selectedTime.value === '1Y') {
+              const month = formatMonth(date)
+              const year = String(date.getFullYear()).slice(-2)
+              return `${month} '${year}`
             }
 
-            // Formato estándar: HH:mm
-            return date.toLocaleTimeString('es-ES', {
-              hour: '2-digit',
-              minute: '2-digit',
-              hour12: false,
-            });
-          },
+            if (selectedTime.value === '1M' || selectedTime.value === '7D' || selectedTime.value === '1D') {
+              // Si la hora es 00:00, mostrar solo día y mes
+              if (date.getHours() === 0 && date.getMinutes() === 0) {
+                return date.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' })
+                  .replace(/^(\d{2}) (\w+)/, (_, day, month) => {
+                    const capitalizedMonth = month.charAt(0).toUpperCase() + month.slice(1)
+                    return `${day} ${capitalizedMonth}`
+                  })
+              }
+              // Si no es 00:00, mostrar hora y minutos
+              return date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: false })
+            }
+
+            if (selectedTime.value === '3M') {
+              // Para 3M, mostramos solo día y mes
+              return date.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' })
+                .replace(/^(\d{2}) (\w+)/, (_, day, month) => {
+                  const capitalizedMonth = month.charAt(0).toUpperCase() + month.slice(1)
+                  return `${day} ${capitalizedMonth}`
+                })
+            }
+
+            return date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: false })
+          }
         },
-        grid: { display: false },
+        grid: { display: false }
       },
       y: {
         beginAtZero: false,
         position: 'right',
-        grid: { display: true },
+        grid: { 
+          display: true, 
+          color: gridColor.value
+        },
+        ticks: {
+          padding: 10,
+          callback: (value) => {
+            if (selectedType.value === 'Market cap') {
+              return storeUserPreferences.convertToAbbreviated(value, storeUserPreferences.selectedCurrency)
+            } else {
+              return storeUserPreferences.convertPrice(value, storeUserPreferences.selectedCurrency)
+            }
+          }
+        },
+        afterDataLimits: (scale) => {
+          const chart = storeCryptos.chartsCryptos
+          if (!chart) return
+
+          // Seleccionar los datos correctos según el tipo
+          const data = selectedType.value === 'Market cap'
+            ? chart.market_caps
+            : chart.prices
+
+          if (!data?.length) return
+
+          const values = data.map(([_, y]) => y)
+          const min = Math.min(...values)
+          const max = Math.max(...values)
+          const padding = (max - min) * 0.1  // 10% de margen
+
+          scale.min = min - padding
+          scale.max = max + padding
+        }
       }
-    }
+    },
   }
 })
 
-window.scrollTo({ top: 0 });
+window.scrollTo({ top: 0 })
 </script>
 
 <template>
@@ -355,7 +415,7 @@ window.scrollTo({ top: 0 });
           :class="{ selected: selectedType === 'Precio' }"
           @click="selectType('Precio')"
         >
-          Precio
+          {{ t('CryptoChart_Price') }}
         </button>
         <button
           class="chart-btn-value"
@@ -389,6 +449,13 @@ window.scrollTo({ top: 0 });
         </button>
         <button
           class="chart-btn-value time-btn"
+          :class="{ selected: selectedTime === '3M' }"
+          @click="selectTime('3M')"
+        >
+          3M
+        </button>
+        <button
+          class="chart-btn-value time-btn"
           :class="{ selected: selectedTime === '1Y' }"
           @click="selectTime('1Y')"
         >
@@ -399,6 +466,14 @@ window.scrollTo({ top: 0 });
     <div class="crypto-chart">
       <Line v-if="!isLoading" :data="chartData" :options="chartOptions" />
       <p v-else>Cargando datos...</p>
+    </div>
+    <div v-if="props.cryptoDetails.description?.en" class="description-container">
+      <p class="description-title">
+        {{ t('CryptoChart_Title_1') }} 
+        {{ props.cryptoDetails.name }}
+        ({{ props.cryptoDetails.symbol.toUpperCase() }}){{ t('CryptoChart_Title_2') }}  
+      </p>
+      <p class="description-text">{{ props.cryptoDetails.description?.en}}</p>
     </div>
   </div>
 </template>
@@ -434,7 +509,6 @@ window.scrollTo({ top: 0 });
 
 .chart-btn-value:hover {
   color: v-bind(textColor);
-
 }
 
 .selected {
@@ -449,5 +523,22 @@ window.scrollTo({ top: 0 });
 .crypto-chart {
 	background-color: v-bind(backgroundSettings) !important;
   border: solid 1px #80808050;
+}
+
+.description-container {
+  margin: 30px 15px 0 15px;
+}
+
+.description-title {
+  color: v-bind(textColor);
+  margin-bottom: 15px;
+  font-size: 1.4rem;
+
+}
+
+.description-text {
+  color: v-bind(textColor);
+  font-size: 0.9rem;
+  text-align: justify;
 }
 </style>
