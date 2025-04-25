@@ -31,7 +31,6 @@ const cryptoId = computed(() => route.params.id)
 <style scoped>
 .main-container {
 	display: flex;
-	max-height: 100vh;
 	overflow: hidden;
 }
 
@@ -47,6 +46,7 @@ const cryptoId = computed(() => route.params.id)
 	scroll-behavior: smooth;
 	scrollbar-width: none;
 	-ms-overflow-style: none;
+	max-height: 90vh;
 }
 
 .container-transactions {

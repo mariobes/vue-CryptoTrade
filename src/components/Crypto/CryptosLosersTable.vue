@@ -28,32 +28,32 @@ storeCryptos.GetCryptosLosers()
 		</thead>
 		<tbody>
 			<tr
-				v-for="cryptos in storeCryptos.losersCryptos.slice(0, 5)"
-				:key="cryptos.id"
+				v-for="crypto in storeCryptos.losersCryptos.slice(0, 5)"
+				:key="crypto.id"
 				class="crypto-link"
         :class="storeUserPreferences.selectedTheme === 'light' ? 'hover-light' : 'hover-dark'"
-        @click="$router.push({ name: 'cryptoDetails', params: { id: cryptos.id } })"
+        @click="$router.push({ name: 'cryptoDetails', params: { id: crypto.id } })"
         style="cursor: pointer"
 			>
 				<td>
 					<div class="table-content-name">
-						<img :src="cryptos.image" alt="Crypto Logo" class="crypto-image" />
-						<span class="crypto-name mt-1">{{ cryptos.name }}</span>
+						<img :src="crypto.image" alt="Crypto Logo" class="crypto-image" @error="crypto.image = '/src/assets/asset-default.png'" />
+						<span class="crypto-name mt-1">{{ crypto.name }}</span>
 					</div>
 				</td>
 				<td>
 					<div class="table-content-price">
 						<span class="crypto-price">
-							{{ storeUserPreferences.convertPrice(cryptos.current_price, storeUserPreferences.selectedCurrency, 'after') }}
+							{{ storeUserPreferences.convertPrice(crypto.current_price, storeUserPreferences.selectedCurrency, 'after') }}
 						</span>
 						<span class="crypto-change">
 							<span 
-								:style="{ color: storeUserPreferences.getPriceColor(cryptos.price_change_percentage_7d_in_currency) }">
-								{{ cryptos.price_change_percentage_7d_in_currency.toFixed(2) }}%
+								:style="{ color: storeUserPreferences.getPriceColor(crypto.price_change_percentage_7d_in_currency) }">
+								{{ crypto.price_change_percentage_7d_in_currency.toFixed(2) }}%
 							</span>
 							<v-icon 
-								:color="storeUserPreferences.getPriceColor(cryptos.price_change_percentage_7d_in_currency)">
-								{{ storeUserPreferences.getArrowDirection(cryptos.price_change_percentage_7d_in_currency) }}
+								:color="storeUserPreferences.getPriceColor(crypto.price_change_percentage_7d_in_currency)">
+								{{ storeUserPreferences.getArrowDirection(crypto.price_change_percentage_7d_in_currency) }}
 							</v-icon>
 						</span>
 					</div>

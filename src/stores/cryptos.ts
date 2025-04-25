@@ -7,12 +7,8 @@ export const useCryptosStore = defineStore('cryptos', () => {
   const crypto = ref<Crypto | null>(null)
   const cryptoDetails = ref<Crypto | null>(null)
   const chartsCryptos = ref<any[]>([])
-  const trendingCryptos = ref<any[]>([])
   const gainersCryptos = ref<any[]>([])
   const losersCryptos = ref<any[]>([])
-  const totalMarketCapCryptos = ref<any[]>([])
-  const fearGreedIndexCryptos = ref<any[]>([])
-  const CMC100IndexCryptos = ref<any[]>([])
   const searchCryptos = ref<any[]>([])
 
   async function GetCryptosApi() {
@@ -73,16 +69,6 @@ export const useCryptosStore = defineStore('cryptos', () => {
     }
   }
 
-  async function GetCryptosTrending() {
-    try {
-        const response = await fetch(`http://localhost:4746/CryptoApi/cryptos-trending`)
-        const cryptosTrendingInfo = await response.json()
-        trendingCryptos.value = cryptosTrendingInfo.coins
-    } catch (error) {
-        console.error('Error al obtener las criptomonedas en tendencia: ', error)
-    }
-  }
-
   async function GetCryptosGainers() {
     try {
         const response = await fetch(`http://localhost:4746/CryptoApi/cryptos-gainers`)
@@ -103,36 +89,6 @@ export const useCryptosStore = defineStore('cryptos', () => {
     }
   }
 
-  async function GetTotalMarketCap() {
-    try {
-        const response = await fetch(`http://localhost:4746/CryptoApi/total-market-cap`)
-        const totalMarketCapCryptosInfo = await response.json()
-        totalMarketCapCryptos.value = totalMarketCapCryptosInfo
-    } catch (error) {
-        console.error('Error al obtener la capitalización total del mercado: ', error)
-    }
-  }
-
-  async function GetFearGreedIndex() {
-    try {
-        const response = await fetch(`http://localhost:4746/CryptoApi/fear-greed-index`)
-        const fearGreedIndexCryptosInfo = await response.json()
-        fearGreedIndexCryptos.value = fearGreedIndexCryptosInfo
-    } catch (error) {
-        console.error('Error al obtener el sentimiento del mercado: ', error)
-    }
-  }
-
-  async function GetCMC100Index() {
-    try {
-        const response = await fetch(`http://localhost:4746/CryptoApi/CMC100-index`)
-        const CMC100IndexCryptosInfo = await response.json()
-        CMC100IndexCryptos.value = CMC100IndexCryptosInfo
-    } catch (error) {
-        console.error('Error al obtener el índice CMC100: ', error)
-    }
-  }
-
   async function SearchCrypto(query: string) {
     try {
         const response = await fetch(`http://localhost:4746/Cryptos/search-crypto?query=${query}`)
@@ -149,24 +105,16 @@ export const useCryptosStore = defineStore('cryptos', () => {
     crypto,
     cryptoDetails,
     chartsCryptos,
-    trendingCryptos, 
     gainersCryptos,
     losersCryptos,
-    totalMarketCapCryptos, 
-    fearGreedIndexCryptos, 
-    CMC100IndexCryptos,
     searchCryptos, 
     GetCryptosApi,
     GetAllCryptos, 
     GetCrypto,
     GetCryptoDetails,
     GetCryptoCharts,
-    GetCryptosTrending, 
     GetCryptosGainers,
     GetCryptosLosers,
-    GetTotalMarketCap, 
-    GetFearGreedIndex, 
-    GetCMC100Index,
     SearchCrypto
   }
 })
