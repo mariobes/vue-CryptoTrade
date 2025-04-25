@@ -45,17 +45,6 @@ const toggleSort = (newSortBy: number) => {
   storeCryptos.GetAllCryptos(sortBy.value, order.value)
 }
 
-const updateCryptoDatabase = async () => {
-  await storeCryptos.GetCrypto('bitcoin');
-
-  if ((storeCryptos.crypto === null) || (new Date(storeCryptos.crypto.lastUpdated).toDateString() !== new Date().toDateString())) {
-    await storeCryptos.GetCryptosApi();
-    storeCryptos.GetAllCryptos(sortBy.value ?? 0, order.value)
-  }
-};
-
-updateCryptoDatabase();
-
 storeCryptos.GetAllCryptos(sortBy.value ?? 0, order.value)
 
 window.scrollTo({ top: 0 });
@@ -151,7 +140,7 @@ window.scrollTo({ top: 0 });
           </td>
           <td>
             <div class="crypto-container">
-              <img :src="crypto.image" alt="Crypto Logo" class="crypto-image" />
+              <img :src="crypto.image" alt="Crypto Logo" class="crypto-image" @error="crypto.image = '/src/assets/asset-default.png'" />
               <span class="crypto-name">{{ crypto.name }}</span>
               <span class="crypto-symbol">{{ crypto.symbol.toUpperCase() }}</span>
             </div>

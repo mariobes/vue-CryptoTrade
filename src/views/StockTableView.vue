@@ -3,6 +3,7 @@ import StocksTrendingTable from '@/components/Stock/StocksTrendingTable.vue'
 import StockTable from '@/components/Stock/StockTable.vue'
 import StocksGainersTable from '@/components/Stock/StocksGainersTable.vue';
 import StocksLosersTable from '@/components/Stock/StocksLosersTable.vue';
+import StocksMostActivesTable from '@/components/Stock/StocksMostActivesTable.vue';
 
 </script>
 
@@ -11,9 +12,9 @@ import StocksLosersTable from '@/components/Stock/StocksLosersTable.vue';
   <div class="main-container">
     <div class="content-container"> 
       <StocksTrendingTable class="content-item"></StocksTrendingTable>
-      <StocksTrendingTable class="content-item"></StocksTrendingTable>
       <StocksGainersTable class="content-item"></StocksGainersTable>
       <StocksLosersTable class="content-item"></StocksLosersTable>
+      <StocksMostActivesTable class="content-item"></StocksMostActivesTable>
     </div>
 
     <StockTable></StockTable>

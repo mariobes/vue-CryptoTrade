@@ -57,7 +57,7 @@ const formatDate = (dateString: string) => {
 const showAllExplorers = ref(false)
 
 const filteredExplorers = computed(() =>
-  cryptoDetails.value.links.blockchain_site.filter(link => !!link)
+  cryptoDetails.value?.links.blockchain_site.filter(link => !!link)
 )
 
 const getDomainFromUrl = (url: string) => {
@@ -74,7 +74,7 @@ const getDomainFromUrl = (url: string) => {
     <div class="main-container" v-if="crypto">
 			<div>
 				<div class="crypto-content-name">
-					<img :src="crypto.image" alt="Crypto Logo" class="crypto-image" />
+					<img :src="crypto.image" alt="Crypto Logo" class="crypto-image" @error="crypto.image = '/src/assets/asset-default.png'" />
 					<span class="crypto-name">{{ crypto.name }}</span>
 					<span class="crypto-symbol mt-1">{{ crypto.symbol.toUpperCase() }}</span>
 					<span class="crypto-rank" :style="{ backgroundColor: storeUserPreferences.selectedTheme === 'light' ? '#f0eded' : '#313030' }">
@@ -98,10 +98,10 @@ const getDomainFromUrl = (url: string) => {
 					<span class="crypto-content-title">{{ t('CryptoInfoTable_MarketCap') }}</span>
 					<div>
 						<span class="crypto-content-value">{{ storeUserPreferences.convertToAbbreviated(crypto.market_cap, storeUserPreferences.selectedCurrency, 'after') }}</span>
-						<span class="crypto-content-percentage" :style="{ color: storeUserPreferences.getPriceColor(crypto.price_change_percentage_24h) }">
+						<span class="crypto-content-percentage" :style="{ color: storeUserPreferences.getPriceColor(crypto.market_cap_change_percentage_24h) }">
 							<v-icon class="crypto-content-percentage-icon"
-								:color="storeUserPreferences.getPriceColor(crypto.price_change_percentage_24h)">
-								{{ storeUserPreferences.getArrowDirection(crypto.price_change_percentage_24h) }}
+								:color="storeUserPreferences.getPriceColor(crypto.market_cap_change_percentage_24h)">
+								{{ storeUserPreferences.getArrowDirection(crypto.market_cap_change_percentage_24h) }}
 							</v-icon>
 							{{ crypto.market_cap_change_percentage_24h.toFixed(2) }}%
 						</span>
@@ -147,7 +147,7 @@ const getDomainFromUrl = (url: string) => {
 					<span class="crypto-links-title">{{ t('CryptoInfoTable_Website') }}</span>
 					<span>
 						<a 
-							v-if="cryptoDetails.links.homepage[0]"
+							v-if="cryptoDetails?.links.homepage?.[0]"
 							:href="cryptoDetails.links.homepage[0]" 
 							target="_blank" 
 							class="crypto-link"
@@ -156,7 +156,7 @@ const getDomainFromUrl = (url: string) => {
 							<span>Website</span>
 						</a>
 						<a 
-							v-if="cryptoDetails.links.whitepaper" 
+							v-if="cryptoDetails?.links.whitepaper" 
 							:href="cryptoDetails.links.whitepaper" 
 							target="_blank" 
 							class="crypto-link"
@@ -171,7 +171,7 @@ const getDomainFromUrl = (url: string) => {
 					<span class="crypto-links-title">{{ t('CryptoInfoTable_Socials') }}</span>
 					<span>
 						<a 
-							v-if="cryptoDetails.links.twitter_screen_name" 
+							v-if="cryptoDetails?.links.twitter_screen_name" 
 							:href="`https://twitter.com/${cryptoDetails.links.twitter_screen_name}`" 
 							target="_blank" 
 							class="crypto-link"
@@ -179,7 +179,7 @@ const getDomainFromUrl = (url: string) => {
 						<span class="mdi mdi-twitter icon-twitter"></span>
 						</a>
 						<a 
-							v-if="cryptoDetails.links.subreddit_url" 
+							v-if="cryptoDetails?.links.subreddit_url" 
 							:href="cryptoDetails.links.subreddit_url" 
 							target="_blank" 
 							class="crypto-link"
@@ -187,7 +187,7 @@ const getDomainFromUrl = (url: string) => {
 						<span class="mdi mdi-reddit icon-reddit"></span>
 						</a>
 						<a
-							v-if="cryptoDetails.links.repos_url.github && cryptoDetails.links.repos_url.github.length"
+							v-if="cryptoDetails?.links.repos_url.github && cryptoDetails.links.repos_url.github.length"
 							:href="cryptoDetails.links.repos_url.github[0]"
 							target="_blank"
 							class="crypto-link"
@@ -201,7 +201,7 @@ const getDomainFromUrl = (url: string) => {
 					<span class="crypto-links-title">{{ t('CryptoInfoTable_Explorers') }}</span>
 					<span class="crypto-explorers">
 						<a
-							v-if="filteredExplorers.length"
+							v-if="filteredExplorers && filteredExplorers.length"
 							:href="filteredExplorers[0]"
 							target="_blank"
 							class="crypto-link"
@@ -209,7 +209,7 @@ const getDomainFromUrl = (url: string) => {
 							<span>{{ getDomainFromUrl(filteredExplorers[0]) }}</span>
 						</a>
 						<v-icon
-							v-if="filteredExplorers.length > 1"
+							v-if="filteredExplorers && filteredExplorers.length > 1"
 							class="toggle-arrow"
 							@click="showAllExplorers = !showAllExplorers"
 						>
@@ -257,7 +257,7 @@ const getDomainFromUrl = (url: string) => {
 					<div>
 						<span class="historical-data-price">{{ storeUserPreferences.convertPrice(crypto.atl, storeUserPreferences.selectedCurrency, 'before') }}</span>
 						<span :style="{ color: storeUserPreferences.getPriceColor(crypto.atl_change_percentage) }">
-							+{{ crypto.atl_change_percentage.toFixed(2) }}%
+							{{ crypto.atl_change_percentage > 0 ? '+' : '' }}{{ (crypto.atl_change_percentage ?? 0).toFixed(2) }}%
 						</span>
 					</div>
 				</div>
@@ -457,6 +457,7 @@ a {
 	max-width: 100px;
 	overflow: hidden; 
   text-overflow: ellipsis; 
+	text-align: center;
 }
 
 .toggle-arrow {

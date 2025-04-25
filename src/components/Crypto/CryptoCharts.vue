@@ -467,7 +467,7 @@ window.scrollTo({ top: 0 })
       <Line v-if="!isLoading" :data="chartData" :options="chartOptions" />
       <p v-else>Cargando datos...</p>
     </div>
-    <div v-if="props.cryptoDetails.description?.en" class="description-container">
+    <div v-if="props.cryptoDetails?.description?.en" class="description-container">
       <p class="description-title">
         {{ t('CryptoChart_Title_1') }} 
         {{ props.cryptoDetails.name }}
