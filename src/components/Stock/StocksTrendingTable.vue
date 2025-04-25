@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { useStocksStore } from '@/stores/stocks'
+import { useMarketsStore } from '@/stores/markets'
 import { useUserPreferencesStore } from '../../stores/userPreferences';
 import { useI18n } from 'vue-i18n'
 
@@ -8,12 +8,11 @@ const backgroundTableColor = computed(() => storeUserPreferences.getTheme().tabl
 const textColor = computed(() => storeUserPreferences.getTheme().text)
 
 const storeUserPreferences = useUserPreferencesStore()
+const storeMarkets = useMarketsStore()
 
 const { t } = useI18n()
 
-const storeStocks = useStocksStore()
-
-//storeStocks.GetStocksTrending()
+storeMarkets.GetStocksTrending()
 </script>
 
 <template>
@@ -28,32 +27,32 @@ const storeStocks = useStocksStore()
     </thead>
     <tbody>
       <tr
-        v-for="stocks in storeStocks.trendingStocks.slice(0, 5)"
-        :key="stocks.ticker"
+        v-for="stock in storeMarkets.stocksTrending.slice(0, 5)"
+        :key="stock.id"
         class="stock-link"
         :class="storeUserPreferences.selectedTheme === 'light' ? 'hover-light' : 'hover-dark'"
-        @click="$router.push({ name: 'stockDetails', params: { id: stocks.ticker } })"
+        @click="$router.push({ name: 'stockDetails', params: { id: stock.id } })"
         style="cursor: pointer"
       >
         <td>
           <div class="table-content-name">
-            <img :src="stocks.image" alt="Stock Logo" class="stock-image" />
-            <span class="stock-name mt-1">{{ stocks.companyName }}</span>
+            <img :src="stock.image" alt="Stock Logo" class="stock-image" @error="storeUserPreferences.showDefaultAssetImage(stock)" />
+            <span class="stock-name mt-1">{{ stock.name }}</span>
           </div>
         </td>
         <td>
           <div class="table-content-price">
             <span class="stock-price">
-              {{ storeUserPreferences.convertPrice(stocks.price, storeUserPreferences.selectedCurrency, 'after') }}
+              {{ storeUserPreferences.convertPrice(stock.price, storeUserPreferences.selectedCurrency, 'after') }}
             </span>
             <span class="stock-change">
               <span 
-                :style="{ color: storeUserPreferences.getPriceColor(stocks.changesPercentage) }">
-                {{ parseInt(stocks.changesPercentage).toFixed(2) }}%
+                :style="{ color: storeUserPreferences.getPriceColor(stock.changePercentage) }">
+                {{ stock.changePercentage.toFixed(2) }}%
               </span>
               <v-icon 
-                :color="storeUserPreferences.getPriceColor(stocks.changesPercentage)">
-                {{ storeUserPreferences.getArrowDirection(stocks.changesPercentage) }}
+                :color="storeUserPreferences.getPriceColor(stock.changePercentage)">
+                {{ storeUserPreferences.getArrowDirection(stock.changePercentage) }}
               </v-icon>
             </span>
           </div>

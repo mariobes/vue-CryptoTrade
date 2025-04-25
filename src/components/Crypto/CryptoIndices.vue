@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-import { useCryptosStore } from '@/stores/cryptos'
+import { useMarketsStore } from '@/stores/markets'
 import { useUserPreferencesStore } from '../../stores/userPreferences';
 import { useI18n } from 'vue-i18n'
 
 const backgroundTableColor = computed(() => storeUserPreferences.getTheme().table)
 const textColor = computed(() => storeUserPreferences.getTheme().text)
 
-const storeCryptos = useCryptosStore()
 const storeUserPreferences = useUserPreferencesStore()
+const storeMarkets = useMarketsStore()
+
 const { t } = useI18n()
 
 const totalMarketCap = ref<number | null>(null);
@@ -18,33 +19,29 @@ const CMC100IndexChangePercentage = ref<number | null>(null)
 const fearGreedValue = ref<number | null>(null)
 const fearGreedSentiment = ref<string | null>(null)
 
-// onMounted(() => {
-//   storeCryptos.GetTotalMarketCap().then(() => {
-//     totalMarketCap.value = storeCryptos.totalMarketCapCryptos.totalMarketCap
-//     marketCapChangePercentage.value = parseFloat(storeCryptos.totalMarketCapCryptos.marketCapChangePercentage.toFixed(2))
-//   })
+onMounted(async () => {
+  await storeMarkets.GetCryptoIndices();
+  const cryptoIndicesData = storeMarkets.cryptoIndices;
 
-//   storeCryptos.GetCMC100Index().then(() => {
-//     valueCMC100Index.value = storeCryptos.CMC100IndexCryptos.value
-//     CMC100IndexChangePercentage.value = parseFloat(storeCryptos.CMC100IndexCryptos.percentageChange.toFixed(2))
-//   })
+  cryptoIndicesData.forEach((index) => {
+    switch (index.name) {
+      case 'total-market-cap':
+        totalMarketCap.value = index.value;
+        marketCapChangePercentage.value = parseFloat(index.changePercentage?.toFixed(2) || '0');
+        break;
+      case 'CMC100-index':
+        valueCMC100Index.value = index.value;
+        CMC100IndexChangePercentage.value = parseFloat(index.changePercentage?.toFixed(2) || '0');
+        break;
+      case 'fear-greed-index':
+        fearGreedValue.value = index.value;
+        fearGreedSentiment.value = index.sentiment;
+        break;
+    }
+  });
+});
 
-//   storeCryptos.GetFearGreedIndex().then(() => {
-//     fearGreedValue.value = storeCryptos.fearGreedIndexCryptos.value
-//     fearGreedSentiment.value = storeCryptos.fearGreedIndexCryptos.valueClassification
-//   })
-// })
-
-onMounted(() => {
-  totalMarketCap.value = 2.68
-  marketCapChangePercentage.value = -2.12
-
-  fearGreedValue.value = 33
-  fearGreedSentiment.value = 'Fear'
-
-  valueCMC100Index.value = 166.28
-  CMC100IndexChangePercentage.value = -3.9
-})
+storeMarkets.GetCryptoIndices()
 
 const getCirclePosition = (value: number | null) => `${value ?? 0}%`
 const getSentimentTranslation = (sentiment: string | null) => {

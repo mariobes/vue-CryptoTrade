@@ -5,9 +5,6 @@ import type { Stock } from '@/core/stock'
 export const useStocksStore = defineStore('stocks', () => {
   const stocks = ref<Stock[]>([])
   const stock = ref<Stock | null>(null)
-  const trendingStocks = ref<any[]>([])
-  const gainersStocks = ref<any[]>([])
-  const losersStocks = ref<any[]>([])
   const searchStocks = ref<any[]>([])
 
   async function GetStocksApi() {
@@ -48,36 +45,6 @@ export const useStocksStore = defineStore('stocks', () => {
     }
   }
 
-  async function GetStocksTrending() {
-    try {
-        const response = await fetch(`http://localhost:4746/StockApi/stocks-trending`)
-        const stocksGainersInfo = await response.json()
-        trendingStocks.value = stocksGainersInfo
-    } catch (error) {
-        console.error('Error al obtener las acciones en tendencia: ', error)
-    }
-  }
-
-  async function GetStocksGainers() {
-    try {
-        const response = await fetch(`http://localhost:4746/StockApi/stocks-gainers`)
-        const stocksTrendingInfo = await response.json()
-        gainersStocks.value = stocksTrendingInfo.mostGainerStock
-    } catch (error) {
-        console.error('Error al obtener las acciones más ganadoras: ', error)
-    }
-  }
-
-  async function GetStocksLosers() {
-    try {
-        const response = await fetch(`http://localhost:4746/StockApi/stocks-losers`)
-        const stocksLosersInfo = await response.json()
-        losersStocks.value = stocksLosersInfo.mostLoserStock
-    } catch (error) {
-        console.error('Error al obtener las acciones más perdedoras: ', error)
-    }
-  }
-
   async function SearchStock(query: string) {
     try {
         const response = await fetch(`http://localhost:4746/Stocks/search-stock?query=${query}`)
@@ -92,16 +59,10 @@ export const useStocksStore = defineStore('stocks', () => {
   return {
     stocks, 
     stock,
-    trendingStocks,  
-    gainersStocks,
-    losersStocks,
     searchStocks,
     GetStocksApi,
     GetAllStocks, 
     GetStock,
-    GetStocksTrending, 
-    GetStocksGainers,
-    GetStocksLosers,
     SearchStock
   }
 })

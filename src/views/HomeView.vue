@@ -1,24 +1,71 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import CryptoIndices from '@/components/Crypto/CryptoIndices.vue'
 import CryptosTrendingTable from '@/components/Crypto/CryptosTrendingTable.vue'
 import StocksTrendingTable from '@/components/Stock/StocksTrendingTable.vue'
 import CryptoTable from '@/components/Crypto/CryptoTable.vue'
 import StockTable from '@/components/Stock/StockTable.vue'
+import { useCryptosStore } from '@/stores/cryptos'
+import { useStocksStore } from '@/stores/stocks'
+import { useMarketsStore } from '@/stores/markets'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
 
 const textColor = computed(() => storeUserPreferences.getTheme().text)
 
+const storeCryptos = useCryptosStore()
+const storeStocks = useStocksStore()
+const storeMarkets = useMarketsStore()
 const storeUserPreferences = useUserPreferencesStore()
 
 const { t } = useI18n()
+
+const updateAssetsDatabase = async () => {
+  await storeCryptos.GetAllCryptos(0, 0)
+  await storeStocks.GetAllStocks(0, 0)
+  const firstCrypto = storeCryptos.cryptos[0];
+  const firstStock =  storeStocks.stocks[0];
+
+  if ((firstCrypto === null) || (new Date(firstCrypto.lastUpdated).toDateString() !== new Date().toDateString()) &&
+     (firstStock === null || new Date(firstStock.lastUpdated).toDateString() !== new Date().toDateString())) {
+    await storeMarkets.GetTotalMarketCapApi();
+    await storeMarkets.GetFearGreedIndexApi();
+    await storeMarkets.GetCMC100IndexApi();
+    await storeMarkets.GetCryptoIndices()
+
+    await storeMarkets.GetCryptosTrendingApi();
+    await storeMarkets.GetCryptosTrending()
+
+    await storeMarkets.GetStocksTrendingApi();
+    await storeMarkets.GetStocksTrending()
+
+    await storeMarkets.GetStocksGainersApi();
+    await storeMarkets.GetStocksGainers()
+
+    await storeMarkets.GetStocksLosersApi();
+    await storeMarkets.GetStocksLosers()
+
+    await storeMarkets.GetStocksMostActivesApi();
+    await storeMarkets.GetStocksMostActives()
+
+    await storeCryptos.GetCryptosApi();
+    await storeCryptos.GetAllCryptos(0, 0)
+
+    await storeStocks.GetStocksApi();
+    await storeStocks.GetAllStocks(0, 0)
+  }
+};
+
+onMounted(async () => {
+  await updateAssetsDatabase();
+});
 </script>
 
 <template>
 
 
 <!-- {{ Math.abs(crypto.price_change_percentage_7d_in_currency).toFixed(2) }}% -->
+<!-- +{{ (crypto.atl_change_percentage ?? 0).toFixed(2) }}% -->
 
 
   <div class="main-container">

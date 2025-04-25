@@ -12,7 +12,7 @@ const storeMarkets = useMarketsStore()
 
 const { t } = useI18n()
 
-storeMarkets.GetCryptosTrending()
+storeMarkets.GetStocksMostActives()
 </script>
 
 <template>
@@ -20,39 +20,39 @@ storeMarkets.GetCryptosTrending()
     <thead>
       <tr>
         <th class="text-left" colspan="2">
-          <v-icon class="mb-2" color="#FF8C00">mdi-fire</v-icon> 
-          <span class="title-table">{{ t('CryptosTrendingTable_Title') }}</span>
+          <v-icon class="mb-2" color="blue">mdi mdi-lightning-bolt</v-icon> 
+          <span class="title-table">{{ t('StocksMostActivesTable_Title') }}</span>
         </th>
       </tr>
     </thead>
     <tbody>
       <tr
-        v-for="crypto in storeMarkets.cryptosTrending.slice(0, 5)"
-        :key="crypto.id"
-        class="crypto-link"
+        v-for="stock in storeMarkets.stocksMostActives.slice(0, 5)"
+        :key="stock.id"
+        class="stock-link"
         :class="storeUserPreferences.selectedTheme === 'light' ? 'hover-light' : 'hover-dark'"
-        @click="$router.push({ name: 'cryptoDetails', params: { id: crypto.id } })"
+        @click="$router.push({ name: 'stockDetails', params: { id: stock.id } })"
         style="cursor: pointer"
       >
         <td>
           <div class="table-content-name">
-            <img :src="crypto.image" alt="Crypto Logo" class="crypto-image" @error="crypto.image = '/src/assets/asset-default.png'" />
-            <span class="crypto-name mt-1">{{ crypto.name }}</span>
+            <img :src="stock.image" alt="Stock Logo" class="stock-image" @error="stock.image = '/src/assets/asset-default.png'" />
+            <span class="stock-name mt-1">{{ stock.name }}</span>
           </div>
         </td>
         <td>
           <div class="table-content-price">
-            <span class="crypto-price">
-              {{ storeUserPreferences.convertPrice(crypto.price, storeUserPreferences.selectedCurrency, 'after') }}
+            <span class="stock-price">
+              {{ storeUserPreferences.convertPrice(stock.price, storeUserPreferences.selectedCurrency, 'after') }}
             </span>
-            <span class="crypto-change">
+            <span class="stock-change">
               <span 
-                :style="{ color: storeUserPreferences.getPriceColor(crypto.changePercentage) }">
-                {{ crypto.changePercentage.toFixed(2) }}%
+                :style="{ color: storeUserPreferences.getPriceColor(stock.changePercentage) }">
+                {{ stock.changePercentage.toFixed(2) }}%
               </span>
               <v-icon 
-                :color="storeUserPreferences.getPriceColor(crypto.changePercentage)">
-                {{ storeUserPreferences.getArrowDirection(crypto.changePercentage) }}
+                :color="storeUserPreferences.getPriceColor(stock.changePercentage)">
+                {{ storeUserPreferences.getArrowDirection(stock.changePercentage) }}
               </v-icon>
             </span>
           </div>
@@ -77,7 +77,7 @@ storeMarkets.GetCryptosTrending()
   font-weight: bold;
 }
 
-.crypto-link {
+.stock-link {
   text-decoration: none;
   color: inherit;
 }
@@ -95,14 +95,14 @@ storeMarkets.GetCryptosTrending()
   align-items: center;
 }
 
-.crypto-image {
+.stock-image {
   width: 30px;
   height: 30px;
   margin-right: 10px;
   border-radius: 50%;
 }
 
-.crypto-name {
+.stock-name {
   max-width: 150px;
   overflow: hidden;
   white-space: nowrap;
@@ -116,11 +116,11 @@ storeMarkets.GetCryptosTrending()
   white-space: nowrap;
 }
 
-.crypto-price {
+.stock-price {
   margin-right: 30px;
 }
 
-.crypto-change {
+.stock-change {
   display: flex;
   align-items: center;
   max-width: 58px;

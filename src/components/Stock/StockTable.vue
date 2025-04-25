@@ -44,17 +44,6 @@ const toggleSort = (newSortBy: number) => {
   storeStocks.GetAllStocks(sortBy.value, order.value)
 }
 
-const updateStockDatabase = async () => {
-  await storeStocks.GetStock('aapl');
-
-  if ((storeStocks.stock === null) || (new Date(storeStocks.stock.lastUpdated).toDateString() !== new Date().toDateString())) {
-    await storeStocks.GetStocksApi();
-    storeStocks.GetAllStocks(sortBy.value ?? 0, order.value) 
-  }
-};
-
-updateStockDatabase();
-
 storeStocks.GetAllStocks(sortBy.value ?? 0, order.value) 
 
 window.scrollTo({ top: 0 });
@@ -149,7 +138,11 @@ window.scrollTo({ top: 0 });
         </td>
         <td>
           <div class="stock-container">
-            <img :src="stock.image" alt="Stock Logo" class="stock-image" :class="{ 'stock-image-light': storeUserPreferences.selectedTheme === 'light' }">
+            <img :src="stock.image" alt="Stock Logo"
+                @error="storeUserPreferences.showDefaultAssetImage(stock)"
+                class="stock-image" 
+                :class="{ 'stock-image-light': storeUserPreferences.selectedTheme === 'light' }"
+            />
             <span class="stock-name">{{ stock.companyName }}</span>
             <span class="stock-symbol">{{ stock.symbol.toUpperCase() }}</span>
           </div>
@@ -264,7 +257,7 @@ window.scrollTo({ top: 0 });
 }
 
 .stocks-see-all-container {
-  margin-top: 30px;
+  margin: 30px 0;
 }
 
 .stocks-see-all {

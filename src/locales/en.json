@@ -76,6 +76,7 @@
     "StocksTrendingTable_Title": "Trending Stocks",
     "StocksGainersTable_Title": "Biggest Gainers",
     "StocksLosersTable_Title": "Biggest Losers",
+    "StocksMostActivesTable_Title": "Most Actives",
 
     "CryptoIndices_Index_1": "Market Cap",
     "CryptoIndices_Index_2": "CMC100 Index",
