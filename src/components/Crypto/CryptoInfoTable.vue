@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, onMounted } from 'vue'
 import { useCryptosStore } from '@/stores/cryptos'
+import { useWatchlistsStore } from '@/stores/watchlists'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
+import { useAuthStore } from '@/stores/auth'
 import { useI18n } from 'vue-i18n'
 
 const backgroundColor = computed(() => storeUserPreferences.getTheme().background)
@@ -13,7 +15,9 @@ const props = defineProps<{ cryptoId: string }>()
 const { t } = useI18n()
 
 const storeCryptos = useCryptosStore()
+const storeWatchlists = useWatchlistsStore()
 const storeUserPreferences = useUserPreferencesStore()
+const storeAuth = useAuthStore()
 
 const crypto = computed(() => storeCryptos.crypto)
 const cryptoDetails = computed(() => storeCryptos.cryptoDetails)
@@ -68,18 +72,64 @@ const getDomainFromUrl = (url: string) => {
     return url
   }
 }
+
+const userId = storeAuth.getUserId()
+const token = storeAuth.getToken()
+
+const watchlist = ref<string[]>([])
+
+async function loadWatchlist() {
+  if (!storeAuth.isLoggedIn()) return;
+  await storeWatchlists.GetAllWatchlists(userId, 'Crypto', token)
+  watchlist.value = storeWatchlists.watchlists.map(wl => wl.assetId)
+}
+
+async function toggleFavorite(cryptoId: string) {
+
+  const isFav = watchlist.value.includes(cryptoId)
+
+  if (isFav) {
+    const success = await storeWatchlists.DeleteWatchlist(userId, cryptoId, 'Crypto', token)
+    if (success) {
+      watchlist.value = watchlist.value.filter(id => id !== cryptoId)
+    }
+  } else {
+    const success = await storeWatchlists.CreateWatchlist(userId, cryptoId, 'Crypto', token)
+    if (success) {
+      watchlist.value.push(cryptoId)
+    }
+  }
+}
+
+onMounted(() => {
+  loadWatchlist()
+})
 </script>
 
 <template>
     <div class="main-container" v-if="crypto">
 			<div>
-				<div class="crypto-content-name">
-					<img :src="crypto.image" alt="Crypto Logo" class="crypto-image" @error="crypto.image = '/src/assets/asset-default.png'" />
-					<span class="crypto-name">{{ crypto.name }}</span>
-					<span class="crypto-symbol mt-1">{{ crypto.symbol.toUpperCase() }}</span>
-					<span class="crypto-rank" :style="{ backgroundColor: storeUserPreferences.selectedTheme === 'light' ? '#f0eded' : '#313030' }">
-						#{{ crypto.marketCapRank }}
-					</span>
+				<div class="crypto-content-name-favorite">
+					<div class="crypto-content-name">
+						<img :src="crypto.image" alt="Crypto Logo" class="crypto-image" @error="crypto.image = '/src/assets/asset-default.png'" />
+						<span class="crypto-name">{{ crypto.name }}</span>
+						<span class="crypto-symbol mt-1">{{ crypto.symbol.toUpperCase() }}</span>
+						<span class="crypto-rank" :style="{ backgroundColor: storeUserPreferences.selectedTheme === 'light' ? '#f0eded' : '#313030' }">
+							#{{ crypto.marketCapRank }}
+						</span>
+					</div>
+					<div class="crypto-content-favorite">
+            <span v-if="storeAuth.isLoggedIn()" @click.stop="toggleFavorite(crypto.id)" class="favorite-icon">
+              <span 
+                v-if="watchlist.includes(crypto.id)" 
+                class="mdi mdi-star favorite-icon-active"
+              ></span>
+              <span 
+                v-else 
+                class="mdi mdi-star-outline"
+              ></span>
+            </span>
+					</div>
 				</div>
 				<div class="crypto-content-price">
 					<span class="crypto-price">{{ storeUserPreferences.convertPrice(crypto.current_price, storeUserPreferences.selectedCurrency, 'after') }}</span>
@@ -303,9 +353,30 @@ const getDomainFromUrl = (url: string) => {
 	padding: 25px;
 }
 
+.crypto-content-name-favorite {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
 .crypto-content-name {
 	display: flex;
   align-items: center;
+}
+
+.favorite-icon-active {
+  color: gold;
+}
+
+.favorite-icon {
+  color: v-bind(textColor);
+	cursor: pointer;
+	font-size: 1.6rem;
+	margin-right: 15px;
+}
+
+.favorite-icon:hover {
+  color: gold;
 }
 
 .crypto-image {
