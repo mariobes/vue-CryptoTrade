@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
-import { useI18n } from 'vue-i18n'
 import CryptoIndices from '@/components/Crypto/CryptoIndices.vue'
 import CryptosTrendingTable from '@/components/Crypto/CryptosTrendingTable.vue'
 import StocksTrendingTable from '@/components/Stock/StocksTrendingTable.vue'
@@ -10,6 +9,7 @@ import { useCryptosStore } from '@/stores/cryptos'
 import { useStocksStore } from '@/stores/stocks'
 import { useMarketsStore } from '@/stores/markets'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
+import { useI18n } from 'vue-i18n'
 
 const textColor = computed(() => storeUserPreferences.getTheme().text)
 
@@ -26,8 +26,9 @@ const updateAssetsDatabase = async () => {
   const firstCrypto = storeCryptos.cryptos[0];
   const firstStock =  storeStocks.stocks[0];
 
-  if ((firstCrypto === null) || (new Date(firstCrypto.lastUpdated).toDateString() !== new Date().toDateString()) &&
-     (firstStock === null || new Date(firstStock.lastUpdated).toDateString() !== new Date().toDateString())) {
+  if ((firstCrypto?.lastUpdated == null || new Date(firstCrypto.lastUpdated).toDateString() !== new Date().toDateString()) &&
+     (firstStock?.lastUpdated == null || new Date(firstStock.lastUpdated).toDateString() !== new Date().toDateString())) 
+  {
     await storeMarkets.GetTotalMarketCapApi();
     await storeMarkets.GetFearGreedIndexApi();
     await storeMarkets.GetCMC100IndexApi();
@@ -40,13 +41,10 @@ const updateAssetsDatabase = async () => {
     await storeMarkets.GetStocksTrending()
 
     await storeMarkets.GetStocksGainersApi();
-    await storeMarkets.GetStocksGainers()
 
     await storeMarkets.GetStocksLosersApi();
-    await storeMarkets.GetStocksLosers()
 
     await storeMarkets.GetStocksMostActivesApi();
-    await storeMarkets.GetStocksMostActives()
 
     await storeCryptos.GetCryptosApi();
     await storeCryptos.GetAllCryptos(0, 0)

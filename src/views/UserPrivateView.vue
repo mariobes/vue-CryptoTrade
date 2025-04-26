@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useRoute } from 'vue-router'
 import { useUserPreferencesStore } from '../stores/userPreferences';
+import { useAuthStore } from '@/stores/auth'
 
 const textColor = computed(() => storeUserPreferences.getTheme().text)
 
 const storeUserPreferences = useUserPreferencesStore()
+const storeAuth = useAuthStore()
 
-const route = useRoute()
-const userId = computed(() => route.params.id)
-
+const userId = storeAuth.getUserId()
 
 </script>
 
