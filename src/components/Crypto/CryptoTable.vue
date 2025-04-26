@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { RouterLink } from 'vue-router';
 import { useRoute } from 'vue-router'
 import { useCryptosStore } from '@/stores/cryptos'
+import { useWatchlistsStore } from '@/stores/watchlists'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
+import { useAuthStore } from '@/stores/auth'
 import { useI18n } from 'vue-i18n'
 import CryptoSparkline from '../Crypto/CryptoSparkline.vue'
 
@@ -13,7 +15,9 @@ const textColor = computed(() => storeUserPreferences.getTheme().text)
 const { t } = useI18n()
 
 const storeCryptos = useCryptosStore()
+const storeWatchlists = useWatchlistsStore()
 const storeUserPreferences = useUserPreferencesStore()
+const storeAuth = useAuthStore()
 
 const sortBy = ref<number | null>(null)
 const order = ref(0)
@@ -21,10 +25,21 @@ const order = ref(0)
 const sortable = ref(false)
 const route = useRoute()
 
+const props = defineProps<{
+  showWatchlist?: boolean,
+  watchlist?: string[]
+}>()
+
+const emit = defineEmits<{
+  (e: 'refresh'): void
+}>()
+
 watch(
   () => route.path,
   (newPath) => {
-    if (newPath === '/cryptoTable') {
+    if (props.showWatchlist) {
+      sortable.value = true
+    } else if (newPath === '/cryptoTable') {
       sortable.value = true
     } else if (newPath === '/') {
       sortable.value = false
@@ -45,16 +60,56 @@ const toggleSort = (newSortBy: number) => {
   storeCryptos.GetAllCryptos(sortBy.value, order.value)
 }
 
-storeCryptos.GetAllCryptos(sortBy.value ?? 0, order.value)
+const cryptosList = computed(() => {
+  if (props.showWatchlist) {
+    return storeCryptos.cryptos.filter(crypto => props.watchlist?.includes(crypto.id))
+  }
+  return sortable.value ? storeCryptos.cryptos : storeCryptos.cryptos.slice(0, 10)
+})
 
-window.scrollTo({ top: 0 });
+const userId = storeAuth.getUserId()
+const token = storeAuth.getToken()
+
+const watchlist = ref<string[]>([])
+
+async function loadWatchlist() {
+  if (!storeAuth.isLoggedIn()) return;
+  await storeWatchlists.GetAllWatchlists(userId, 'Crypto', token)
+  watchlist.value = storeWatchlists.watchlists.map(wl => wl.assetId)
+}
+
+async function toggleFavorite(cryptoId: string) {
+
+  const isFav = watchlist.value.includes(cryptoId)
+
+  if (isFav) {
+    const success = await storeWatchlists.DeleteWatchlist(userId, cryptoId, 'Crypto', token)
+    if (success) {
+      watchlist.value = watchlist.value.filter(id => id !== cryptoId)
+      emit('refresh')
+    }
+  } else {
+    const success = await storeWatchlists.CreateWatchlist(userId, cryptoId, 'Crypto', token)
+    if (success) {
+      watchlist.value.push(cryptoId)
+      emit('refresh')
+    }
+  }
+}
+
+onMounted(async () => {
+  await loadWatchlist()
+  await storeCryptos.GetAllCryptos(sortBy.value ?? 0, order.value)
+  window.scrollTo({ top: 0 });
+})
 </script>
 
 <template>
-  <div class="title-container">
+  <div v-if="!props.showWatchlist" class="title-container">
     <p class="title-text">{{ t('CryptoTable_Title') }}</p>
   </div>
-  <v-table class="table-container">
+
+  <v-table v-if="cryptosList.length != 0" class="table-container">
     <thead>
       <tr>
         <th></th>
@@ -119,7 +174,7 @@ window.scrollTo({ top: 0 });
     </thead>
     <tbody>
       <tr
-        v-for="crypto in (sortable ? storeCryptos.cryptos : storeCryptos.cryptos.slice(0, 10))"
+        v-for="crypto in cryptosList"        
         :key="crypto.id"
         class="crypto-link"
         :class="storeUserPreferences.selectedTheme === 'light' ? 'hover-light' : 'hover-dark'"
@@ -127,11 +182,16 @@ window.scrollTo({ top: 0 });
         style="cursor: pointer"
       >
           <td>
-            <span class="mdi mdi-star-outline"></span>
-            <!-- <span class="mdi mdi-star"></span> -->
-            <!-- <RouterLink to="/stockTable" @click.stop>
-              <span class="mdi mdi-star-outline"></span>
-            </RouterLink> -->
+            <span v-if="storeAuth.isLoggedIn()" @click.stop="toggleFavorite(crypto.id)" class="favorite-icon">
+              <span 
+                v-if="watchlist.includes(crypto.id)" 
+                class="mdi mdi-star favorite-icon-active"
+              ></span>
+              <span 
+                v-else 
+                class="mdi mdi-star-outline"
+              ></span>
+            </span>
           </td>
           <td>
             <span>
@@ -172,13 +232,12 @@ window.scrollTo({ top: 0 });
       </tr>
     </tbody>
   </v-table>
-  <div v-if="!sortable" class="cryptos-see-all-container">
+  <div v-if="!sortable && !props.showWatchlist" class="cryptos-see-all-container">
     <RouterLink 
       to="/cryptoTable" 
       class="cryptos-see-all" 
       :style="'color: white'"
     >
-      <!-- target="_blank" -->
       {{ t('AssetTable_See_All') }}
     </RouterLink>
   </div>
@@ -224,6 +283,18 @@ window.scrollTo({ top: 0 });
 
 .hover-dark:hover {
   background-color: #232323 !important;
+}
+
+.favorite-icon-active {
+  color: gold;
+}
+
+.favorite-icon {
+  color: v-bind(textColor);
+}
+
+.favorite-icon:hover {
+  color: gold;
 }
 
 .crypto-container {

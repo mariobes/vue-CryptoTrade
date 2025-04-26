@@ -55,6 +55,7 @@
     "CryptoTable_Volume_24h": "Volume (24h)",
     "CryptoTable_Circulating_Supply": "Circulating Supply",
     "CryptoTable_Last_7_Days": "Last 7 Days",
+    "CryptoTable_Watchlist_Message": "You don't have any cryptocurrencies in your watchlist yet",
 
     "StockTable_Title": "Top Stocks by Market Cap",
     "StockTable_Name": "Name",
@@ -66,6 +67,7 @@
     "StockTable_MarketCap": "Market Cap",
     "StockTable_Average_Volume": "Average Volume",
     "StockTable_Exchange": "Exchange",
+    "StockTable_Watchlist_Message": "You don't have any stocks in your watchlist yet",
 
     "AssetTable_See_All": "See All",
 
@@ -106,7 +108,8 @@
 
     "CryptoChart_Title_1": "What is",
     "CryptoChart_Title_2": "?",
+    "CryptoChart_Price": "Price",
 
-    "CryptoChart_Price": "Price"
+    "WatchlistTableView_Title": "Your Cryptocurrency and Stocks Watchlists"
 
 }

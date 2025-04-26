@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { RouterLink } from 'vue-router';
 import { useRoute } from 'vue-router'
 import { useStocksStore } from '@/stores/stocks'
+import { useWatchlistsStore } from '@/stores/watchlists'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
+import { useAuthStore } from '@/stores/auth'
 import { useI18n } from 'vue-i18n'
 
 const backgroundColor = computed(() => storeUserPreferences.getTheme().background)
@@ -12,7 +14,9 @@ const textColor = computed(() => storeUserPreferences.getTheme().text)
 const { t } = useI18n()
 
 const storeStocks = useStocksStore()
+const storeWatchlists = useWatchlistsStore()
 const storeUserPreferences = useUserPreferencesStore()
+const storeAuth = useAuthStore()
 
 const sortBy = ref<number | null>(null)
 const order = ref(0)
@@ -20,10 +24,21 @@ const order = ref(0)
 const sortable = ref(false)
 const route = useRoute()
 
+const props = defineProps<{
+  showWatchlist?: boolean,
+  watchlist?: string[]
+}>()
+
+const emit = defineEmits<{
+  (e: 'refresh'): void
+}>()
+
 watch(
   () => route.path,
   (newPath) => {
-    if (newPath === '/stockTable') {
+    if (props.showWatchlist) {
+      sortable.value = true
+    } else if (newPath === '/stockTable') {
       sortable.value = true
     } else if (newPath === '/') {
       sortable.value = false
@@ -44,16 +59,56 @@ const toggleSort = (newSortBy: number) => {
   storeStocks.GetAllStocks(sortBy.value, order.value)
 }
 
-storeStocks.GetAllStocks(sortBy.value ?? 0, order.value) 
+const stocksList = computed(() => {
+  if (props.showWatchlist) {
+    return storeStocks.stocks.filter(stock => props.watchlist?.includes(stock.id))
+  }
+  return sortable.value ? storeStocks.stocks : storeStocks.stocks.slice(0, 10)
+})
 
-window.scrollTo({ top: 0 });
+const userId = storeAuth.getUserId()
+const token = storeAuth.getToken()
+
+const watchlist = ref<string[]>([])
+
+async function loadWatchlist() {
+  if (!storeAuth.isLoggedIn()) return;
+  await storeWatchlists.GetAllWatchlists(userId, 'Stock', token)
+  watchlist.value = storeWatchlists.watchlists.map(wl => wl.assetId)
+}
+
+async function toggleFavorite(stockId: string) {
+
+  const isFav = watchlist.value.includes(stockId)
+
+  if (isFav) {
+    const success = await storeWatchlists.DeleteWatchlist(userId, stockId, 'Stock', token)
+    if (success) {
+      watchlist.value = watchlist.value.filter(id => id !== stockId)
+      emit('refresh')
+    }
+  } else {
+    const success = await storeWatchlists.CreateWatchlist(userId, stockId, 'Stock', token)
+    if (success) {
+      watchlist.value.push(stockId)
+      emit('refresh')
+    }
+  }
+}
+
+onMounted(async () => {
+  await loadWatchlist()
+  storeStocks.GetAllStocks(sortBy.value ?? 0, order.value) 
+  window.scrollTo({ top: 0 });
+})
 </script>
 
 <template>
-  <div class="title-container">
+  <div v-if="!props.showWatchlist" class="title-container">
     <p class="title-text">{{ t('StockTable_Title') }}</p>
   </div>
-  <v-table class="table-container">
+
+  <v-table v-if="stocksList.length != 0" class="table-container">
     <thead>
       <tr>
         <th></th>
@@ -120,7 +175,7 @@ window.scrollTo({ top: 0 });
     </thead>
     <tbody>
       <tr
-        v-for="stock in (sortable ? storeStocks.stocks : storeStocks.stocks.slice(0, 10))"
+        v-for="stock in stocksList"        
         :key="stock.id"
         class="stock-link"
         :class="storeUserPreferences.selectedTheme === 'light' ? 'hover-light' : 'hover-dark'"
@@ -128,8 +183,16 @@ window.scrollTo({ top: 0 });
         style="cursor: pointer"
       >
         <td>
-          <span class="mdi mdi-star-outline"></span>
-          <!-- <span class="mdi mdi-star"></span> -->
+          <span v-if="storeAuth.isLoggedIn()" @click.stop="toggleFavorite(stock.id)" class="favorite-icon">
+            <span 
+              v-if="watchlist.includes(stock.id)" 
+              class="mdi mdi-star favorite-icon-active"
+            ></span>
+            <span 
+              v-else 
+              class="mdi mdi-star-outline"
+            ></span>
+          </span>
         </td>
         <td>
           <span>
@@ -170,7 +233,7 @@ window.scrollTo({ top: 0 });
       </tr>
     </tbody>
   </v-table>
-  <div v-if="!sortable" class="stocks-see-all-container">
+  <div v-if="!sortable && !props.showWatchlist" class="stocks-see-all-container">
     <RouterLink 
       to="/stockTable" 
       class="stocks-see-all" 
@@ -221,6 +284,18 @@ window.scrollTo({ top: 0 });
 
 .hover-dark:hover {
   background-color: #232323 !important;
+}
+
+.favorite-icon-active {
+  color: gold;
+}
+
+.favorite-icon {
+  color: v-bind(textColor);
+}
+
+.favorite-icon:hover {
+  color: gold;
 }
 
 .stock-container {
