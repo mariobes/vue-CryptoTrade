@@ -61,6 +61,9 @@ onMounted(async () => {
 
 <template>
 
+<!-- onMounted(async () => {
+  await storeTransactions.GetTransactions(userId, token);
+}); -->
 
 <!-- {{ Math.abs(crypto.price_change_percentage_7d_in_currency).toFixed(2) }}% -->
 <!-- +{{ (crypto.atl_change_percentage ?? 0).toFixed(2) }}% -->

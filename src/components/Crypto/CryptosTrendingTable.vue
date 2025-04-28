@@ -45,13 +45,11 @@ storeMarkets.GetCryptosTrending()
             <span class="crypto-price">
               {{ storeUserPreferences.convertPrice(crypto.price, storeUserPreferences.selectedCurrency, 'after') }}
             </span>
-            <span class="crypto-change">
-              <span 
-                :style="{ color: storeUserPreferences.getPriceColor(crypto.changePercentage) }">
+            <span class="crypto-change" :style="{ color: storeUserPreferences.getPriceColor(crypto.changePercentage) }">
+              <span>
                 {{ crypto.changePercentage.toFixed(2) }}%
               </span>
-              <v-icon 
-                :color="storeUserPreferences.getPriceColor(crypto.changePercentage)">
+              <v-icon>
                 {{ storeUserPreferences.getArrowDirection(crypto.changePercentage) }}
               </v-icon>
             </span>

@@ -46,13 +46,11 @@ storeCryptos.GetCryptosLosers()
 						<span class="crypto-price">
 							{{ storeUserPreferences.convertPrice(crypto.current_price, storeUserPreferences.selectedCurrency, 'after') }}
 						</span>
-						<span class="crypto-change">
-							<span 
-								:style="{ color: storeUserPreferences.getPriceColor(crypto.price_change_percentage_7d_in_currency) }">
+						<span class="crypto-change" :style="{ color: storeUserPreferences.getPriceColor(crypto.price_change_percentage_7d_in_currency) }">
+							<span>
 								{{ crypto.price_change_percentage_7d_in_currency.toFixed(2) }}%
 							</span>
-							<v-icon 
-								:color="storeUserPreferences.getPriceColor(crypto.price_change_percentage_7d_in_currency)">
+							<v-icon>
 								{{ storeUserPreferences.getArrowDirection(crypto.price_change_percentage_7d_in_currency) }}
 							</v-icon>
 						</span>

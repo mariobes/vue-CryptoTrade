@@ -24,7 +24,7 @@ const cryptoId = computed(() => route.params.id)
 	<div class="main-container">
 		<CryptoInfoTable class="container-details" :cryptoId="cryptoId" :key="cryptoId"></CryptoInfoTable>
 		<CryptoCharts class="container-chart" :cryptoId="cryptoId" :cryptoDetails="cryptoDetails" :key="cryptoId"></CryptoCharts>
-		<TransactionComponent class="container-transactions"></TransactionComponent>
+		<TransactionComponent class="container-transactions" :cryptoId="cryptoId" :key="cryptoId"></TransactionComponent>
 	</div>
 </template>
 

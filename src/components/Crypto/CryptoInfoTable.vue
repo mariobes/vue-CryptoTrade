@@ -10,14 +10,14 @@ const backgroundColor = computed(() => storeUserPreferences.getTheme().backgroun
 const textColor = computed(() => storeUserPreferences.getTheme().text)
 const colorGray = computed(() => storeUserPreferences.getTheme().colorGray)
 
-const props = defineProps<{ cryptoId: string }>()
-
-const { t } = useI18n()
-
 const storeCryptos = useCryptosStore()
 const storeWatchlists = useWatchlistsStore()
 const storeUserPreferences = useUserPreferencesStore()
 const storeAuth = useAuthStore()
+
+const { t } = useI18n()
+
+const props = defineProps<{ cryptoId: string }>()
 
 const crypto = computed(() => storeCryptos.crypto)
 const cryptoDetails = computed(() => storeCryptos.cryptoDetails)
@@ -134,8 +134,7 @@ onMounted(() => {
 				<div class="crypto-content-price">
 					<span class="crypto-price">{{ storeUserPreferences.convertPrice(crypto.current_price, storeUserPreferences.selectedCurrency, 'after') }}</span>
 					<span class="crypto-percentage" :style="{ color: storeUserPreferences.getPriceColor(crypto.price_change_percentage_24h) }">
-						<v-icon 
-							:color="storeUserPreferences.getPriceColor(crypto.price_change_percentage_24h)">
+						<v-icon>
 							{{ storeUserPreferences.getArrowDirection(crypto.price_change_percentage_24h) }}
 						</v-icon>
 						{{ crypto.price_change_percentage_24h.toFixed(2) }}% (1D)
@@ -149,8 +148,7 @@ onMounted(() => {
 					<div>
 						<span class="crypto-content-value">{{ storeUserPreferences.convertToAbbreviated(crypto.market_cap, storeUserPreferences.selectedCurrency, 'after') }}</span>
 						<span class="crypto-content-percentage" :style="{ color: storeUserPreferences.getPriceColor(crypto.market_cap_change_percentage_24h) }">
-							<v-icon class="crypto-content-percentage-icon"
-								:color="storeUserPreferences.getPriceColor(crypto.market_cap_change_percentage_24h)">
+							<v-icon class="crypto-content-percentage-icon">
 								{{ storeUserPreferences.getArrowDirection(crypto.market_cap_change_percentage_24h) }}
 							</v-icon>
 							{{ crypto.market_cap_change_percentage_24h.toFixed(2) }}%

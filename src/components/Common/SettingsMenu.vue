@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import router from '@/router'
 import { useUserPreferencesStore } from '../../stores/userPreferences';
+import type { User } from '@/core/user'
+import { useUsersStore } from '@/stores/users'
 import { useAuthStore } from '@/stores/auth'
 import { useI18n } from 'vue-i18n'
 
@@ -9,6 +11,7 @@ const textColor = computed(() => storeUserPreferences.getTheme().text)
 const backgroundSettings = computed(() => storeUserPreferences.getTheme().settings)
 
 const storeUserPreferences = useUserPreferencesStore()
+const storeUsers = useUsersStore()
 const storeAuth = useAuthStore()
 
 const { t, locale } = useI18n()
@@ -61,6 +64,27 @@ const handleLogout = async () => {
   storeAuth.logout();
   router.push('/')
 }
+
+const userData = ref<User | null>(null);
+const userId = storeAuth.getUserId()
+const token = storeAuth.getToken()
+
+onMounted(async () => {
+  if (storeAuth.isLoggedIn()) {
+    const userId = storeAuth.getUserId();
+    const token = storeAuth.getToken();
+    userData.value = await storeUsers.GetUserById(userId, token);
+  }
+});
+
+watch(() => storeAuth.getUserId(), async (newUserId) => {
+  if (storeAuth.isLoggedIn() && newUserId) {
+    const token = storeAuth.getToken();
+    userData.value = await storeUsers.GetUserById(newUserId, token);
+  } else {
+    userData.value = null;
+  }
+});
 </script>
 
 <template>
@@ -84,6 +108,16 @@ const handleLogout = async () => {
         >
 					{{ t('Header_Select_5') }}
 				</v-btn>
+			</div>
+
+      <div class="settings-text-logged" v-if="storeAuth.isLoggedIn()">
+        <div class="settings-icon-content">
+          <span class="mdi mdi-shield-account settings-icon-img"></span>
+        </div>
+        <div class="settings-text-content">
+          <span class="settings-text-name">{{ t('Header_Popup_Auth_Text') }} {{userData?.name}}</span>
+          <span class="settings-text-email">{{userData?.email}}</span>
+        </div>
 			</div>
 
 			<div class="settings-options">
@@ -214,8 +248,40 @@ const handleLogout = async () => {
   background-color: #ffd79621;
 }
 
+.settings-text-logged {
+  display: flex;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: solid 1px #8080803a;
+}
+
+.settings-icon-content {
+  margin: 0 15px 0 10px;
+}
+
+.settings-icon-img {
+  font-size: 2.4rem;
+  color: #FF8C00;
+}
+
+.settings-text-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-text-name {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.settings-text-email {
+  font-size: 0.85rem;
+  color: #808080;
+}
+
 .settings-options {
   padding-bottom: 20px;
+  padding-top: 5px;
 }
 
 .settings-options-btn {
