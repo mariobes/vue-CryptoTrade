@@ -28,6 +28,7 @@
     
     "Header_Popup_Auth_Login": "Sign In",
     "Header_Popup_Auth_Register": "Sign Up",
+    "Header_Popup_Auth_Text": "Hello,",
     "Header_Popup_Auth_Settings": "Settings",
     "Header_Popup_Auth_Logout": "Log Out",
     "Header_Popup_Auth_Email": "Email address",
