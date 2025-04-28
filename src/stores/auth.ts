@@ -53,7 +53,7 @@ export const useAuthStore = defineStore('auth', {
           const token = await response.text()
           this.setToken(token)
 
-          const userData = await this.getUserData(email)
+          const userData = await this.getUserDataByEmail(email)
           this.setRole(userData.role)
           this.setUserId(userData.id)
 
@@ -65,6 +65,7 @@ export const useAuthStore = defineStore('auth', {
 
       return false
     },
+
 		async register(name: string, birthdate: Date, email: string, password: string, phone: string, dni: string, nationality: string) {
       try {
         const response = await fetch('http://localhost:4746/Auth/register', {
@@ -90,7 +91,8 @@ export const useAuthStore = defineStore('auth', {
 
       return false
     },
-		async getUserData(email: string) {
+
+		async getUserDataByEmail(email: string) {
       try {
         const userDataResponse = await fetch(`http://localhost:4746/Users/by-email?userEmail=${email}`, {
           method: 'GET',
@@ -100,7 +102,22 @@ export const useAuthStore = defineStore('auth', {
         })
         return await userDataResponse.json()
       } catch (error) {
-        console.error('Error al obtener los datos del usuario: ', error)
+        console.error('Error al obtener los datos del usuario por email: ', error)
+        return {}
+      }
+    },
+
+    async getUserDataById(id: number) {
+      try {
+        const userDataResponse = await fetch(`http://localhost:4746/Users/${id}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${this.getToken()}`
+          }
+        })
+        return await userDataResponse.json()
+      } catch (error) {
+        console.error('Error al obtener los datos del usuario por ID: ', error)
         return {}
       }
     }

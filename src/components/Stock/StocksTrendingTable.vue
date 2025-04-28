@@ -45,13 +45,11 @@ storeMarkets.GetStocksTrending()
             <span class="stock-price">
               {{ storeUserPreferences.convertPrice(stock.price, storeUserPreferences.selectedCurrency, 'after') }}
             </span>
-            <span class="stock-change">
-              <span 
-                :style="{ color: storeUserPreferences.getPriceColor(stock.changePercentage) }">
+            <span class="stock-change" :style="{ color: storeUserPreferences.getPriceColor(stock.changePercentage) }">
+              <span>
                 {{ stock.changePercentage.toFixed(2) }}%
               </span>
-              <v-icon 
-                :color="storeUserPreferences.getPriceColor(stock.changePercentage)">
+              <v-icon>
                 {{ storeUserPreferences.getArrowDirection(stock.changePercentage) }}
               </v-icon>
             </span>

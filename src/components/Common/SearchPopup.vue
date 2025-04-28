@@ -182,8 +182,7 @@ const goToStock = (id: string) => {
 									{{ storeUserPreferences.convertPrice(crypto.current_price, storeUserPreferences.selectedCurrency, 'before') }}
 								</span>
 								<span class="popup-asset-percentage" :style="{ color: storeUserPreferences.getPriceColor(crypto.price_change_percentage_24h) }">
-									<v-icon 
-										:color="storeUserPreferences.getPriceColor(crypto.price_change_percentage_24h)">
+									<v-icon>
 										{{ storeUserPreferences.getArrowDirection(crypto.price_change_percentage_24h) }}
 									</v-icon>
 									{{ crypto.price_change_percentage_24h.toFixed(2) }}%
@@ -252,8 +251,7 @@ const goToStock = (id: string) => {
 									{{ storeUserPreferences.convertPrice(stock.price, storeUserPreferences.selectedCurrency, 'before') }}
 								</span>
 								<span class="popup-asset-percentage" :style="{ color: storeUserPreferences.getPriceColor(stock.changesPercentage) }">
-									<v-icon 
-										:color="storeUserPreferences.getPriceColor(stock.changesPercentage)">
+									<v-icon>
 										{{ storeUserPreferences.getArrowDirection(stock.changesPercentage) }}
 									</v-icon>
 									{{ stock.changesPercentage.toFixed(2) }}%
