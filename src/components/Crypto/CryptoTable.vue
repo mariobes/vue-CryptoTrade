@@ -176,7 +176,6 @@ onMounted(async () => {
       <tr
         v-for="crypto in cryptosList"        
         :key="crypto.id"
-        class="crypto-link"
         :class="storeUserPreferences.selectedTheme === 'light' ? 'hover-light' : 'hover-dark'"
         @click="$router.push({ name: 'cryptoDetails', params: { id: crypto.id } })"
         style="cursor: pointer"
@@ -200,7 +199,7 @@ onMounted(async () => {
           </td>
           <td>
             <div class="crypto-container">
-              <img :src="crypto.image" alt="Crypto Logo" class="crypto-image" @error="crypto.image = '/src/assets/asset-default.png'" />
+              <img :src="crypto.image" alt="Crypto Logo" class="crypto-image" @error="storeUserPreferences.showDefaultAssetImage(crypto)" />
               <span class="crypto-name">{{ crypto.name }}</span>
               <span class="crypto-symbol">{{ crypto.symbol.toUpperCase() }}</span>
             </div>
@@ -209,13 +208,22 @@ onMounted(async () => {
             {{ storeUserPreferences.convertPrice(crypto.current_price, storeUserPreferences.selectedCurrency, 'after') }}
           </td>
           <td :style="{ color: storeUserPreferences.getPriceColor(crypto.price_change_percentage_1h_in_currency) }" class="text-right">
-            {{ crypto.price_change_percentage_1h_in_currency.toFixed(2) }}%
+            <v-icon class="mb-1">
+              {{ storeUserPreferences.getArrowDirection(crypto.price_change_percentage_1h_in_currency) }}
+            </v-icon>
+            {{ Math.abs(crypto.price_change_percentage_1h_in_currency).toFixed(2) }}%
           </td>
           <td :style="{ color: storeUserPreferences.getPriceColor(crypto.price_change_percentage_24h) }" class="text-right">
-            {{ crypto.price_change_percentage_24h.toFixed(2) }}%
+            <v-icon class="mb-1">
+              {{ storeUserPreferences.getArrowDirection(crypto.price_change_percentage_24h) }}
+            </v-icon>
+            {{ Math.abs(crypto.price_change_percentage_24h).toFixed(2) }}%
           </td>
           <td :style="{ color: storeUserPreferences.getPriceColor(crypto.price_change_percentage_7d_in_currency) }" class="text-right">
-            {{ crypto.price_change_percentage_7d_in_currency.toFixed(2) }}%
+            <v-icon class="mb-1">
+              {{ storeUserPreferences.getArrowDirection(crypto.price_change_percentage_7d_in_currency) }}
+            </v-icon>
+            {{ Math.abs(crypto.price_change_percentage_7d_in_currency).toFixed(2) }}%
           </td>
           <td class="text-right">
             {{ storeUserPreferences.convertLargeNumber(crypto.market_cap, storeUserPreferences.selectedCurrency, 'after') }}
@@ -251,11 +259,13 @@ onMounted(async () => {
 .title-text {
   font-size: 2rem;
   color: v-bind(textColor);
+  font-weight: bold;
 }
 
 .table-container {
   background-color: v-bind(backgroundColor);
   color: v-bind(textColor);
+  margin-bottom: 30px;
 }
 
 .column-fixed {
@@ -272,13 +282,8 @@ onMounted(async () => {
   font-size: 1.0rem !important;
 }
 
-.crypto-link {
-  text-decoration: none;
-  color: inherit;
-}
-
 .hover-light:hover {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.336);
+  background-color: #ced1d3 !important;
 }
 
 .hover-dark:hover {
@@ -316,6 +321,7 @@ onMounted(async () => {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  font-weight: bold;
 }
 
 .crypto-symbol {
@@ -323,6 +329,7 @@ onMounted(async () => {
   font-size: 0.85rem;
   color: #808080;
   white-space: nowrap;
+  font-weight: bold;
 }
 
 .cryptos-see-all-container {

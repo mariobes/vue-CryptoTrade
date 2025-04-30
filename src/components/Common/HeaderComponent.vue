@@ -253,7 +253,8 @@ a {
 }
 
 .header-icons:hover {
-  background-color: #7c4e1983;
+  background-color: #ff8c0077;
+  /* ffffff22 */
 }
 
 .header-icons-text {
@@ -283,7 +284,7 @@ a {
 }
 
 .header-icons-search:hover {
-  background-color: #a55a0452;
+  background-color: #ff8c0077;
 }
 
 .login-btn {

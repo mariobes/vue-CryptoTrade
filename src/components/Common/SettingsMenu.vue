@@ -184,7 +184,7 @@ watch(() => storeAuth.getUserId(), async (newUserId) => {
 }
 
 .header-icons:hover {
-  background-color: #7c4e1983;
+  background-color: #ff8c0077;
 }
 
 .icon-user {

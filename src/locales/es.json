@@ -111,6 +111,56 @@
     "CryptoChart_Title_2": "?",
     "CryptoChart_Price": "Precio",
 
-    "WatchlistTableView_Title": "Tus listas de seguimiento de criptomonedas y acciones"
+    "WatchlistTableView_Title": "Tus listas de seguimiento de criptomonedas y acciones",
 
+    "TransactionComponent_Buy_Btn": "Comprar",
+    "TransactionComponent_Sell_Btn": "Vender",
+    "TransactionComponent_Available_Text": "disponibles",
+    "TransactionComponent_Available_Assets_Text": "acciones disponibles",
+    "TransactionComponent_Import_Text": "Importe",
+    "TransactionComponent_Actives_Text": "Activos",
+    "TransactionComponent_Assets_Text": "Acciones",
+    "TransactionComponent_Market_Price_Text": "Precio de mercado",
+    "TransactionComponent_Total_Text": "Total",
+    "TransactionComponent_Logout_Message": "Inicia sesión para poder operar con activos.",
+    "TransactionComponent_Position_Message": "Todavía no tienes posiciones en esta criptomoneda.",
+    "TransactionComponent_Position_Text": "Posición",
+    "TransactionComponent_Profitability_Text": "Rentabilidad",
+    "TransactionComponent_Purchase_Price_Text": "Precio de compra",
+    "TransactionComponent_Purchase_Percentage_Text": "% cartera",
+
+    "UserInfo_Wallet_Title": "Cartera de valores",
+    "UserInfo_Cash_Title": "Efectivo",
+    "UserInfo_Deposit_Btn": "Ingresar fondos",
+    "UserInfo_Withdrawal_Btn": "Retirar fondos",
+
+    "UserInfo_Panel_Payment_Title": "Selecciona un método de pago",
+    "UserInfo_Panel_Deposit_Title": "¿Cuánto dinero quieres ingresar?",
+    "UserInfo_Panel_Withdrawal_Title": "Retirar",
+    "UserInfo_Panel_Transfer_Bank_Title": "Transferencia bancaria",
+    "UserInfo_Panel_Transfer_Bank_Text": "Envía dinero desde cualquier banco",
+    "UserInfo_Panel_Credit_Card_Title": "Tarjeta de crédito",
+    "UserInfo_Panel_Credit_Card_Text": "Ingresa dinero con tu tarjeta de crédito o débito",
+    "UserInfo_Panel_Google_pay_Title": "Google Pay",
+    "UserInfo_Panel_Google_pay_Text": "Ingresa dinero con tu cuenta de Google",
+    "UserInfo_Panel_Avaiable": "disponible",
+
+    "UserInfo_Overview_Text": "Vista general",
+    "UserInfo_Transactions_Text": "Transacciones",
+
+
+
+
+
+    "UserInfo_All_Text": "Todos",
+    "UserInfo_Cryptocurrencies_Text": "Criptomonedas",
+    "UserInfo_Stocks_Text": "Acciones",
+
+    "UserInfo_Table_Name": "Nombre",
+    "UserInfo_Table_Price": "Precio",
+    "UserInfo_Table_24h": "24 h %",
+    "UserInfo_Table_Holdings": "Inversiones",
+    "UserInfo_Table_Purchase_Price": "Precio de compra",
+    "UserInfo_Table_Profit_Loss": "Ganancia/Pérdida"
+    
 }
