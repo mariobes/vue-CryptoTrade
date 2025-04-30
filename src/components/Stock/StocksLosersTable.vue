@@ -29,14 +29,13 @@ storeMarkets.GetStocksLosers()
       <tr
         v-for="stock in storeMarkets.stocksLosers.slice(0, 5)"
         :key="stock.id"
-        class="stock-link"
         :class="storeUserPreferences.selectedTheme === 'light' ? 'hover-light' : 'hover-dark'"
         @click="$router.push({ name: 'stockDetails', params: { id: stock.id } })"
         style="cursor: pointer"
       >
         <td>
           <div class="table-content-name">
-            <img :src="stock.image" alt="Stock Logo" class="stock-image" @error="stock.image = '/src/assets/asset-default.png'" />
+            <img :src="stock.image" alt="Stock Logo" class="stock-image" @error="storeUserPreferences.showDefaultAssetImage(stock)" />
             <span class="stock-name mt-1">{{ stock.name }}</span>
           </div>
         </td>
@@ -46,12 +45,12 @@ storeMarkets.GetStocksLosers()
               {{ storeUserPreferences.convertPrice(stock.price, storeUserPreferences.selectedCurrency, 'after') }}
             </span>
             <span class="stock-change" :style="{ color: storeUserPreferences.getPriceColor(stock.changePercentage) }">
-              <span>
-                {{ stock.changePercentage.toFixed(2) }}%
-              </span>
               <v-icon>
                 {{ storeUserPreferences.getArrowDirection(stock.changePercentage) }}
               </v-icon>
+              <span>
+                {{ Math.abs(stock.changePercentage).toFixed(2) }}%
+              </span>
             </span>
           </div>
         </td>
@@ -75,13 +74,8 @@ storeMarkets.GetStocksLosers()
   font-weight: bold;
 }
 
-.stock-link {
-  text-decoration: none;
-  color: inherit;
-}
-
 .hover-light:hover {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.336);
+  background-color: #ced1d3 !important;
 }
 
 .hover-dark:hover {

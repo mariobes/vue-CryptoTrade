@@ -37,13 +37,8 @@ const userId = storeAuth.getUserId()
 const token = storeAuth.getToken()
 
 const loadUserData = async () => {
-  if (storeAuth.isLoggedIn()) {
-    const userId = storeAuth.getUserId();
-    const token = storeAuth.getToken();
-    userData.value = await storeUsers.GetUserById(userId, token);
-  } else {
-    userData.value = null;
-  }
+  if (!storeAuth.isLoggedIn()) return;
+  userData.value = await storeUsers.GetUserById(userId, token);
 }
 
 const loadCrypto = async () => {
@@ -68,10 +63,12 @@ const handleBuy = async () => {
   if (success) {
     await loadUserData();
     await loadCrypto();
-    amount.value = '';
   } else {
     alert('Hubo un error al realizar la compra');
   }
+  amount.value = '';
+  amountToSend = undefined;
+  assetAmountToSend = undefined;
 };
 
 const handleSell = async () => {
@@ -86,10 +83,12 @@ const handleSell = async () => {
   if (success) {
     await loadUserData();
     await loadCrypto();
-    amount.value = '';
   } else {
     alert('Hubo un error al realizar la venta');
   }
+  amount.value = '';
+  amountToSend = undefined;
+  assetAmountToSend = undefined;
 };
 
 watch(() => props.cryptoId, async () => {
@@ -98,6 +97,10 @@ watch(() => props.cryptoId, async () => {
 
 watch([selectedAction, selectedOption], () => {
   amount.value = '';
+});
+
+watch(selectedAction, () => {
+  selectedOption.value = 'amount';
 });
 </script>
 
@@ -110,7 +113,7 @@ watch([selectedAction, selectedOption], () => {
           :class="{ selected: selectedAction === 'buy' }"
           @click="selectedAction = 'buy'"
         >
-          Comprar
+          {{ t('TransactionComponent_Buy_Btn') }}
         </button>
         <button
           v-if="userCrypto && userCrypto.totalAssetAmount > 0"
@@ -118,15 +121,16 @@ watch([selectedAction, selectedOption], () => {
           :class="{ selected: selectedAction === 'sell' }"
           @click="selectedAction = 'sell'"
         >
-          Vender
+          {{ t('TransactionComponent_Sell_Btn') }}
         </button>
       </div>
 
       <div v-if="selectedAction" class="amount-input-container">
         <label v-if="storeAuth.isLoggedIn()" class="amount-input-text">
           {{ selectedAction === 'buy'
-            ? `${storeUserPreferences.convertPrice(userData?.cash, storeUserPreferences.selectedCurrency, 'after')} disponibles`
-            : `${userCrypto.totalAssetAmount.toFixed(6)} acciones disponibles`
+            ? `${storeUserPreferences.convertPrice(userData?.cash, storeUserPreferences.selectedCurrency, 'after')} ${t('TransactionComponent_Available_Text')}`
+            : `${userCrypto.totalAssetAmount.toFixed(6)} ${t('TransactionComponent_Available_Assets_Text')}`
+
           }}
         </label>
 
@@ -136,52 +140,51 @@ watch([selectedAction, selectedOption], () => {
             :class="{ selectedOption: selectedOption === 'amount' }"
             @click="selectedOption = 'amount'"
           >
-            Importe
+            {{ t('TransactionComponent_Import_Text') }}
           </button>
           <button 
             class="select-option-btn"
             :class="{ selectedOption: selectedOption === 'assetAmount' }"
             @click="selectedOption = 'assetAmount'"
           >
-            Activos
+            {{ t('TransactionComponent_Actives_Text') }}
           </button>
 
         </div>
 
         <div class="amount-input-content">
-          <span class="amount-input-title">{{ selectedOption === 'amount' ? 'Importe' : 'Acciones' }}</span>
+          <span class="amount-input-title">{{ selectedOption === 'amount' ? t('TransactionComponent_Import_Text') : t('TransactionComponent_Assets_Text') }}</span>
           <input 
             v-model="amount" 
             class="amount-input-value"
             placeholder="0" 
-            :disabled="!storeAuth.isLoggedIn()"/>
+            :disabled="!storeAuth.isLoggedIn()" />
         </div>
 
         <div v-if="selectedOption === 'amount'" class="asset-info-container">
-          <span class="amount-input-title">Activos</span>
+          <span class="amount-input-title">{{ t('TransactionComponent_Actives_Text') }}</span>
           <span class="asset-info-value">
             {{
               crypto && amount && !isNaN(amount)
-                ? (parseFloat(amount) / crypto.current_price)
+                ? storeUserPreferences.convertPriceFullDecimals((parseFloat(amount) / crypto.current_price), storeUserPreferences.selectedCurrency)
                 : 0
             }} 
           </span>
         </div>
 
         <div v-if="selectedOption === 'assetAmount'" class="asset-info-container">
-          <span class="amount-input-title">Precio de mercado</span>
+          <span class="amount-input-title">{{ t('TransactionComponent_Market_Price_Text') }}</span>
           <span class="asset-info-value">{{ storeUserPreferences.convertPrice(crypto.current_price, storeUserPreferences.selectedCurrency, 'after') }}</span>
         </div>
 
         <div v-if="selectedOption === 'assetAmount'" class="asset-info-container mt-7">
-          <span class="amount-input-title">Total</span>
+          <span class="amount-input-title">{{ t('TransactionComponent_Total_Text') }}</span>
           <span class="asset-info-value">
             {{
               selectedOption === 'assetAmount' && crypto && amount && !isNaN(amount)
-                ? (parseFloat(amount) * crypto.current_price)
+                ? storeUserPreferences.convertPrice((parseFloat(amount) * crypto.current_price), storeUserPreferences.selectedCurrency, 'after')
                 : 0
             }} 
-            {{ storeUserPreferences.getCurrencySymbol(storeUserPreferences.selectedCurrency) }}
           </span>
         </div>
 
@@ -191,53 +194,53 @@ watch([selectedAction, selectedOption], () => {
             :disabled="!storeAuth.isLoggedIn() || !amount || amount == 0"
             @click="selectedAction === 'buy' ? handleBuy() : handleSell()"
           >
-            {{ selectedAction === 'buy' ? 'Comprar' : 'Vender' }}
+            {{ selectedAction === 'buy' ? t('TransactionComponent_Buy_Btn') : t('TransactionComponent_Sell_Btn') }}
           </button>
         </div>
       </div>
     </div>
 
     <div v-if="!storeAuth.isLoggedIn()">
-      <span class="positions-message">Inicia sesión para poder operar con activos.</span>
+      <span class="positions-message">{{ t('TransactionComponent_Logout_Message') }}</span>
     </div>
 
     <div v-if="storeAuth.isLoggedIn() && !userCrypto">
-      <span class="positions-message">Todavía no tienes posiciones en esta criptomoneda.</span>
+      <span class="positions-message">{{ t('TransactionComponent_Position_Message') }}</span>
     </div>
 
     <div v-if="storeAuth.isLoggedIn() && userCrypto" class="positions-container">
-      <div class="positions-title">Posición</div>
+      <div class="positions-title">{{ t('TransactionComponent_Position_Text') }}</div>
       <div class="positions-total-content">
-        <span class="positions-text">Total</span>
+        <span class="positions-text">{{ t('TransactionComponent_Total_Text') }}</span>
         <span class="positions-total-value">
           {{ storeUserPreferences.convertPrice(userCrypto.total, storeUserPreferences.selectedCurrency, 'after') }}
         </span>
       </div>
 
       <div class="positions-profit-content">
-        <span class="positions-text">Rentabilidad</span>
+        <span class="positions-text">{{ t('TransactionComponent_Profitability_Text') }}</span>
         <span class="positions-profit-value" :style="{ color: storeUserPreferences.getPriceColor(userCrypto.balance) }">
-          <v-icon class="positions-profit-icon">
+          <v-icon class="positions-profit-icon mb-1">
             {{ storeUserPreferences.getArrowDirection(userCrypto.balance) }}
           </v-icon>
-          <span class="mr-2">{{ storeUserPreferences.convertPrice(userCrypto.balance, storeUserPreferences.selectedCurrency, 'after') }}</span>
-          <span>({{ userCrypto.balancePercentage.toFixed(2) }} %)</span>
-          
-          
+          <span class="mr-2">{{ storeUserPreferences.convertPrice(Math.abs(userCrypto.balance), storeUserPreferences.selectedCurrency, 'after') }}</span>
+          <span>
+            ({{ userCrypto.balancePercentage > 0 ? '+' : '-' }} {{ Math.abs(userCrypto.balancePercentage).toFixed(2) }} %)
+          </span>
         </span>
       </div>
 
       <div class="positions-info-content">
         <div class="positions-info-assets">
-          <span class="positions-text">Activos</span>
-          <span class="positions-info-value">{{ userCrypto.totalAssetAmount.toFixed(6) }}</span>
+          <span class="positions-text">{{ t('TransactionComponent_Actives_Text') }}</span>
+          <span class="positions-info-value">{{ storeUserPreferences.convertAssetAmount(userCrypto.totalAssetAmount) }}</span>
         </div>
         <div class="positions-info-purchase-price">
-          <span class="positions-text">Precio de compra</span>
+          <span class="positions-text">{{ t('TransactionComponent_Purchase_Price_Text') }}</span>
           <span class="positions-info-value">{{ storeUserPreferences.convertPrice(userCrypto.averagePurchasePrice, storeUserPreferences.selectedCurrency, 'after') }}</span>
         </div>
         <div class="positions-info-percentage">
-          <span class="positions-text">% cartera</span>
+          <span class="positions-text">{{ t('TransactionComponent_Purchase_Percentage_Text') }}</span>
           <span class="positions-info-value">{{ userCrypto.walletPercentage.toFixed(2) }} %</span>
         </div>
       </div>
@@ -253,7 +256,7 @@ watch([selectedAction, selectedOption], () => {
 }
 
 .actions-container {
-  margin: 50px 0 50px 0;
+  margin: 50px 0 30px 0;
 }
 
 .action-btn-content {
@@ -362,8 +365,16 @@ watch([selectedAction, selectedOption], () => {
   background-color: green;
 }
 
+.buy-btn:hover {
+  background-color: #008000c0;
+}
+
 .sell-btn {
   background-color: red;
+}
+
+.sell-btn:hover {
+  background-color: #ff0000b7;
 }
 
 .buy-sell-btn:disabled {
@@ -376,6 +387,12 @@ watch([selectedAction, selectedOption], () => {
   background-color: #eeeeee;
   color: #aaaaaa;
   cursor: not-allowed;
+}
+
+.positions-message {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #808080;
 }
 
 .positions-container {
@@ -399,7 +416,7 @@ watch([selectedAction, selectedOption], () => {
 .positions-total-content {
   display: flex;
   flex-direction: column;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 .positions-total-value {
   font-size: 1.2rem;
@@ -409,7 +426,7 @@ watch([selectedAction, selectedOption], () => {
 .positions-profit-content {
   display: flex;
   flex-direction: column;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 .positions-profit-value {
@@ -424,34 +441,28 @@ watch([selectedAction, selectedOption], () => {
 .positions-info-content {
   display: flex;
   justify-content: space-between;
-  /* align-items: start; */
   text-align: center;
 }
 
 .positions-info-assets {
   display: flex;
   flex-direction: column;
-  max-width: 33%;
+  max-width: 30%;
   justify-content: space-between;
 }
 
 .positions-info-purchase-price {
   display: flex;
   flex-direction: column;
-  max-width: 33%;
+  max-width: 40%;
   justify-content: space-between;
+  /* white-space: nowrap; */
 }
 
 .positions-info-percentage {
   display: flex;
   flex-direction: column;
-  max-width: 33%;
+  max-width: 30%;
   justify-content: space-between;
-}
-
-.positions-message {
-  font-size: 0.9rem;
-  font-weight: bold;
-  color: #808080;
 }
 </style>

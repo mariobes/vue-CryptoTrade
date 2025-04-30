@@ -12,6 +12,7 @@ export interface User {
     cash: number
     wallet: number
     profit: number
+    lastBalance: number
     creationDate: Date
     transactions: Transaction[]
     role: string
