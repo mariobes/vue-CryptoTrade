@@ -22,4 +22,9 @@ export interface Transaction {
     balancePercentage: number
     total: number
     walletPercentage: number
+    typeOfAsset: string
+    symbol: string
+    image: string
+    price: number
+    changesPercentage24h: number
   }

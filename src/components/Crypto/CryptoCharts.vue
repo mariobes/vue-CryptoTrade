@@ -465,7 +465,7 @@ window.scrollTo({ top: 0 })
     </div>
     <div class="crypto-chart">
       <Line v-if="!isLoading" :data="chartData" :options="chartOptions" />
-      <p v-else>Cargando datos...</p>
+      <span v-else>Cargando datos...</span>
     </div>
     <div v-if="props.cryptoDetails?.description?.en" class="description-container">
       <p class="description-title">

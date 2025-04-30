@@ -30,14 +30,13 @@ storeCryptos.GetCryptosGainers()
       <tr
         v-for="crypto in storeCryptos.gainersCryptos.slice(0, 5)"
         :key="crypto.id"
-        class="crypto-link"
         :class="storeUserPreferences.selectedTheme === 'light' ? 'hover-light' : 'hover-dark'"
         @click="$router.push({ name: 'cryptoDetails', params: { id: crypto.id } })"
         style="cursor: pointer"
       >
         <td>
           <div class="table-content-name">
-            <img :src="crypto.image" alt="Crypto Logo" class="crypto-image" @error="crypto.image = '/src/assets/asset-default.png'" />
+            <img :src="crypto.image" alt="Crypto Logo" class="crypto-image" @error="storeUserPreferences.showDefaultAssetImage(crypto)" />
             <span class="crypto-name mt-1">{{ crypto.name }}</span>
           </div>
         </td>
@@ -47,12 +46,12 @@ storeCryptos.GetCryptosGainers()
               {{ storeUserPreferences.convertPrice(crypto.current_price, storeUserPreferences.selectedCurrency, 'after') }}
             </span>
             <span class="crypto-change" :style="{ color: storeUserPreferences.getPriceColor(crypto.price_change_percentage_7d_in_currency) }">
-              <span>
-                {{ crypto.price_change_percentage_7d_in_currency.toFixed(2) }}%
-              </span>
               <v-icon>
                 {{ storeUserPreferences.getArrowDirection(crypto.price_change_percentage_7d_in_currency) }}
               </v-icon>
+              <span>
+                {{ Math.abs(crypto.price_change_percentage_7d_in_currency).toFixed(2) }}%
+              </span>
             </span>
           </div>
         </td>
@@ -76,13 +75,8 @@ storeCryptos.GetCryptosGainers()
   font-weight: bold;
 }
 
-.crypto-link {
-  text-decoration: none;
-  color: inherit;
-}
-
 .hover-light:hover {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.336);
+  background-color: #ced1d3 !important;
 }
 
 .hover-dark:hover {

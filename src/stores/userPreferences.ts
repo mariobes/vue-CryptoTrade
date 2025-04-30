@@ -192,6 +192,18 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
       return this.formatCurrency(formatted, currency, symbolPosition);
     },
 
+    convertPriceFullDecimals(price: number, currency: CurrencyType, symbolPosition?: 'before' | 'after'): string {
+      const conversionRate = this.getCurrencyConversionRate(currency);
+      const converted = price * conversionRate;
+    
+      if (!Number.isFinite(converted)) return this.formatCurrency('0', currency, symbolPosition);
+    
+      const formatted = converted.toString();
+    
+      if (!symbolPosition) return formatted;
+      return this.formatCurrency(formatted, currency, symbolPosition);
+    },
+
     convertLargeNumber(value: number, currency: CurrencyType, symbolPosition?: 'before' | 'after'): string {
       const rate = this.getCurrencyConversionRate(currency);
       const converted = value * rate;
@@ -218,51 +230,25 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
       }
       if (!symbolPosition) return formatted;
       return this.formatCurrency(formatted, currency, symbolPosition);
-    },    
+    },
 
-    convertFromUSD(price: number, currency: CurrencyType): string {
-      const conversionRate = this.getCurrencyConversionRate(currency);
-      let convertedNumber = price * conversionRate;
-
-      // Si el número convertido es 0 o extremadamente cercano a 0, mostramos "0"
-      if (Math.abs(convertedNumber) < 0.00000001) {
-        const symbol = this.getCurrencySymbol(currency);
-        return `0 ${symbol}`;
+    convertAssetAmount(amount: number): string {
+      if (!Number.isFinite(amount)) return '0.0000';
+    
+      if (amount >= 1_000_000) {
+        return amount.toFixed(0);
+      } else if (amount >= 1) {
+        return amount.toFixed(2);
+      } else if (amount > 0) {
+        // Cuenta cuántos decimales tiene antes de un número distinto de 0
+        const decimalStr = amount.toFixed(8);
+        const trimmed = decimalStr.replace(/0+$/, ''); // eliminar ceros finales
+        const [_, decimals = ''] = trimmed.split('.');
+        const visibleDecimals = Math.min(Math.max(decimals.length, 4), 8);
+        return amount.toFixed(visibleDecimals);
+      } else {
+        return '0.0000';
       }
-    
-      // Función para formatear el número según las reglas: miles con punto y decimales con coma
-      const formatNumber = (number: number, decimals: number): string => {
-        return new Intl.NumberFormat('de-DE', {
-          minimumFractionDigits: decimals,
-          maximumFractionDigits: decimals,
-        }).format(number);
-      };
-    
-      // Si el número es extremadamente pequeño, mantener hasta 8 decimales
-      if (Math.abs(convertedNumber) < 0.0001) {
-        const formattedNumber = formatNumber(convertedNumber, 8); // Limitar a 8 decimales para valores muy pequeños
-        const symbol = this.getCurrencySymbol(currency);
-        return `${formattedNumber} ${symbol}`;
-      }
-    
-      // Si el número es mayor o igual a 10,000, no mostrar decimales
-      if (Math.abs(convertedNumber) >= 10000) {
-        const formattedNumber = formatNumber(convertedNumber, 0); // Eliminar los decimales
-        const symbol = this.getCurrencySymbol(currency);
-        return `${formattedNumber} ${symbol}`;
-      }
-    
-      // Si el número es mayor o igual a 1, mostrar solo 2 decimales
-      if (Math.abs(convertedNumber) >= 1) {
-        const formattedNumber = formatNumber(convertedNumber, 2); // Limitar a 2 decimales para números >= 1
-        const symbol = this.getCurrencySymbol(currency);
-        return `${formattedNumber} ${symbol}`;
-      }
-    
-      // Si el número es menor que 1, mostrar hasta 4 decimales significativos
-      const formattedNumber = formatNumber(convertedNumber, 4); // Limitar a 4 decimales para números menores a 1
-      const symbol = this.getCurrencySymbol(currency);
-      return `${formattedNumber} ${symbol}`;
     },
 
     showDefaultAssetImage(stock: any) {

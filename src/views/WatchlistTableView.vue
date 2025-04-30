@@ -58,17 +58,16 @@ onMounted(async () => {
 		<StockTable v-if="selectedCategory === 'Stock'" :showWatchlist="true" :watchlist="watchlist" @refresh="loadWatchlist" />
 
 		<div v-if="watchlist.length === 0 && selectedCategory === 'Crypto'">
-    <p class="watchlist-message-text">
-      {{ t('CryptoTable_Watchlist_Message') }}
-    </p>
-  </div>
+      <p class="watchlist-message-text">
+        {{ t('CryptoTable_Watchlist_Message') }}
+      </p>
+    </div>
 
-	<div v-if="watchlist.length === 0 && selectedCategory === 'Stock'">
-    <p class="watchlist-message-text">
-      {{ t('StockTable_Watchlist_Message') }}
-    </p>
-  </div>
-
+    <div v-if="watchlist.length === 0 && selectedCategory === 'Stock'">
+      <p class="watchlist-message-text">
+        {{ t('StockTable_Watchlist_Message') }}
+      </p>
+    </div>
 	</div>
 </template>
 
@@ -86,6 +85,7 @@ onMounted(async () => {
 .title-text {
   font-size: 2rem;
   color: v-bind(textColor);
+  font-weight: bold;
 }
 
 .selection-container {

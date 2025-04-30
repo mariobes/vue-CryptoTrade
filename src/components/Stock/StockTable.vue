@@ -177,7 +177,6 @@ onMounted(async () => {
       <tr
         v-for="stock in stocksList"        
         :key="stock.id"
-        class="stock-link"
         :class="storeUserPreferences.selectedTheme === 'light' ? 'hover-light' : 'hover-dark'"
         @click="$router.push({ name: 'stockDetails', params: { id: stock.id } })"
         style="cursor: pointer"
@@ -214,10 +213,16 @@ onMounted(async () => {
           {{ storeUserPreferences.convertPrice(stock.price, storeUserPreferences.selectedCurrency, 'after') }}
         </td>
         <td :style="{ color: storeUserPreferences.getPriceColor(stock.changes) }" class="text-right">
-          {{ storeUserPreferences.convertPrice(stock.changes, storeUserPreferences.selectedCurrency, 'after') }}
+          <v-icon class="mb-1">
+            {{ storeUserPreferences.getArrowDirection(stock.changes) }}
+          </v-icon>
+          {{ storeUserPreferences.convertPrice(Math.abs(stock.changes), storeUserPreferences.selectedCurrency, 'after') }}
         </td>
         <td :style="{ color: storeUserPreferences.getPriceColor(stock.changesPercentage) }" class="text-right">
-          {{ stock.changesPercentage.toFixed(2) }}%
+          <v-icon class="mb-1">
+            {{ storeUserPreferences.getArrowDirection(stock.changesPercentage) }}
+          </v-icon>
+          {{ Math.abs(stock.changesPercentage).toFixed(2) }}%
         </td>
         <td class="text-right">{{ stock.currency }}</td>
         <td class="text-right" v-if="sortable">
@@ -252,11 +257,13 @@ onMounted(async () => {
 .title-text {
   font-size: 2rem;
   color: v-bind(textColor);
+  font-weight: bold;
 }
 
 .table-container {
   background-color: v-bind(backgroundColor);
   color: v-bind(textColor);
+  margin-bottom: 30px;
 }
 
 .column-fixed {
@@ -273,13 +280,8 @@ onMounted(async () => {
   font-size: 1.0rem !important;
 }
 
-.stock-link {
-  text-decoration: none;
-  color: inherit;
-}
-
 .hover-light:hover {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.336);
+  background-color: #ced1d3 !important;
 }
 
 .hover-dark:hover {
@@ -322,6 +324,7 @@ onMounted(async () => {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  font-weight: bold;
 }
 
 .stock-symbol {
@@ -329,6 +332,7 @@ onMounted(async () => {
   font-size: 0.85rem;
   color: #808080;
   white-space: nowrap;
+  font-weight: bold;
 }
 
 .stocks-see-all-container {

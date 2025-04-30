@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import UserInfo from '../components/User/UserInfo.vue'
+import UserCharts from '../components/User/UserAssetCharts.vue'
+// import UserAssetsTable from '../components/User/UserAssetsTable.vue'
 import { useUserPreferencesStore } from '../stores/userPreferences';
 import { useAuthStore } from '@/stores/auth'
 
@@ -14,13 +17,21 @@ const userId = storeAuth.getUserId()
 
 <template>
 
-<p class="text">Hola usuario con ID: {{ userId }}</p> 
+<div class="main-container">
+	<UserInfo></UserInfo>
+	<UserCharts></UserCharts>
+	<!-- <UserAssetsTable></UserAssetsTable> -->
+</div>
+
 
 </template>
 
 <style scoped>
-.text {
-    color: v-bind(textColor);
+.main-container {
+	max-width: 60vw;
+	margin: 50px auto 30px auto;
 }
+
+
 
 </style>

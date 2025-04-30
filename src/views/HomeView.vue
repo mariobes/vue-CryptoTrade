@@ -97,6 +97,7 @@ onMounted(async () => {
 .title-text {
   font-size: 2rem;
   color: v-bind(textColor);
+  font-weight: bold;
 }
 
 .content-container {

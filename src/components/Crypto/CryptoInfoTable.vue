@@ -111,7 +111,7 @@ onMounted(() => {
 			<div>
 				<div class="crypto-content-name-favorite">
 					<div class="crypto-content-name">
-						<img :src="crypto.image" alt="Crypto Logo" class="crypto-image" @error="crypto.image = '/src/assets/asset-default.png'" />
+						<img :src="crypto.image" alt="Crypto Logo" class="crypto-image" @error="storeUserPreferences.showDefaultAssetImage(crypto)" />
 						<span class="crypto-name">{{ crypto.name }}</span>
 						<span class="crypto-symbol mt-1">{{ crypto.symbol.toUpperCase() }}</span>
 						<span class="crypto-rank" :style="{ backgroundColor: storeUserPreferences.selectedTheme === 'light' ? '#f0eded' : '#313030' }">
@@ -134,10 +134,10 @@ onMounted(() => {
 				<div class="crypto-content-price">
 					<span class="crypto-price">{{ storeUserPreferences.convertPrice(crypto.current_price, storeUserPreferences.selectedCurrency, 'after') }}</span>
 					<span class="crypto-percentage" :style="{ color: storeUserPreferences.getPriceColor(crypto.price_change_percentage_24h) }">
-						<v-icon>
+						<v-icon class="mb-1">
 							{{ storeUserPreferences.getArrowDirection(crypto.price_change_percentage_24h) }}
 						</v-icon>
-						{{ crypto.price_change_percentage_24h.toFixed(2) }}% (1D)
+						{{ Math.abs(crypto.price_change_percentage_24h).toFixed(2) }}% (1D)
 					</span>
 				</div>
 			</div>
@@ -151,7 +151,7 @@ onMounted(() => {
 							<v-icon class="crypto-content-percentage-icon">
 								{{ storeUserPreferences.getArrowDirection(crypto.market_cap_change_percentage_24h) }}
 							</v-icon>
-							{{ crypto.market_cap_change_percentage_24h.toFixed(2) }}%
+							{{ Math.abs(crypto.market_cap_change_percentage_24h).toFixed(2) }}%
 						</span>
 					</div>
 				</div>

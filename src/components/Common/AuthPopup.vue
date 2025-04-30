@@ -173,7 +173,7 @@ const handleAuth = async () => {
                 class="auth-form-calendar-btn"
               >
                 <v-icon>mdi-calendar</v-icon>
-                <p class="auth-form-calendar-text">{{ formattedBirthDate }}</p>
+                <span class="auth-form-calendar-text">{{ formattedBirthDate }}</span>
               </v-btn>
             </div>
           </template>

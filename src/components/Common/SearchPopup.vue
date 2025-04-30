@@ -148,7 +148,7 @@ const goToStock = (id: string) => {
 							:style="{ backgroundColor: storeUserPreferences.selectedTheme === 'light' ? '#e9ecef' : '#363535' }"
 						>
 							<div class="popup-results-asset">
-								<img :src="crypto.image" alt="asset Image" class="popup-asset-image" />
+								<img :src="crypto.image" alt="asset Image" class="popup-asset-image" @error="storeUserPreferences.showDefaultAssetImage(crypto)" />
 								<div class="popup-results-asset-name">
 									<div class="popup-results-asset-name-rank">
 										<span class="popup-asset-name">
@@ -185,7 +185,7 @@ const goToStock = (id: string) => {
 									<v-icon>
 										{{ storeUserPreferences.getArrowDirection(crypto.price_change_percentage_24h) }}
 									</v-icon>
-									{{ crypto.price_change_percentage_24h.toFixed(2) }}%
+									{{ Math.abs(crypto.price_change_percentage_24h).toFixed(2) }}%
 								</span>
 							</div>
 						</button>
@@ -217,7 +217,12 @@ const goToStock = (id: string) => {
 							:style="{ backgroundColor: storeUserPreferences.selectedTheme === 'light' ? '#e9ecef' : '#363535' }"
 						>
 							<div class="popup-results-asset">
-								<img :src="stock.image" alt="asset Image" class="popup-asset-image" :class="{ 'popup-stock-image': storeUserPreferences.selectedTheme === 'light' }" />
+								<img :src="stock.image" 
+									alt="asset Image" 
+									class="popup-asset-image" 
+									:class="{ 'popup-stock-image': storeUserPreferences.selectedTheme === 'light' }" 
+									@error="storeUserPreferences.showDefaultAssetImage(stock)"
+								/>
 								<div class="popup-results-asset-name">
 									<div class="popup-results-asset-name-rank">
 										<span class="popup-asset-name">
@@ -254,7 +259,7 @@ const goToStock = (id: string) => {
 									<v-icon>
 										{{ storeUserPreferences.getArrowDirection(stock.changesPercentage) }}
 									</v-icon>
-									{{ stock.changesPercentage.toFixed(2) }}%
+									{{ Math.abs(stock.changesPercentage).toFixed(2) }}%
 								</span>
 							</div>
 						</button>

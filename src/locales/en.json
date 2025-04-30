@@ -111,6 +111,56 @@
     "CryptoChart_Title_2": "?",
     "CryptoChart_Price": "Price",
 
-    "WatchlistTableView_Title": "Your Cryptocurrency and Stocks Watchlists"
+    "WatchlistTableView_Title": "Your Cryptocurrency and Stocks Watchlists",
+
+    "TransactionComponent_Buy_Btn": "Buy",
+    "TransactionComponent_Sell_Btn": "Sell",
+    "TransactionComponent_Available_Text": "available",
+    "TransactionComponent_Available_Assets_Text": "available stocks",
+    "TransactionComponent_Import_Text": "Amount",
+    "TransactionComponent_Actives_Text": "Assets",
+    "TransactionComponent_Assets_Text": "Assets",
+    "TransactionComponent_Market_Price_Text": "Purchase price",
+    "TransactionComponent_Total_Text": "Total",
+    "TransactionComponent_Logout_Message": "Log in to trade assets.",
+    "TransactionComponent_Position_Message": "You don't have any positions in this cryptocurrency yet.",
+    "TransactionComponent_Position_Text": "Position",
+    "TransactionComponent_Profitability_Text": "Profitability",
+    "TransactionComponent_Purchase_Price_Text": "Purchase price",
+    "TransactionComponent_Purchase_Percentage_Text": "% wallet",
+
+    "UserInfo_Wallet_Title": "Portfolio",
+    "UserInfo_Cash_Title": "Cash",
+    "UserInfo_Deposit_Btn": "Deposit funds",
+    "UserInfo_Withdrawal_Btn": "Withdraw funds",
+
+    "UserInfo_Panel_Payment_Title": "Select a payment method",
+    "UserInfo_Panel_Deposit_Title": "How much money do you want to deposit?",
+    "UserInfo_Panel_Withdrawal_Title": "Withdraw",
+    "UserInfo_Panel_Transfer_Bank_Title": "Bank transfer",
+    "UserInfo_Panel_Transfer_Bank_Text": "Send money from any bank",
+    "UserInfo_Panel_Credit_Card_Title": "Credit card",
+    "UserInfo_Panel_Credit_Card_Text": "Deposit money using your credit or debit card",
+    "UserInfo_Panel_Google_pay_Title": "Google Pay",
+    "UserInfo_Panel_Google_pay_Text": "Deposit money using your Google account",
+    "UserInfo_Panel_Avaiable": "available",
+
+    "UserInfo_Overview_Text": "Overview",
+    "UserInfo_Transactions_Text": "Transactions",
+
+
+
+
+
+    "UserInfo_All_Text": "All",
+    "UserInfo_Cryptocurrencies_Text": "Cryptocurrencies",
+    "UserInfo_Stocks_Text": "Stocks",
+
+    "UserInfo_Table_Name": "Name",
+    "UserInfo_Table_Price": "Price",
+    "UserInfo_Table_24h": "24 h %",
+    "UserInfo_Table_Holdings": "Holdings",
+    "UserInfo_Table_Purchase_Price": "Purchase price",
+    "UserInfo_Table_Profit_Loss": "Profit/Loss"
 
 }
