@@ -8,8 +8,8 @@ export interface Transaction {
     assetAmount: number
     date: Date
     charge: number
-    payment_Method: string
-    typeAsset: string
+    paymentMethod: string
+    typeOfAsset: string
   }
 
   export interface UserAssetsSummary {

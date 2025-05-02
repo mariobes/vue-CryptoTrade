@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useUserPreferencesStore } from '@/stores/userPreferences';
-import type { UserAssetsSummary } from '@/core/transaction'
+import type { Transaction, UserAssetsSummary } from '@/core/transaction'
 import { useTransactionsStore } from '@/stores/transactions'
 import { useAuthStore } from '@/stores/auth'
 import { useI18n } from 'vue-i18n'
@@ -13,6 +14,7 @@ const storeUserPreferences = useUserPreferencesStore()
 const storeTransactions = useTransactionsStore()
 const storeAuth = useAuthStore()
 
+const $router = useRouter()
 const { t } = useI18n()
 
 const tableSelected = ref<'all' | 'cryptos' | 'stocks'>('all')
@@ -53,6 +55,11 @@ const hasAssets = computed(() => {
   return assets.value.length > 0;
 });
 
+function openAssetInNewTab(asset: Transaction) {
+  const route = asset.typeOfAsset === 'Crypto' ? 'cryptoDetails' : 'stockDetails';
+  const url = $router.resolve({ name: route, params: { id: asset.assetId } }).href;
+  window.open(url, '_blank');
+}
 </script>
 
 <template>
@@ -99,6 +106,9 @@ const hasAssets = computed(() => {
 				<th class="text-right">
 					{{ t('UserInfo_Table_Profit_Loss') }}
 				</th>
+				<th class="text-right">
+					{{ t('UserInfo_Table_Percentage') }}
+				</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -106,7 +116,7 @@ const hasAssets = computed(() => {
 				v-for="asset in filteredAssets"        
 				:key="asset.assetId"
 				:class="storeUserPreferences.selectedTheme === 'light' ? 'hover-light' : 'hover-dark'"
-				@click="$router.push({ name: asset.typeOfAsset === 'Crypto' ? 'cryptoDetails' : 'stockDetails', params: { id: asset.assetId } })"
+				@click="openAssetInNewTab(asset)"
 				style="cursor: pointer"
 			>
 				<td>
@@ -150,6 +160,7 @@ const hasAssets = computed(() => {
 						</span>	
 					</div>
 				</td>
+				<td class="text-right">{{ asset.walletPercentage.toFixed(2) }}%</td>
 			</tr>
 		</tbody>
 	</v-table>
@@ -167,7 +178,7 @@ const hasAssets = computed(() => {
 .tables-content {
 	display: flex;
 	gap: 30px;
-	margin-bottom: 15px;
+	margin: 15px 0;
 }
 
 .table {
@@ -178,6 +189,7 @@ const hasAssets = computed(() => {
 .table.selected {
 	border-bottom: solid 2px #FF8C00;
 	color: v-bind(textColor);
+	font-weight: bold;
 }
 
 .table-selected-content {
@@ -249,17 +261,18 @@ const hasAssets = computed(() => {
 .asset-total {
 	display: flex;
 	flex-direction: column;
+	font-weight: bold;
 }
 
 .asset-total-amount-asset {
 	font-size: 0.85rem;
-	color: #ffffff73;
+	color: #808080;
+	font-weight: bold;
 }
 
 .asset-profit {
 	display: flex;
 	flex-direction: column;
+	font-weight: bold;
 }
-
-
 </style>
