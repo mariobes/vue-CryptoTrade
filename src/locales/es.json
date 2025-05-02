@@ -111,6 +111,8 @@
     "CryptoChart_Title_2": "?",
     "CryptoChart_Price": "Precio",
 
+    "CryptoChart_Loading": "Cargando datos...",
+
     "WatchlistTableView_Title": "Tus listas de seguimiento de criptomonedas y acciones",
 
     "TransactionComponent_Buy_Btn": "Comprar",
@@ -137,8 +139,8 @@
     "UserInfo_Panel_Payment_Title": "Selecciona un método de pago",
     "UserInfo_Panel_Deposit_Title": "¿Cuánto dinero quieres ingresar?",
     "UserInfo_Panel_Withdrawal_Title": "Retirar",
-    "UserInfo_Panel_Transfer_Bank_Title": "Transferencia bancaria",
-    "UserInfo_Panel_Transfer_Bank_Text": "Envía dinero desde cualquier banco",
+    "UserInfo_Panel_Bank_Transfer_Title": "Transferencia bancaria",
+    "UserInfo_Panel_Bank_Transfer_Text": "Envía dinero desde cualquier banco",
     "UserInfo_Panel_Credit_Card_Title": "Tarjeta de crédito",
     "UserInfo_Panel_Credit_Card_Text": "Ingresa dinero con tu tarjeta de crédito o débito",
     "UserInfo_Panel_Google_pay_Title": "Google Pay",
@@ -148,9 +150,14 @@
     "UserInfo_Overview_Text": "Vista general",
     "UserInfo_Transactions_Text": "Transacciones",
 
+    "UserInfo_Chart_Historic_Benefict": "Beneficio histórico",
+    "UserInfo_Chart_Total_Invested": "Total invertido",
+    "UserInfo_Chart_Historic_Best_Performer": "Mayor ganancia",
+    "UserInfo_Chart_Historic_Worst_Performer": "Mayor pérdida",
+    "UserInfo_Chart_Total_Invested_Date": "Desde",
 
-
-
+    "UserInfo_Chart_Title": "Asignación",
+    "UserInfo_Chart_Text": "No tienes ningún activo en tu cartera.",
 
     "UserInfo_All_Text": "Todos",
     "UserInfo_Cryptocurrencies_Text": "Criptomonedas",
@@ -161,6 +168,17 @@
     "UserInfo_Table_24h": "24 h %",
     "UserInfo_Table_Holdings": "Inversiones",
     "UserInfo_Table_Purchase_Price": "Precio de compra",
-    "UserInfo_Table_Profit_Loss": "Ganancia/Pérdida"
+    "UserInfo_Table_Profit_Loss": "Ganancia/Pérdida",
+    "UserInfo_Table_Percentage": "% cartera",
+
+    "UserInfo_Transactions_Table_Type": "Tipo",
+    "UserInfo_Transactions_Table_Date": "Fecha",
+    "UserInfo_Transactions_Table_Asset_Payment": "Activo/Método de pago",
+    "UserInfo_Transactions_Table_Purchase_Price": "Precio de compra",
+    "UserInfo_Transactions_Table_Amount": "Cantidad",
+    "UserInfo_Transactions_Table_Deposit": "Depósito",
+    "UserInfo_Transactions_Table_Withdrawal": "Retiro",
+    "UserInfo_Transactions_Table_Buy": "Comprar",
+    "UserInfo_Transactions_Table_Sell": "Vender"
     
 }

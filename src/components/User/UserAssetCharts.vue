@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import UserAssetsTable from '../User/UserAssetsTable.vue'
+import DoughnutAssetsChart from '../User/DoughnutAssetsChart.vue'
+import UserTransactionsTable from '../User/UserTransactionsTable.vue'
 import type { User } from '@/core/user'
 import { useUsersStore } from '@/stores/users'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
@@ -50,6 +52,11 @@ const highestLoser = computed(() => {
     current.balance < min.balance ? current : min
   );
 });
+
+const profitPercentage = computed(() => {
+  if (!userData.value || !userData.value.wallet || userData.value.wallet === 0) return 0;
+  return (userData.value.profit / userData.value.wallet) * 100;
+});
 </script>
 
 <template>
@@ -69,58 +76,82 @@ const highestLoser = computed(() => {
 		</span>
 	</div>
 
-	<div class="option-active-content">
-		<div v-if="activeOption === 'overview'" class="user-charts-container">
-			<div class="mini-charts-content">
+	<div v-if="activeOption === 'overview'" class="user-charts-container">
+		<div class="mini-charts-content">
 
-				<div class="mini-charts-profit">
+			<div class="mini-charts">
 
-					<div class="mini-chart-item">
-						<span>Beneficio histórico</span>
-						<span>{{ userData?.profit }}</span>
-						<span>-98.95%</span>
-					</div>
-
-					<div class="mini-chart-item">
-						<span>Total invertido</span>
-						<span>{{ userData?.wallet }}</span>
-					</div>
-
+				<div class="mini-chart-item">
+					<span class="item-title">{{ t('UserInfo_Chart_Historic_Benefict') }}</span>
+					<span class="item-value" :style="{ color: storeUserPreferences.getPriceColor(Number(userData?.profit)) }">
+						{{ Number(userData?.profit) > 0 ? '+' : '-' }}{{  storeUserPreferences.convertPrice(Math.abs(Number(userData?.profit)), storeUserPreferences.selectedCurrency, 'before') }}
+					</span>
+					<span>
+						<v-icon class="item-icon mb-1" :style="{ color: storeUserPreferences.getPriceColor(Number(highestGainer?.balancePercentage)) }">
+							{{ storeUserPreferences.getArrowDirection(Number(highestGainer?.balancePercentage)) }}
+						</v-icon>
+						<span :style="{ color: storeUserPreferences.getPriceColor(profitPercentage) }">
+							{{ Math.abs(profitPercentage).toFixed(2) }}%
+						</span>
+					</span>
 				</div>
 
-				<div class="mini-charts-assets">
-
-					<div class="mini-chart-item">
-						<span>Mayor ganancia</span>
-						{{ highestGainer?.name }}
-						<!-- <span>
-							<img :src="highestGainer?.image" alt="Asset Logo" class="asset-image" @error="storeUserPreferences.showDefaultAssetImage(highestGainer)" />
-							<span>{{ highestGainer?.symbol }}</span>
-						</span>
-						<span>{{ highestGainer?.balance }} {{ highestGainer?.balancePercentage }}%</span> -->
-					</div>
-
-					<div class="mini-chart-item">
-						<span>Mayor pérdida</span>
-						{{ highestLoser?.name }}
-						<!-- <span>
-							<img :src="highestLoser?.image" alt="Asset Logo" class="asset-image" @error="storeUserPreferences.showDefaultAssetImage(highestLoser)" />
-							<span>{{ highestLoser?.symbol }}</span>
-						</span>
-						<span>{{ highestLoser?.balance }} {{ highestLoser?.balancePercentage }}%</span> -->
-					</div>
-
+				<div class="mini-chart-item">
+					<span class="item-title">{{ t('UserInfo_Chart_Total_Invested') }}</span>
+					<span class="item-value">{{ storeUserPreferences.convertPrice(Number(userData?.wallet), storeUserPreferences.selectedCurrency, 'before') }}</span>
+					<span class="item-date"> {{ t('UserInfo_Chart_Total_Invested_Date') }} {{ userData?.creationDate ? new Date(userData.creationDate).toLocaleDateString() : '' }}</span>
 				</div>
+
 			</div>
-			<div class="chart-assets-content">
-				Gráfica
+
+			<div class="mini-charts">
+
+				<div class="mini-chart-item">
+					<span class="item-title">{{ t('UserInfo_Chart_Historic_Best_Performer') }}</span>
+					<span class="item-asset-image">
+						<img :src="highestGainer?.image" alt="Asset Logo" class="asset-image" @error="storeUserPreferences.showDefaultAssetImage(highestGainer)" />
+						<span class="item-asset-text">{{ highestGainer?.symbol.toUpperCase() }}</span>
+					</span>
+					<span :style="{ color: storeUserPreferences.getPriceColor(Number(highestGainer?.balance)) }">
+						<span class="item-asset-value">
+							{{ Number(highestGainer?.balance) > 0 ? '+' : '-' }}{{ storeUserPreferences.convertPrice(Math.abs(Number(highestGainer?.balance.toFixed(2))), storeUserPreferences.selectedCurrency, 'before') }}
+						</span>
+						<v-icon class="item-icon mb-1 ml-1">
+							{{ storeUserPreferences.getArrowDirection(Number(highestGainer?.balancePercentage)) }}
+						</v-icon>
+						<span class="item-asset-value">{{ Math.abs(Number(highestGainer?.balancePercentage)).toFixed(2) }}%</span>
+					</span>
+				</div>
+
+				<div class="mini-chart-item">
+					<span class="item-title">{{ t('UserInfo_Chart_Historic_Worst_Performer') }}</span>
+					<span class="item-asset-image">
+						<img :src="highestLoser?.image" alt="Asset Logo" class="asset-image" @error="storeUserPreferences.showDefaultAssetImage(highestLoser)" />
+						<span class="item-asset-text">{{ highestLoser?.symbol.toUpperCase() }}</span>
+					</span>
+					<span :style="{ color: storeUserPreferences.getPriceColor(Number(highestLoser?.balance)) }">
+						<span class="item-asset-value">
+							{{ Number(highestLoser?.balance) > 0 ? '+' : '-' }}{{ storeUserPreferences.convertPrice(Math.abs(Number(highestLoser?.balance.toFixed(2))), storeUserPreferences.selectedCurrency, 'before') }}
+						</span>
+						<v-icon class="item-icon mb-1 ml-1">
+							{{ storeUserPreferences.getArrowDirection(Number(highestLoser?.balancePercentage)) }}
+						</v-icon>
+						<span class="item-asset-value">{{ Math.abs(Number(highestLoser?.balancePercentage)).toFixed(2) }}%</span>
+					</span>
+				</div>
+
 			</div>
 		</div>
-		<div v-else-if="activeOption === 'transactions'">
-			<div>Componente Transacciones</div>
+
+		<div class="chart-assets-content">
+			<DoughnutAssetsChart :assets="combinedAssets" />
 		</div>
 	</div>
 
+	<div v-else-if="activeOption === 'transactions'">
+		<UserTransactionsTable :assets="combinedAssets" />
+	</div>
+	
 	<div v-if="activeOption === 'overview'">
 		<UserAssetsTable></UserAssetsTable>
 	</div>
@@ -138,7 +169,7 @@ const highestLoser = computed(() => {
 
 .options-content {
 	display: flex;
-	gap: 20px;
+	gap: 30px;
 	margin-bottom: 20px;
 	color: #808080;
 }
@@ -162,57 +193,85 @@ const highestLoser = computed(() => {
 	color: v-bind(textColor);
 }
 
-.option-active-content {
-	padding: 10px 0;
-}
-
 .user-charts-container {
 	display: flex;
-	justify-content: space-between;
-
+	margin-top: 10px;
 }
 
 .mini-charts-content {
 	width: 50%;
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	gap: 30px;
+	align-items: center;
 }
 
 .chart-assets-content {
-	width: 50%;
+	width: 42%;
+	height: 280px;
+	background-color: v-bind(backgroundSettings);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.336);
+	border-radius: 10px;
 }
 
 .mini-charts-profit {
 	display: flex;
-	gap: 10px;
+	gap: 30px;
 }
 
-.mini-charts-assets {
+.mini-charts {
 	display: flex;
-	gap: 10px;
+	gap: 30px;
 }
 
 .mini-chart-item {
-	width: 50%;
   display: flex;
 	flex-direction: column;
 	background-color: v-bind(backgroundSettings);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.336);
 	border-radius: 10px;
-	padding: 20px 0 20px 50px;
+	padding: 15px 25px;
 	align-items: start;
+	gap: 5px;
+	font-weight: bold;
+	min-width: 210px;
 }
 
+.item-title {
+	color: #808080;
+}
 
+.item-value {
+	font-size: 1.4rem;
+}
+
+.item-icon {
+	font-size: 1.4rem;
+}
+
+.item-date {
+	font-size: 0.85rem;
+	color: #808080;
+	margin-top: 5px;
+}
+
+.item-asset-image {
+	display: flex;
+	margin-top: 5px;
+}
 
 .asset-image {
-  width: 30px;
-  height: 30px;
+  width: 25px;
+  height: 25px;
   margin-right: 10px;
   border-radius: 50%;
 }
 
+.item-asset-text {
+	font-size: 1.2rem;
+}
 
-
-
+.item-asset-value {
+	font-size: 0.95rem;
+}
 </style>

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { useUserPreferencesStore } from '@/stores/userPreferences';
 import type { User } from '@/core/user'
 import { useUsersStore } from '@/stores/users'
+import { useUserPreferencesStore } from '@/stores/userPreferences';
 import { useTransactionsStore } from '@/stores/transactions'
 import { useAuthStore } from '@/stores/auth'
 import DepositWithDrawalPanel from '@/components/User/DepositWithDrawalPanel.vue';
@@ -201,7 +201,7 @@ const walletInfo = computed(() => {
 
 .info-cash-text {
   color: #808080;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   font-weight: bold;
 }
 

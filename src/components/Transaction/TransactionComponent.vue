@@ -128,7 +128,7 @@ watch(selectedAction, () => {
       <div v-if="selectedAction" class="amount-input-container">
         <label v-if="storeAuth.isLoggedIn()" class="amount-input-text">
           {{ selectedAction === 'buy'
-            ? `${storeUserPreferences.convertPrice(userData?.cash, storeUserPreferences.selectedCurrency, 'after')} ${t('TransactionComponent_Available_Text')}`
+            ? `${storeUserPreferences.convertPrice(Number(userData?.cash), storeUserPreferences.selectedCurrency, 'after')} ${t('TransactionComponent_Available_Text')}`
             : `${userCrypto.totalAssetAmount.toFixed(6)} ${t('TransactionComponent_Available_Assets_Text')}`
 
           }}
