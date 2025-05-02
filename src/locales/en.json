@@ -111,6 +111,8 @@
     "CryptoChart_Title_2": "?",
     "CryptoChart_Price": "Price",
 
+    "CryptoChart_Loading": "Loading data...",
+
     "WatchlistTableView_Title": "Your Cryptocurrency and Stocks Watchlists",
 
     "TransactionComponent_Buy_Btn": "Buy",
@@ -137,8 +139,8 @@
     "UserInfo_Panel_Payment_Title": "Select a payment method",
     "UserInfo_Panel_Deposit_Title": "How much money do you want to deposit?",
     "UserInfo_Panel_Withdrawal_Title": "Withdraw",
-    "UserInfo_Panel_Transfer_Bank_Title": "Bank transfer",
-    "UserInfo_Panel_Transfer_Bank_Text": "Send money from any bank",
+    "UserInfo_Panel_Bank_Transfer_Title": "Bank transfer",
+    "UserInfo_Panel_Bank_Transfer_Text": "Send money from any bank",
     "UserInfo_Panel_Credit_Card_Title": "Credit card",
     "UserInfo_Panel_Credit_Card_Text": "Deposit money using your credit or debit card",
     "UserInfo_Panel_Google_pay_Title": "Google Pay",
@@ -148,9 +150,14 @@
     "UserInfo_Overview_Text": "Overview",
     "UserInfo_Transactions_Text": "Transactions",
 
+    "UserInfo_Chart_Historic_Benefict": "All-time profit",
+    "UserInfo_Chart_Total_Invested": "Total invested",
+    "UserInfo_Chart_Historic_Best_Performer": "Best performer",
+    "UserInfo_Chart_Historic_Worst_Performer": "Worst performer",
+    "UserInfo_Chart_Total_Invested_Date": "Since",
 
-
-
+    "UserInfo_Chart_Title": "Allocation",
+    "UserInfo_Chart_Text": "You don't have any assets in your portfolio.",
 
     "UserInfo_All_Text": "All",
     "UserInfo_Cryptocurrencies_Text": "Cryptocurrencies",
@@ -161,6 +168,17 @@
     "UserInfo_Table_24h": "24 h %",
     "UserInfo_Table_Holdings": "Holdings",
     "UserInfo_Table_Purchase_Price": "Purchase price",
-    "UserInfo_Table_Profit_Loss": "Profit/Loss"
+    "UserInfo_Table_Profit_Loss": "Profit/Loss",
+    "UserInfo_Table_Percentage": "% wallet",
+
+    "UserInfo_Transactions_Table_Type": "Type",
+    "UserInfo_Transactions_Table_Date": "Date",
+    "UserInfo_Transactions_Table_Asset_Payment": "Asset/Payment method",
+    "UserInfo_Transactions_Table_Purchase_Price": "Purchase price",
+    "UserInfo_Transactions_Table_Amount": "Amount",
+    "UserInfo_Transactions_Table_Deposit": "Deposit",
+    "UserInfo_Transactions_Table_Withdrawal": "Withdraw",
+    "UserInfo_Transactions_Table_Buy": "Buy",
+    "UserInfo_Transactions_Table_Sell": "Sell"
 
 }

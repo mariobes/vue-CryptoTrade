@@ -50,37 +50,11 @@ const getSentimentTranslation = (sentiment: string | null) => {
     'Fear': t('CryptoIndices_Sentiment_Fear'),
     'Neutral': t('CryptoIndices_Sentiment_Neutral'),
     'Greed': t('CryptoIndices_Sentiment_Greed'),
-    'Extreme greed': t('CryptoIndices_Sentiment_Extreme_Greed'),
+    'Extreme greed': t('CryptoIndices_Sentiment_Extreme_Greed')
   }
   return map[sentiment ?? ''] ?? sentiment
 }
 </script>
-
-<!-- <div class="index-section">
-  <div class="index-section-content index-section-content-cap">
-    <p class="title-index cap-index">{{ t('CryptoIndices_Index_1') }}</p>
-    <p class="price-index">
-      {{ storeUserPreferences.convertToAbbreviated(totalMarketCap, storeUserPreferences.selectedCurrency, 'before') }}
-    </p>
-    <p>
-      <span :style="{ color: storeUserPreferences.getPriceColor(marketCapChangePercentage) }">
-        {{ marketCapChangePercentage > 0 ? '+' : '' }}{{ marketCapChangePercentage }}%
-      </span>
-    </p>
-  </div>
-
-  <div class="index-section-content">
-    <p class="title-index cap-index">{{ t('CryptoIndices_Index_2') }}</p>
-    <p class="price-index">
-      {{ storeUserPreferences.convertToAbbreviated(valueCMC100Index, storeUserPreferences.selectedCurrency, 'before') }}
-    </p>
-    <p>
-      <span :style="{ color: storeUserPreferences.getPriceColor(CMC100IndexChangePercentage) }">
-        {{ CMC100IndexChangePercentage > 0 ? '+' : '' }}{{ CMC100IndexChangePercentage }}%
-      </span>
-    </p>
-  </div>
-</div> -->
 
 <template>
   <div class="index-container">
@@ -91,8 +65,11 @@ const getSentimentTranslation = (sentiment: string | null) => {
           {{ storeUserPreferences.convertToAbbreviated(totalMarketCap, storeUserPreferences.selectedCurrency, 'before') }}
         </p>
         <p>
+          <v-icon class="mb-1" :style="{ color: storeUserPreferences.getPriceColor(marketCapChangePercentage) }">
+            {{ storeUserPreferences.getArrowDirection(marketCapChangePercentage) }}
+          </v-icon>
           <span :style="{ color: storeUserPreferences.getPriceColor(marketCapChangePercentage) }">
-            {{ marketCapChangePercentage > 0 ? '+' : '' }}{{ marketCapChangePercentage }}%
+            {{ marketCapChangePercentage }}%
           </span>
         </p>
       </div>
@@ -103,8 +80,11 @@ const getSentimentTranslation = (sentiment: string | null) => {
           {{ storeUserPreferences.convertToAbbreviated(valueCMC100Index, storeUserPreferences.selectedCurrency, 'before') }}
         </p>
         <p>
+          <v-icon class="mb-1" :style="{ color: storeUserPreferences.getPriceColor(CMC100IndexChangePercentage) }">
+            {{ storeUserPreferences.getArrowDirection(CMC100IndexChangePercentage) }}
+          </v-icon>
           <span :style="{ color: storeUserPreferences.getPriceColor(CMC100IndexChangePercentage) }">
-            {{ CMC100IndexChangePercentage > 0 ? '+' : '' }}{{ CMC100IndexChangePercentage }}%
+            {{ Math.abs(CMC100IndexChangePercentage) }}%
           </span>
         </p>
       </div>

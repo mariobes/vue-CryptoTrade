@@ -53,7 +53,7 @@ const handleDeposit = async () => {
     await loadUserData();
     amount.value = '';
     closePanel();
-    emit('update-cash', userData.value?.cash);
+    emit('update-cash', Number(userData.value?.cash));
   } else {
     alert('Hubo un error al realizar el deposito');
   }
@@ -66,17 +66,11 @@ const handleWithdrawal = async () => {
     await loadUserData();
     amount.value = '';
     closePanel();
-    emit('update-cash', userData.value?.cash);
+    emit('update-cash', Number(userData.value?.cash));
   } else {
     alert('Hubo un error al realizar el retiro');
   }
 };
-
-const paymentMethodLabels = {
-  0: 'Transferencia bancaria',
-  1: 'Tarjeta de crédito',
-  2: 'Google Pay'
-}
 
 const closePanel = () => {
   selectedPaymentMethod.value = null;
@@ -130,8 +124,8 @@ const closePanel = () => {
             <button @click="selectedPaymentMethod = 0" class="panel-payment-btn">
               <span class="mdi mdi-bank-outline panel-payment-icon"></span>
               <div class="payment-text-content">
-                <span class="panel-payment-title">{{ t('UserInfo_Panel_Transfer_Bank_Title') }}</span>
-                <span class="panel-payment-text">{{ t('UserInfo_Panel_Transfer_Bank_Text') }}</span>
+                <span class="panel-payment-title">{{ t('UserInfo_Panel_Bank_Transfer_Title') }}</span>
+                <span class="panel-payment-text">{{ t('UserInfo_Panel_Bank_Transfer_Text') }}</span>
               </div>
             </button>
           </div>
@@ -157,14 +151,22 @@ const closePanel = () => {
 
         <div v-if="props.visible && props.action === 'withdrawal'" class="panel-payment">
           <span class="mdi mdi-bank-outline panel-payment-icon"></span>
-          <span class="panel-payment-title">{{ paymentMethodLabels[0] }}</span>
+          <span class="panel-payment-title">{{ t('UserInfo_Panel_Bank_Transfer_Title') }}</span>
         </div>
 
         <div v-if="props.action === 'deposit' && selectedPaymentMethod !== null" class="panel-payment">
-          <span v-if="selectedPaymentMethod === 0" class="mdi mdi-bank-outline panel-payment-icon"></span>
-          <span v-else-if="selectedPaymentMethod === 1" class="mdi mdi-credit-card-outline panel-payment-icon"></span>
-          <span v-else-if="selectedPaymentMethod === 2" class="mdi mdi-google panel-payment-icon"></span>
-          <span class="panel-payment-title">{{ paymentMethodLabels[selectedPaymentMethod] }}</span>
+          <div v-if="selectedPaymentMethod === 0">
+            <span class="mdi mdi-bank-outline panel-payment-icon"></span>
+            <span class="panel-payment-title">{{ t('UserInfo_Panel_Bank_Transfer_Title') }}</span>
+          </div>
+          <div v-else-if="selectedPaymentMethod === 1">
+            <span class="mdi mdi-credit-card-outline panel-payment-icon"></span>
+            <span class="panel-payment-title">{{ t('UserInfo_Panel_Credit_Card_Title') }}</span>
+          </div>
+          <div v-else-if="selectedPaymentMethod === 2">
+            <span class="mdi mdi-google panel-payment-icon"></span>
+            <span class="panel-payment-title">{{ t('UserInfo_Panel_Google_pay_Title') }}</span>
+          </div>
         </div>          
         
         <div v-if="(props.action === 'withdrawal') || (props.action === 'deposit' && selectedPaymentMethod !== null)" 
@@ -179,7 +181,7 @@ const closePanel = () => {
 
         <div v-if="props.visible && props.action === 'withdrawal'" class="cash-available-text">
           <span>
-            {{ storeUserPreferences.convertPrice(userData?.cash, storeUserPreferences.selectedCurrency, 'after') }}
+            {{ storeUserPreferences.convertPrice(Number(userData?.cash), storeUserPreferences.selectedCurrency, 'after') }}
             {{ t('UserInfo_Panel_Avaiable') }}
           </span>
         </div>
