@@ -77,7 +77,7 @@ const handleBuy = async () => {
 
   await loadUserData();
   await loadCrypto();
-  successMessage.value = t('TransactionComponent_Buy_Success');
+  successMessage.value = t('TransactionsCrypto_Buy_Success');
   setTimeout(() => {
     successMessage.value = null;
   }, 5000);
@@ -100,7 +100,7 @@ const handleSell = async () => {
 
   await loadUserData();
   await loadCrypto();
-  successMessage.value = t('TransactionComponent_Sell_Success');
+  successMessage.value = t('TransactionsCrypto_Sell_Success');
   setTimeout(() => {
     successMessage.value = null;
   }, 5000);
@@ -138,12 +138,12 @@ const validateFields = () => {
 
   if ((amount.value < 1 && selectedOption.value === 'amount') || (amount.value === '0' && selectedOption.value === 'assetAmount')) {
     errorMessages.value[fieldName] = t(
-      isBuy ? 'TransactionComponent_Buy_Low_Error' : 'TransactionComponent_Sell_Low_Error'
+      isBuy ? 'TransactionsCrypto_Buy_Low_Error' : 'TransactionsCrypto_Sell_Low_Error'
     );
   } else if ((isBuy && amount.value > cash && selectedOption.value === 'amount') || (isBuy && amount.value * cryptoPrice > cash && selectedOption.value === 'assetAmount')) {
-    errorMessages.value[fieldName] = t('TransactionComponent_Buy_High_Error');
+    errorMessages.value[fieldName] = t('TransactionsCrypto_Buy_High_Error');
   } else if ((isSell && amount.value > total && selectedOption.value === 'amount') || (isSell && amount.value > totalAssetAmount) && selectedOption.value === 'assetAmount') {
-    errorMessages.value[fieldName] = t('TransactionComponent_Sell_High_Error');
+    errorMessages.value[fieldName] = t('TransactionsCrypto_Sell_High_Error');
   }
 
   return Object.keys(errorMessages.value).length === 0
@@ -165,7 +165,7 @@ watch(amount, () => {
           :class="{ selected: selectedAction === 'buy' }"
           @click="selectedAction = 'buy'"
         >
-          {{ t('TransactionComponent_Buy_Btn') }}
+          {{ t('TransactionsCrypto_Buy_Btn') }}
         </button>
         <button
           v-if="userCrypto && userCrypto.totalAssetAmount > 0"
@@ -173,15 +173,15 @@ watch(amount, () => {
           :class="{ selected: selectedAction === 'sell' }"
           @click="selectedAction = 'sell'"
         >
-          {{ t('TransactionComponent_Sell_Btn') }}
+          {{ t('TransactionsCrypto_Sell_Btn') }}
         </button>
       </div>
 
       <div v-if="selectedAction" class="amount-input-container">
         <label v-if="storeAuth.isLoggedIn()" class="amount-input-text">
           {{ selectedAction === 'buy'
-            ? `${storeUserPreferences.convertPrice(userCash, storeUserPreferences.selectedCurrency, 'after', true)} ${t('TransactionComponent_Available_Text')}`
-            : storeUserPreferences.showPrices ? `${userCrypto.totalAssetAmount.toFixed(6)} ${t('TransactionComponent_Available_Assets_Text')}` : '******'
+            ? `${storeUserPreferences.convertPrice(userCash, storeUserPreferences.selectedCurrency, 'after', true)} ${t('TransactionsCrypto_Available_Text')}`
+            : storeUserPreferences.showPrices ? `${userCrypto.totalAssetAmount.toFixed(6)} ${t('TransactionsCrypto_Available_Assets_Text')}` : '******'
           }}
         </label>
 
@@ -191,20 +191,20 @@ watch(amount, () => {
             :class="{ selectedOption: selectedOption === 'amount' }"
             @click="selectedOption = 'amount'"
           >
-            {{ t('TransactionComponent_Import_Text') }}
+            {{ t('TransactionsCrypto_Import_Text') }}
           </button>
           <button 
             class="select-option-btn"
             :class="{ selectedOption: selectedOption === 'assetAmount' }"
             @click="selectedOption = 'assetAmount'"
           >
-            {{ t('TransactionComponent_Actives_Text') }}
+            {{ t('TransactionsCrypto_Actives_Text') }}
           </button>
 
         </div>
 
         <div class="amount-input-content">
-          <span class="amount-input-title">{{ selectedOption === 'amount' ? t('TransactionComponent_Import_Text') : t('TransactionComponent_Assets_Text') }}</span>
+          <span class="amount-input-title">{{ selectedOption === 'amount' ? t('TransactionsCrypto_Import_Text') : t('TransactionsCrypto_Assets_Text') }}</span>
           <input 
             v-model="amount" 
             class="amount-input-value"
@@ -218,7 +218,7 @@ watch(amount, () => {
         </div>
 
         <div v-if="selectedOption === 'amount'" class="asset-info-container">
-          <span class="amount-input-title">{{ t('TransactionComponent_Actives_Text') }}</span>
+          <span class="amount-input-title">{{ t('TransactionsCrypto_Actives_Text') }}</span>
           <span class="asset-info-value">
             {{
               crypto && amount && !isNaN(amount)
@@ -229,12 +229,12 @@ watch(amount, () => {
         </div>
 
         <div v-if="selectedOption === 'assetAmount'" class="asset-info-container">
-          <span class="amount-input-title">{{ t('TransactionComponent_Market_Price_Text') }}</span>
+          <span class="amount-input-title">{{ t('TransactionsCrypto_Market_Price_Text') }}</span>
           <span class="asset-info-value">{{ storeUserPreferences.convertPrice(crypto.current_price, storeUserPreferences.selectedCurrency, 'after') }}</span>
         </div>
 
         <div v-if="selectedOption === 'assetAmount'" class="asset-info-container mt-7">
-          <span class="amount-input-title">{{ t('TransactionComponent_Total_Text') }}</span>
+          <span class="amount-input-title">{{ t('TransactionsCrypto_Total_Text') }}</span>
           <span class="asset-info-value">
             {{
               selectedOption === 'assetAmount' && crypto && amount && !isNaN(amount)
@@ -256,7 +256,7 @@ watch(amount, () => {
               (selectedAction === 'sell' && selectedOption === 'amount' && parseFloat(amount) > userCrypto.total) ||
               (selectedAction === 'sell' && selectedOption === 'assetAmount' && parseFloat(amount) > userCrypto.totalAssetAmount)"
           >
-            {{ selectedAction === 'buy' ? t('TransactionComponent_Buy_Btn') : t('TransactionComponent_Sell_Btn') }}
+            {{ selectedAction === 'buy' ? t('TransactionsCrypto_Buy_Btn') : t('TransactionsCrypto_Sell_Btn') }}
           </button>
         </div>
         
@@ -270,30 +270,30 @@ watch(amount, () => {
     </div>
 
     <div v-if="!storeAuth.isLoggedIn()">
-      <span class="positions-message">{{ t('TransactionComponent_Logout_Message') }}</span>
+      <span class="positions-message">{{ t('TransactionsCrypto_Logout_Message') }}</span>
     </div>
 
     <div v-if="storeAuth.isLoggedIn() && !userCrypto">
-      <span class="positions-message">{{ t('TransactionComponent_Position_Message') }}</span>
+      <span class="positions-message">{{ t('TransactionsCrypto_Position_Message') }}</span>
     </div>
 
     <div v-if="storeAuth.isLoggedIn() && userCrypto" class="positions-container">
       <div class="positions-title">
-        <span>{{ t('TransactionComponent_Position_Text') }}</span>
+        <span>{{ t('TransactionsCrypto_Position_Text') }}</span>
         <span @click="storeUserPreferences.toggleShowPrices()" class="eye-icon">
           <span v-if="storeUserPreferences.showPrices" class="mdi mdi-eye-outline"></span>
           <span v-else class="mdi mdi-eye-off-outline"></span>
         </span>
       </div>
       <div class="positions-total-content">
-        <span class="positions-text">{{ t('TransactionComponent_Total_Text') }}</span>
+        <span class="positions-text">{{ t('TransactionsCrypto_Total_Text') }}</span>
         <span class="positions-total-value">
           {{ storeUserPreferences.convertPrice(userCrypto.total, storeUserPreferences.selectedCurrency, 'after', true) }}
         </span>
       </div>
 
       <div class="positions-profit-content">
-        <span class="positions-text">{{ t('TransactionComponent_Profitability_Text') }}</span>
+        <span class="positions-text">{{ t('TransactionsCrypto_Profitability_Text') }}</span>
         <span class="positions-profit-value" :style="{ color: storeUserPreferences.getPriceColor(userCrypto.balance) }">
           <v-icon class="positions-profit-icon mb-1">
             {{ storeUserPreferences.getArrowDirection(userCrypto.balance) }}
@@ -307,15 +307,15 @@ watch(amount, () => {
 
       <div class="positions-info-content">
         <div class="positions-info-assets">
-          <span class="positions-text">{{ t('TransactionComponent_Actives_Text') }}</span>
+          <span class="positions-text">{{ t('TransactionsCrypto_Actives_Text') }}</span>
           <span class="positions-info-value">{{ storeUserPreferences.convertAssetAmount(userCrypto.totalAssetAmount, true) }}</span>
         </div>
         <div class="positions-info-purchase-price">
-          <span class="positions-text">{{ t('TransactionComponent_Purchase_Price_Text') }}</span>
+          <span class="positions-text">{{ t('TransactionsCrypto_Purchase_Price_Text') }}</span>
           <span class="positions-info-value">{{ storeUserPreferences.convertPrice(userCrypto.averagePurchasePrice, storeUserPreferences.selectedCurrency, 'after', true) }}</span>
         </div>
         <div class="positions-info-percentage">
-          <span class="positions-text">{{ t('TransactionComponent_Purchase_Percentage_Text') }}</span>
+          <span class="positions-text">{{ t('TransactionsCrypto_Purchase_Percentage_Text') }}</span>
           <span class="positions-info-value">{{ storeUserPreferences.maskedPrice(userCrypto.walletPercentage) }} %</span>
         </div>
       </div>

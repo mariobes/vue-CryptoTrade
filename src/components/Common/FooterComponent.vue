@@ -14,18 +14,121 @@ const storeUserPreferences = useUserPreferencesStore()
 
 <template>
 	<div class="main-container">
-		<div class="text">CryptoTrade</div>
+		<div class="footer-info-content">
+			<div class="info-logo-content">
+				<img src="@/assets/logo.png" alt="Logo" class="info-logo-image" />
+				<span class="info-logo-title">Crypto Trade</span>
+			</div>
+			<p class="footer-info-text">{{ t('FooterComponent_Description') }}</p>			
+		<div class="footer-info-copyright">&copy; Crypto Trade. {{ t('FooterComponent_Copyright') }}</div>
+		</div>
+		<div class="footer-links-content">
+			<div>
+				<div class="footer-links-title">{{ t('FooterComponent_Products_Title') }}</div>
+				<div class="footer-links-text">{{ t('FooterComponent_Products_Item_1') }}</div>
+				<div class="footer-links-text">{{ t('FooterComponent_Products_Item_2') }}</div>
+				<div class="footer-links-text">{{ t('FooterComponent_Products_Item_3') }}</div>
+				<div class="footer-links-text">{{ t('FooterComponent_Products_Item_4') }}</div>
+				<div class="footer-links-text">{{ t('FooterComponent_Products_Item_5') }}</div>
+				<div class="footer-links-text">{{ t('FooterComponent_Products_Item_6') }}</div>
+				<div class="footer-links-text">{{ t('FooterComponent_Products_Item_7') }}</div>
+				<div class="footer-links-text">{{ t('FooterComponent_Products_Item_8') }}</div>
+			</div>
+			<div>
+				<div class="footer-links-title">{{ t('FooterComponent_Assistance_Title') }}</div>
+				<div class="footer-links-text">{{ t('FooterComponent_Assistance_Item_1') }}</div>
+				<div class="footer-links-text">{{ t('FooterComponent_Assistance_Item_2') }}</div>
+				<div class="footer-links-text">{{ t('FooterComponent_Assistance_Item_3') }}</div>
+				<div class="footer-links-text">{{ t('FooterComponent_Assistance_Item_4') }}</div>
+				<div class="footer-links-text">{{ t('FooterComponent_Assistance_Item_5') }}</div>
+			</div>
+			<div>
+				<div class="footer-links-title">{{ t('FooterComponent_Company_Title') }}</div>
+				<div class="footer-links-text">{{ t('FooterComponent_Company_Item_1') }}</div>
+				<div class="footer-links-text">{{ t('FooterComponent_Company_Item_2') }}</div>
+				<div class="footer-links-text">{{ t('FooterComponent_Company_Item_3') }}</div>
+				<div class="footer-links-text">{{ t('FooterComponent_Company_Item_4') }}</div>
+				<div class="footer-links-text">{{ t('FooterComponent_Company_Item_5') }}</div>
+				<div class="footer-links-text">{{ t('FooterComponent_Company_Item_6') }}</div>
+				<div class="footer-links-text">{{ t('FooterComponent_Company_Item_7') }}</div>
+				<div class="footer-links-text">{{ t('FooterComponent_Company_Item_8') }}</div>
+				<div class="footer-links-text">{{ t('FooterComponent_Company_Item_9') }}</div>
+			</div>
+			<div>
+				<div class="footer-links-title">{{ t('FooterComponent_Community_Title') }}</div>
+				<div class="footer-links-text">{{ t('FooterComponent_Community_Item_1') }}</div>
+				<div class="footer-links-text">{{ t('FooterComponent_Community_Item_2') }}</div>
+				<div class="footer-links-text">{{ t('FooterComponent_Community_Item_3') }}</div>
+				<div class="footer-links-text">{{ t('FooterComponent_Community_Item_4') }}</div>
+				<div class="footer-links-text">{{ t('FooterComponent_Community_Item_5') }}</div>
+				<div class="footer-links-text">{{ t('FooterComponent_Community_Item_6') }}</div>
+			</div>
+		</div>
 	</div>
 </template>
 
 <style scoped>
 .main-container {
 	background-color: v-bind(backgroundColor);
-	padding: 20px 50px;
+	padding: 50px 150px;
 	border-top: solid 1px #80808050;
+	display: flex;
+	justify-content: space-between;
+	color: v-bind(textColor);
+	gap: 100px;
 }
 
-.text {
-    color: v-bind(textColor);
+.footer-info-content {
+	width: 45%;
+}
+
+.info-logo-content {
+	display: flex;
+	align-items: center;
+	margin-bottom: 30px;
+}
+
+.info-logo-image {
+  width: 50px;
+  height: 50px;
+	margin-right: 10px;
+}
+
+.info-logo-title {
+  font-size: 1.6rem;
+	font-weight: bold;
+}
+
+.footer-info-text {
+  font-size: 0.95rem;
+	color: #808080;
+	margin-bottom: 200px;
+	text-align: justify;
+}
+
+.footer-info-copyright {
+	font-size: 0.95rem;
+	font-weight: bold;
+	color: #808080;
+}
+
+.footer-links-content {
+	width: 55%;
+	display: flex;
+	gap: 50px;
+	font-weight: bold;
+	justify-content: end;
+}
+
+.footer-links-title {
+	font-size: 1.2rem;
+	margin-bottom: 40px;
+}
+
+.footer-links-text {
+	cursor: pointer;
+	font-size: 0.9rem;
+	color: #808080;
+	margin-bottom: 20px;
 }
 </style>

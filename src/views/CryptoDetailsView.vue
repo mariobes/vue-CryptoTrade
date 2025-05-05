@@ -5,7 +5,7 @@ import { useCryptosStore } from '@/stores/cryptos'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
 import CryptoInfoTable from '@/components/Crypto/CryptoInfoTable.vue'
 import CryptoCharts from '@/components/Crypto/CryptoCharts.vue'
-import TransactionComponent from '@/components/Transaction/TransactionComponent.vue'
+import TransactionsCrypto from '@/components/Transaction/TransactionsCrypto.vue'
 
 const textColor = computed(() => storeUserPreferences.getTheme().text)
 
@@ -24,7 +24,7 @@ const cryptoId = computed(() => route.params.id)
 	<div class="main-container">
 		<CryptoInfoTable class="container-details" :cryptoId="cryptoId" :key="cryptoId"></CryptoInfoTable>
 		<CryptoCharts class="container-chart" :cryptoId="cryptoId" :cryptoDetails="cryptoDetails" :key="cryptoId"></CryptoCharts>
-		<TransactionComponent class="container-transactions" :cryptoId="cryptoId" :key="cryptoId"></TransactionComponent>
+		<TransactionsCrypto class="container-transactions" :cryptoId="cryptoId" :key="cryptoId"></TransactionsCrypto>
 	</div>
 </template>
 
