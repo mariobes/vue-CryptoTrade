@@ -188,7 +188,7 @@ const chartOptions = computed(() => {
               return `Market Cap: ${price}`
             } else {
               price = storeUserPreferences.convertPrice(value, storeUserPreferences.selectedCurrency, 'after')
-              return `${t('CryptoChart_Price')}: ${price}`
+              return `${t('AssetChart_Price')}: ${price}`
             }  
           },
           afterLabel: (context) => {
@@ -402,8 +402,6 @@ const chartOptions = computed(() => {
     },
   }
 })
-
-window.scrollTo({ top: 0 })
 </script>
 
 <template>
@@ -415,7 +413,7 @@ window.scrollTo({ top: 0 })
           :class="{ selected: selectedType === 'Precio' }"
           @click="selectType('Precio')"
         >
-          {{ t('CryptoChart_Price') }}
+          {{ t('AssetChart_Price') }}
         </button>
         <button
           class="chart-btn-value"
@@ -465,15 +463,15 @@ window.scrollTo({ top: 0 })
     </div>
     <div class="crypto-chart">
       <Line v-if="!isLoading" :data="chartData" :options="chartOptions" />
-      <span v-else :style="{ color: textColor }">{{ t('CryptoChart_Loading') }}</span>
+      <span v-else :style="{ color: textColor }">{{ t('AssetChart_Loading') }}</span>
     </div>
     <div v-if="props.cryptoDetails?.description?.en" class="description-container">
       <p class="description-title">
-        {{ t('CryptoChart_Title_1') }} 
+        {{ t('AssetChart_Title_1') }} 
         {{ props.cryptoDetails.name }}
-        ({{ props.cryptoDetails.symbol.toUpperCase() }}){{ t('CryptoChart_Title_2') }}  
+        ({{ props.cryptoDetails.symbol.toUpperCase() }}){{ t('AssetChart_Title_2') }}  
       </p>
-      <p class="description-text">{{ props.cryptoDetails.description?.en}}</p>
+      <p class="description-text">{{ props.cryptoDetails.description?.en }}</p>
     </div>
   </div>
 </template>
