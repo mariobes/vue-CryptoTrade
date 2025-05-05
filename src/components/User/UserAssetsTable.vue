@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserPreferencesStore } from '@/stores/userPreferences';
-import type { Transaction, UserAssetsSummary } from '@/core/transaction'
+import type { UserAssetsSummary } from '@/core/transaction'
 import { useTransactionsStore } from '@/stores/transactions'
 import { useAuthStore } from '@/stores/auth'
 import { useI18n } from 'vue-i18n'
@@ -35,6 +35,17 @@ onMounted(async () => {
   ].sort((a, b) => b.total - a.total);
 });
 
+watch(
+  () => [storeTransactions.cryptos, storeTransactions.stocks],
+  () => {
+    assets.value = [
+      ...storeTransactions.cryptos,
+      ...storeTransactions.stocks
+    ].sort((a, b) => b.total - a.total);
+  },
+  { deep: true }
+);
+
 const filteredAssets = computed(() => {
   if (tableSelected.value === 'cryptos') {
     return storeTransactions.cryptos;
@@ -55,7 +66,7 @@ const hasAssets = computed(() => {
   return assets.value.length > 0;
 });
 
-function openAssetInNewTab(asset: Transaction) {
+function openAssetInNewTab(asset: UserAssetsSummary) {
   const route = asset.typeOfAsset === 'Crypto' ? 'cryptoDetails' : 'stockDetails';
   const url = $router.resolve({ name: route, params: { id: asset.assetId } }).href;
   window.open(url, '_blank');
@@ -142,25 +153,30 @@ function openAssetInNewTab(asset: Transaction) {
 				<td class="text-right">
 					<div class="asset-total">
 						<span>
-							{{ storeUserPreferences.convertPrice(Number(asset.total.toFixed(2)), storeUserPreferences.selectedCurrency, 'before') }}
+							{{ storeUserPreferences.convertPrice(Number(asset.total.toFixed(2)), storeUserPreferences.selectedCurrency, 'before', true) }}
 						</span>
 						<span class="asset-total-amount-asset">
-							{{ storeUserPreferences.convertAssetAmount(asset.totalAssetAmount) }} {{ asset.symbol.toUpperCase() }}
+							{{ storeUserPreferences.convertAssetAmount(asset.totalAssetAmount, true) }} {{ asset.symbol.toUpperCase() }}
 						</span>
 					</div>
 				</td>
-				<td class="text-right">{{ storeUserPreferences.convertPrice(asset.averagePurchasePrice, storeUserPreferences.selectedCurrency, 'before') }}</td>
+				<td class="text-right">{{ storeUserPreferences.convertPrice(asset.averagePurchasePrice, storeUserPreferences.selectedCurrency, 'before', true) }}</td>
 				<td class="text-right">
 					<div class="asset-profit">
 						<span :style="{ color: storeUserPreferences.getPriceColor(asset.balance) }">
-							{{ asset.balance > 0 ? '+' : '' }}{{ storeUserPreferences.convertPrice(Number(asset.balance.toFixed(2)), storeUserPreferences.selectedCurrency, 'after') }}
+							{{ asset.balance > 0 ? '+' : '' }}{{ storeUserPreferences.convertPrice(Number(asset.balance.toFixed(2)), storeUserPreferences.selectedCurrency, 'after', true) }}
 						</span>
-						<span :style="{ color: storeUserPreferences.getPriceColor(asset.balancePercentage) }">
-							{{ asset.balancePercentage.toFixed(2) }}%
-						</span>	
+						<div :style="{ color: storeUserPreferences.getPriceColor(asset.balancePercentage) }">
+							<v-icon class="mb-1">
+								{{ storeUserPreferences.getArrowDirection(asset.balancePercentage) }}
+							</v-icon>
+							<span>
+								{{ storeUserPreferences.maskedPrice(Math.abs(asset.balancePercentage)) }}%
+							</span>	
+						</div>
 					</div>
 				</td>
-				<td class="text-right">{{ asset.walletPercentage.toFixed(2) }}%</td>
+				<td class="text-right">{{ storeUserPreferences.maskedPrice(asset.walletPercentage) }}%</td>
 			</tr>
 		</tbody>
 	</v-table>

@@ -12,34 +12,57 @@ const storeMarkets = useMarketsStore()
 
 const { t } = useI18n()
 
-const totalMarketCap = ref()
-const marketCapChangePercentage = ref()
-const valueCMC100Index = ref()
-const CMC100IndexChangePercentage = ref()
-const fearGreedValue = ref()
-const fearGreedSentiment = ref()
+// const totalMarketCap = ref()
+// const marketCapChangePercentage = ref()
+// const valueCMC100Index = ref()
+// const CMC100IndexChangePercentage = ref()
+// const fearGreedValue = ref()
+// const fearGreedSentiment = ref()
 
-onMounted(async () => {
-  await storeMarkets.GetCryptoIndices();
-  const cryptoIndicesData = storeMarkets.cryptoIndices;
+// onMounted(async () => {
+//   await storeMarkets.GetCryptoIndices();
+//   const cryptoIndicesData = storeMarkets.cryptoIndices;
 
-  cryptoIndicesData.forEach((index) => {
-    switch (index.name) {
-      case 'total-market-cap':
-        totalMarketCap.value = index.value;
-        marketCapChangePercentage.value = parseFloat(index.changePercentage?.toFixed(2) || '0');
-        break;
-      case 'CMC100-index':
-        valueCMC100Index.value = index.value;
-        CMC100IndexChangePercentage.value = parseFloat(index.changePercentage?.toFixed(2) || '0');
-        break;
-      case 'fear-greed-index':
-        fearGreedValue.value = index.value;
-        fearGreedSentiment.value = index.sentiment;
-        break;
-    }
-  });
-});
+//   cryptoIndicesData.forEach((index) => {
+//     switch (index.name) {
+//       case 'total-market-cap':
+//         totalMarketCap.value = index.value;
+//         marketCapChangePercentage.value = parseFloat(index.changePercentage?.toFixed(2) || '0');
+//         break;
+//       case 'CMC100-index':
+//         valueCMC100Index.value = index.value;
+//         CMC100IndexChangePercentage.value = parseFloat(index.changePercentage?.toFixed(2) || '0');
+//         break;
+//       case 'fear-greed-index':
+//         fearGreedValue.value = index.value;
+//         fearGreedSentiment.value = index.sentiment;
+//         break;
+//     }
+//   });
+// });
+
+const cryptoIndicesData = computed(() => storeMarkets.cryptoIndices)
+
+const totalMarketCap = computed(() =>
+  cryptoIndicesData.value.find(i => i.name === 'total-market-cap')?.value ?? null
+)
+const marketCapChangePercentage = computed(() =>
+  parseFloat(cryptoIndicesData.value.find(i => i.name === 'total-market-cap')?.changePercentage?.toFixed(2) ?? '0')
+)
+
+const valueCMC100Index = computed(() =>
+  cryptoIndicesData.value.find(i => i.name === 'CMC100-index')?.value ?? null
+)
+const CMC100IndexChangePercentage = computed(() =>
+  parseFloat(cryptoIndicesData.value.find(i => i.name === 'CMC100-index')?.changePercentage?.toFixed(2) ?? '0')
+)
+
+const fearGreedValue = computed(() =>
+  cryptoIndicesData.value.find(i => i.name === 'fear-greed-index')?.value ?? null
+)
+const fearGreedSentiment = computed(() =>
+  cryptoIndicesData.value.find(i => i.name === 'fear-greed-index')?.sentiment ?? null
+)
 
 storeMarkets.GetCryptoIndices()
 

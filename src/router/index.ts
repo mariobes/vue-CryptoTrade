@@ -41,7 +41,18 @@ const router = createRouter({
       name: 'watchlistTable',
       component: () => import('../views/WatchlistTableView.vue'),
       beforeEnter: guard
-    }
+    },
+    {
+      path: '/userSettings/:id',
+      name: 'userSettings',
+      component: () => import('../views/UserSettingsView.vue'),
+      beforeEnter: guard
+    },
+    {
+      path: '/descentralizedWallet',
+      name: 'descentralizedWallet',
+      component: () => import('../views/DescentralizedWalletView.vue')
+    },
   ],
 })
 

@@ -182,14 +182,8 @@ onMounted(async () => {
       >
           <td>
             <span v-if="storeAuth.isLoggedIn()" @click.stop="toggleFavorite(crypto.id)" class="favorite-icon">
-              <span 
-                v-if="watchlist.includes(crypto.id)" 
-                class="mdi mdi-star favorite-icon-active"
-              ></span>
-              <span 
-                v-else 
-                class="mdi mdi-star-outline"
-              ></span>
+              <span v-if="watchlist.includes(crypto.id)" class="mdi mdi-star favorite-icon-active"></span>
+              <span v-else class="mdi mdi-star-outline"></span>
             </span>
           </td>
           <td>

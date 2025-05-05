@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useUserPreferencesStore } from '@/stores/userPreferences';
 import type { User } from '@/core/user'
 import { useUsersStore } from '@/stores/users'
@@ -27,11 +27,18 @@ const emit = defineEmits<{
   (e: 'close'): void;
   (e: 'submit'): void;
   (e: 'update-cash', newCashValue: number): void;
+  (e: 'success-message', newSuccessMessage: string): void;
 }>();
 
+const errorMessages = ref<{
+  deposit?: string,
+  withdrawal?: string,
+}>({})
 
 const amount = ref();
 const selectedPaymentMethod = ref<0 | 1 | 2 | null>(null);
+const hasInteracted = ref(false);
+const successMessage = ref<string | null>(null);
 
 const userData = ref<User | null>(null);
 const userId = storeAuth.getUserId()
@@ -47,29 +54,28 @@ onMounted(async () => {
 });
 
 const handleDeposit = async () => {
-  const success = await storeTransactions.MakeDeposit(userId, amount.value, selectedPaymentMethod.value!, token);
+  if (!validateFields()) return
 
-  if (success) {
-    await loadUserData();
-    amount.value = '';
-    closePanel();
-    emit('update-cash', Number(userData.value?.cash));
-  } else {
-    alert('Hubo un error al realizar el deposito');
-  }
+  await storeTransactions.MakeDeposit(userId, amount.value, selectedPaymentMethod.value!, token);
+
+  await loadUserData();
+  amount.value = '';
+  closePanel();
+  emit('update-cash', Number(userData.value?.cash));
+  successMessage.value = t('UserInfo_Deposit_Success');
+  emit('success-message', successMessage.value);
 };
 
 const handleWithdrawal = async () => {
-  const success = await storeTransactions.MakeWithdrawal(userId, amount.value, token);
+  if (!validateFields()) return
 
-  if (success) {
-    await loadUserData();
-    amount.value = '';
-    closePanel();
-    emit('update-cash', Number(userData.value?.cash));
-  } else {
-    alert('Hubo un error al realizar el retiro');
-  }
+  await storeTransactions.MakeWithdrawal(userId, amount.value, token);
+  await loadUserData();
+  amount.value = '';
+  closePanel();
+  emit('update-cash', Number(userData.value?.cash));
+  successMessage.value = t('UserInfo_Withdrawal_Success');
+  emit('success-message', successMessage.value);
 };
 
 const closePanel = () => {
@@ -77,6 +83,46 @@ const closePanel = () => {
   amount.value = '';
   emit('close');
 };
+
+const validateFields = () => {
+  errorMessages.value = {}
+
+  const isDeposit = props.action === 'deposit';
+  const isWithdrawal = props.action === 'withdrawal';
+  const currentCash = Number(userData.value?.cash || 0);
+
+  const fieldName = isDeposit ? 'deposit' : 'withdrawal';
+
+  if (amount.value < 10) {
+    errorMessages.value[fieldName] = t(
+      isDeposit ? 'UserInfo_Panel_Deposit_Low_Error' : 'UserInfo_Panel_Withdrawal_Low_Error'
+    );
+  } else if (isDeposit && amount.value >= 10000) {
+    errorMessages.value[fieldName] = t('UserInfo_Panel_Deposit_High_Error');
+  } else if (isWithdrawal && amount.value > currentCash) {
+    errorMessages.value[fieldName] = t('UserInfo_Panel_Withdrawal_High_Error');
+  }
+
+  return Object.keys(errorMessages.value).length === 0
+}
+
+watch(amount, () => {
+  if (!hasInteracted.value && amount.value !== '') {
+    hasInteracted.value = true;
+  }
+  if (hasInteracted.value) {
+    validateFields();
+  }
+});
+
+watch(() => props.visible, (newVal) => {
+  if (newVal) {
+    errorMessages.value = {};
+    amount.value = '';
+    selectedPaymentMethod.value = null;
+    hasInteracted.value = false;
+  }
+});
 </script>
 
 <template>
@@ -177,11 +223,15 @@ const closePanel = () => {
             class="panel-input-value"
             :style="{ background: colorGray }"
             placeholder="0" />
+
+            <span class="panel-input-currency">
+              {{ storeUserPreferences.getCurrencySymbol(storeUserPreferences.selectedCurrency) }}
+            </span>
         </div>
 
         <div v-if="props.visible && props.action === 'withdrawal'" class="cash-available-text">
           <span>
-            {{ storeUserPreferences.convertPrice(Number(userData?.cash), storeUserPreferences.selectedCurrency, 'after') }}
+            {{ storeUserPreferences.convertPrice(Number(userData?.cash), storeUserPreferences.selectedCurrency, 'after', true) }}
             {{ t('UserInfo_Panel_Avaiable') }}
           </span>
         </div>
@@ -190,10 +240,13 @@ const closePanel = () => {
           v-if="(props.action === 'withdrawal') || (props.action === 'deposit' && selectedPaymentMethod !== null)"
           class="panel-input-btn"
           @click="props.action === 'withdrawal' ? handleWithdrawal() : handleDeposit()" 
-          :disabled="!amount || amount < 1"
+          :disabled="!amount || amount < 10 || 
+           (props.action === 'deposit' && amount >= 10000) || 
+           (props.action === 'withdrawal' && amount > Number(userData?.cash))"
         >
         {{ props.action === 'deposit' ? t('UserInfo_Deposit_Btn') : t('UserInfo_Withdrawal_Btn') }}
         </button>
+        <span v-if="errorMessages.deposit || errorMessages.withdrawal" class="deposit-withdrawal-error">{{ props.action === 'deposit' ? errorMessages.deposit : errorMessages.withdrawal }}</span>
       </div>
     </div>
   </div>
@@ -330,6 +383,8 @@ const closePanel = () => {
   color: v-bind(textColor);
   padding: 0 20px;
   box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3);
+  text-align: end;
+  padding-right: 40px;
 }
 
 .panel-input-value:hover {
@@ -339,6 +394,12 @@ const closePanel = () => {
 .panel-input-value:focus {
   outline: none;
   border: none;
+}
+
+.panel-input-currency {
+  font-size: 2rem;
+  position: absolute;
+  transform: translate(-30px, 13px);
 }
 
 .cash-available-text {
@@ -371,5 +432,16 @@ const closePanel = () => {
 
 .panel-input-btn:hover {
   background-color: #ffffffc2;
+}
+
+.deposit-withdrawal-error {
+  color: #ff0000cc;
+  font-size: 0.95rem;
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  width: 100%;
+  justify-content: start;
+  margin-left: 30px;
 }
 </style>

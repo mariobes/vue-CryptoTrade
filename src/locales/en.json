@@ -31,6 +31,8 @@
     "Header_Popup_Auth_Text": "Hello,",
     "Header_Popup_Auth_Settings": "Settings",
     "Header_Popup_Auth_Logout": "Log Out",
+    "Header_Popup_Auth_Email_Phone": "Email address or phone number",
+    "Header_Popup_Auth_Placeholder_Email_Phone": "Enter your email address or phone number",
     "Header_Popup_Auth_Email": "Email address",
     "Header_Popup_Auth_Placeholder_Email": "Enter your email address",
     "Header_Popup_Auth_Password": "Pasword",
@@ -157,6 +159,7 @@
     "UserInfo_Chart_Total_Invested_Date": "Since",
 
     "UserInfo_Chart_Title": "Allocation",
+    "UserInfo_Chart_Others": "Others",
     "UserInfo_Chart_Text": "You don't have any assets in your portfolio.",
 
     "UserInfo_All_Text": "All",
@@ -179,6 +182,31 @@
     "UserInfo_Transactions_Table_Deposit": "Deposit",
     "UserInfo_Transactions_Table_Withdrawal": "Withdraw",
     "UserInfo_Transactions_Table_Buy": "Buy",
-    "UserInfo_Transactions_Table_Sell": "Sell"
+    "UserInfo_Transactions_Table_Sell": "Sell",
+
+    "Header_Popup_Auth_Field_Required": "The field is required",
+    "Header_Popup_Auth_Login_Error": "No user found with those credentials",
+    "Header_Popup_Auth_Name_Error": "Maximum 50 characters allowed",
+    "Header_Popup_Auth_BirthDate_Error": "You must be over 18 years old",
+    "Header_Popup_Auth_Email_Error": "The email address is not valid",
+    "Header_Popup_Auth_Password_Error": "Incorrect password (minimum 8 characters, one number, one letter, and one uppercase)",
+    "Header_Popup_Auth_Phone_Error": "The phone number is not valid",
+    "Header_Popup_Auth_DNI_Error": "The identity document is not valid",
+  
+    "TransactionComponent_Buy_Success": "Purchase completed successfully",
+    "TransactionComponent_Sell_Success": "Sale completed successfully",
+    "TransactionComponent_Buy_Low_Error": "The minimum purchase amount is 1",
+    "TransactionComponent_Sell_Low_Error": "The minimum sale amount is 1",
+    "TransactionComponent_Buy_High_Error": "You don't have enough assets",
+    "TransactionComponent_Sell_High_Error": "You don't have enough assets",
+  
+    "UserInfo_Deposit_Success": "Deposit completed successfully",
+    "UserInfo_Withdrawal_Success": "Withdrawal completed successfully",
+    "UserInfo_Panel_Deposit_Low_Error": "The minimum deposit is 10",
+    "UserInfo_Panel_Withdrawal_Low_Error": "The minimum withdrawal is 10",
+    "UserInfo_Panel_Deposit_High_Error": "The maximum allowed amount is 10,000",
+    "UserInfo_Panel_Withdrawal_High_Error": "You don't have enough funds",
+
+    "DescentralizedWallet_Text": "Feature in development"
 
 }

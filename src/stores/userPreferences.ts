@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 
 export type LanguageType = "ES" | "EN";
-export type CurrencyType = "USD" | "EUR" | "GBP" | "JPY" | "CAD" | "AUD" | "CHF" | "CNY" | "MXN" | "BRL" | "INR" | "RUB" | "ZAR";
+export type CurrencyType = "USD" | "EUR" | "GBP" | "JPY" | "CAD" | "AUD" | "CNY" | "MXN" | "BRL" | "INR" | "RUB" | "ZAR";
 export type ThemeType = "light" | "dark";
 
 export const useUserPreferencesStore = defineStore('userPreferences', {
@@ -9,6 +9,7 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
     selectedLanguage: localStorage.getItem('language') as LanguageType || "ES",
     selectedCurrency: localStorage.getItem('currency') as CurrencyType || "USD",
     selectedTheme: localStorage.getItem('theme') as ThemeType || "light",
+    showPrices: localStorage.getItem('showPrices') === 'false' ? false : true,
   }),
 
   actions: {
@@ -25,6 +26,25 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
     setSelectedTheme(theme: ThemeType) {
       this.selectedTheme = theme;
       localStorage.setItem('theme', theme);
+    },
+
+    toggleShowPrices() {
+      this.showPrices = !this.showPrices;
+      localStorage.setItem('showPrices', this.showPrices.toString());
+    },
+
+    maskedPrice(value?: number): string {
+      if (this.showPrices && value != null) {
+        return value.toFixed(2);
+      }
+
+      if (value != null) {
+        const digitsOnly = value.toFixed(2).replace(/\D/g, '');
+        const length = Math.min(Math.max(digitsOnly.length, 4), 10);
+        return '*'.repeat(length);
+      }
+    
+      return '****';
     },
 
     getTheme() {
@@ -77,7 +97,7 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
     },
 
     getCurrencies(): CurrencyType[] {
-      return ["USD", "EUR", "GBP", "JPY", "CAD", "AUD", "CHF", "CNY", "MXN", "BRL", "INR", "RUB", "ZAR"];
+      return ["USD", "EUR", "GBP", "JPY", "CAD", "AUD", "CNY", "MXN", "BRL", "INR", "RUB", "ZAR"];
     },
 
     getCurrencyText(currency: CurrencyType): string {
@@ -88,7 +108,6 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
         JPY: "Japanese Yen",
         CAD: "Canadian Dollar",
         AUD: "Australian Dollar",
-        CHF: "Swiss Franc",
         CNY: "Chinese Yuan",
         MXN: "Mexican Peso",
         BRL: "Brazilian Real",
@@ -108,7 +127,6 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
         JPY: "¥ JPY",
         CAD: "CA$ CAD",
         AUD: "A$ AUD",
-        CHF: "CHF CHF",
         CNY: "¥ CNY",
         MXN: "$ MXN",
         BRL: "R$ BRL",
@@ -128,7 +146,6 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
         JPY: 150.5,
         CAD: 1.36,
         AUD: 1.49,
-        CHF: 0.91,
         CNY: 7.06,
         MXN: 18.12,
         BRL: 5.14,
@@ -146,12 +163,11 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
         EUR: "€",
         GBP: "£",
         JPY: "¥",
-        CAD: "CA$",
-        AUD: "A$",
-        CHF: "CHF",
+        CAD: "$",
+        AUD: "$",
         CNY: "¥",
         MXN: "$",
-        BRL: "R$",
+        BRL: "$",
         INR: "₹",
         RUB: "₽",
         ZAR: "R",
@@ -165,7 +181,11 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
       return position === 'before' ? `${symbol}${value}` : `${value} ${symbol}`;
     },
 
-    convertPrice(price: number, currency: CurrencyType, symbolPosition?: 'before' | 'after'): string {
+    convertPrice(price: number, currency: CurrencyType, symbolPosition?: 'before' | 'after', maskPrices : boolean = false): string {
+      if (maskPrices && !this.showPrices) {
+        return this.maskedPrice(price);
+      }
+
       const conversionRate = this.getCurrencyConversionRate(currency);
       const converted = price * conversionRate;
 
@@ -232,7 +252,11 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
       return this.formatCurrency(formatted, currency, symbolPosition);
     },
 
-    convertAssetAmount(amount: number): string {
+    convertAssetAmount(amount: number, maskPrices : boolean = false): string {
+      if (maskPrices && !this.showPrices) {
+        return this.maskedPrice(amount);
+      }
+
       if (!Number.isFinite(amount)) return '0.0000';
     
       if (amount >= 1_000_000) {
@@ -253,7 +277,7 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
 
     showDefaultAssetImage(stock: any) {
       stock.image = '/src/assets/asset-default.png';
-    }
+    },
   }
 });
 

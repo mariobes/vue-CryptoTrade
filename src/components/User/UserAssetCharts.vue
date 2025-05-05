@@ -84,21 +84,21 @@ const profitPercentage = computed(() => {
 				<div class="mini-chart-item">
 					<span class="item-title">{{ t('UserInfo_Chart_Historic_Benefict') }}</span>
 					<span class="item-value" :style="{ color: storeUserPreferences.getPriceColor(Number(userData?.profit)) }">
-						{{ Number(userData?.profit) > 0 ? '+' : '-' }}{{  storeUserPreferences.convertPrice(Math.abs(Number(userData?.profit)), storeUserPreferences.selectedCurrency, 'before') }}
+						{{ Number(userData?.profit) > 0 ? '+' : '-' }}{{ storeUserPreferences.convertPrice(Math.abs(Number(userData?.profit)), storeUserPreferences.selectedCurrency, 'before', true) }}
 					</span>
 					<span>
-						<v-icon class="item-icon mb-1" :style="{ color: storeUserPreferences.getPriceColor(Number(highestGainer?.balancePercentage)) }">
-							{{ storeUserPreferences.getArrowDirection(Number(highestGainer?.balancePercentage)) }}
+						<v-icon class="item-icon mb-1" :style="{ color: storeUserPreferences.getPriceColor(profitPercentage) }">
+							{{ storeUserPreferences.getArrowDirection(profitPercentage) }}
 						</v-icon>
 						<span :style="{ color: storeUserPreferences.getPriceColor(profitPercentage) }">
-							{{ Math.abs(profitPercentage).toFixed(2) }}%
+							{{ storeUserPreferences.maskedPrice(Math.abs(profitPercentage)) }}%
 						</span>
 					</span>
 				</div>
 
 				<div class="mini-chart-item">
 					<span class="item-title">{{ t('UserInfo_Chart_Total_Invested') }}</span>
-					<span class="item-value">{{ storeUserPreferences.convertPrice(Number(userData?.wallet), storeUserPreferences.selectedCurrency, 'before') }}</span>
+					<span class="item-value">{{ storeUserPreferences.convertPrice(Number(userData?.wallet), storeUserPreferences.selectedCurrency, 'before', true) }}</span>
 					<span class="item-date"> {{ t('UserInfo_Chart_Total_Invested_Date') }} {{ userData?.creationDate ? new Date(userData.creationDate).toLocaleDateString() : '' }}</span>
 				</div>
 
@@ -114,12 +114,12 @@ const profitPercentage = computed(() => {
 					</span>
 					<span :style="{ color: storeUserPreferences.getPriceColor(Number(highestGainer?.balance)) }">
 						<span class="item-asset-value">
-							{{ Number(highestGainer?.balance) > 0 ? '+' : '-' }}{{ storeUserPreferences.convertPrice(Math.abs(Number(highestGainer?.balance.toFixed(2))), storeUserPreferences.selectedCurrency, 'before') }}
+							{{ Number(highestGainer?.balance) > 0 ? '+' : '-' }}{{ storeUserPreferences.convertPrice(Math.abs(Number(highestGainer?.balance.toFixed(2))), storeUserPreferences.selectedCurrency, 'before', true) }}
 						</span>
 						<v-icon class="item-icon mb-1 ml-1">
 							{{ storeUserPreferences.getArrowDirection(Number(highestGainer?.balancePercentage)) }}
 						</v-icon>
-						<span class="item-asset-value">{{ Math.abs(Number(highestGainer?.balancePercentage)).toFixed(2) }}%</span>
+						<span class="item-asset-value">{{ storeUserPreferences.maskedPrice(Math.abs(Number(highestGainer?.balancePercentage))) }}%</span>
 					</span>
 				</div>
 
@@ -131,12 +131,12 @@ const profitPercentage = computed(() => {
 					</span>
 					<span :style="{ color: storeUserPreferences.getPriceColor(Number(highestLoser?.balance)) }">
 						<span class="item-asset-value">
-							{{ Number(highestLoser?.balance) > 0 ? '+' : '-' }}{{ storeUserPreferences.convertPrice(Math.abs(Number(highestLoser?.balance.toFixed(2))), storeUserPreferences.selectedCurrency, 'before') }}
+							{{ Number(highestLoser?.balance) > 0 ? '+' : '-' }}{{ storeUserPreferences.convertPrice(Math.abs(Number(highestLoser?.balance.toFixed(2))), storeUserPreferences.selectedCurrency, 'before', true) }}
 						</span>
 						<v-icon class="item-icon mb-1 ml-1">
 							{{ storeUserPreferences.getArrowDirection(Number(highestLoser?.balancePercentage)) }}
 						</v-icon>
-						<span class="item-asset-value">{{ Math.abs(Number(highestLoser?.balancePercentage)).toFixed(2) }}%</span>
+						<span class="item-asset-value">{{ storeUserPreferences.maskedPrice(Math.abs(Number(highestLoser?.balancePercentage))) }}%</span>
 					</span>
 				</div>
 

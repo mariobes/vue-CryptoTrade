@@ -33,6 +33,7 @@ const selectedTab = computed({
   set: (value: 'login' | 'register') => emit('update:selectedTab', value),
 })
 
+const emailOrPhone = ref('')
 const name = ref('')
 const birthDate = ref<Date | null>(null)
 const email = ref('')
@@ -42,6 +43,25 @@ const dni = ref('')
 const nationality = ref('')
 const focusedField = ref('')
 const birthDateMenu = ref(false)
+
+const passwordVisible = ref(false)
+const showPassword = computed(() => passwordVisible.value ? 'text' : 'password')
+
+const errorMessages = ref<{
+  emailOrPhone?: string,
+  name?: string,
+  birthDate?: string,
+  email?: string,
+  password?: string,
+  phone?: string,
+  dni?: string,
+  nationality?: string,
+  login?: string,
+}>({})
+
+const toggleShowPassword = () => {
+  passwordVisible.value = !passwordVisible.value
+}
 
 const formattedBirthDate = computed(() => {
   if (birthDate.value) {
@@ -61,6 +81,7 @@ const handleBirthDate = (val: Date) => {
 }
 
 const clearForm = () => {
+  emailOrPhone.value = ''
   name.value = ''
   birthDate.value = null
   email.value = ''
@@ -68,6 +89,7 @@ const clearForm = () => {
   phone.value = ''
   dni.value = ''
   nationality.value = ''
+  errorMessages.value = {}
 }
 
 watch(selectedTab, () => {
@@ -88,9 +110,18 @@ const removeFocus = () => {
 }
 
 const handleAuth = async () => {
+  if (selectedTab.value === 'login')
+  {
+    if (!validateFieldsLogin()) return
+  } else {
+    if (!validateFieldsRegister()) return
+  }
   let success
   if (selectedTab.value === 'login') {
-    success = await storeAuth.login(email.value, password.value)
+    success = await storeAuth.login(emailOrPhone.value, password.value)
+    if (!success) {
+      errorMessages.value.login = t('Header_Popup_Auth_Login_Error')
+    }
   } else {
     success = await storeAuth.register(
       name.value,
@@ -103,10 +134,86 @@ const handleAuth = async () => {
     )
     if (success) await storeAuth.login(email.value, password.value)
   }
+
   if (success) {
     authDialog.value = false
     router.push({ name: 'userPrivate', params: { id: storeAuth.getUserId() } })
   }
+  return Object.keys(errorMessages.value).length === 0
+}
+
+const validateFieldsLogin = () => {
+  errorMessages.value = {}
+
+  if (!emailOrPhone.value) errorMessages.value.emailOrPhone = t('Header_Popup_Auth_Field_Required')
+
+  if (!password.value) {
+    errorMessages.value.password = t('Header_Popup_Auth_Field_Required')
+  } else if (!/^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?{}|<>])[A-Za-z\d!@#$%^&*(),.?{}|<>]{8,}$/.test(password.value)) {
+    errorMessages.value.password = t('Header_Popup_Auth_Password_Error')
+  }
+
+  return Object.keys(errorMessages.value).length === 0
+}
+
+const validateFieldsRegister = () => {
+  errorMessages.value = {}
+
+  if (!name.value)  {
+    errorMessages.value.name = t('Header_Popup_Auth_Field_Required')
+  } else if (name.value.length > 50) {
+    errorMessages.value.name = t('Header_Popup_Auth_Name_Error')
+  }
+
+  if (!birthDate.value)  {
+    errorMessages.value.birthDate = t('Header_Popup_Auth_Field_Required')
+  } else if (isUnder18(birthDate.value)) {
+    errorMessages.value.birthDate = t('Header_Popup_Auth_BirthDate_Error')
+  }
+
+  if (!email.value)  {
+    errorMessages.value.email = t('Header_Popup_Auth_Field_Required')
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+    errorMessages.value.email = t('Header_Popup_Auth_Email_Error')
+  }
+
+  if (!password.value)  {
+    errorMessages.value.password = t('Header_Popup_Auth_Field_Required')
+  } else if (!/^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?{}|<>])[A-Za-z\d!@#$%^&*(),.?{}|<>]{8,}$/.test(password.value)) {
+    errorMessages.value.password = t('Header_Popup_Auth_Password_Error')
+  }
+
+  if (!phone.value) {
+    errorMessages.value.phone = t('Header_Popup_Auth_Field_Required')
+  } else if (!/^\+?[0-9\s\-().]{7,20}$/.test(phone.value)) {
+    errorMessages.value.phone = t('Header_Popup_Auth_Phone_Error')
+  }
+
+  if (!dni.value) {
+    errorMessages.value.dni = t('Header_Popup_Auth_Field_Required')
+  } else if (!/^[\w\s\-\/\.]{4,30}$/.test(dni.value)) {
+    errorMessages.value.dni = t('Header_Popup_Auth_DNI_Error')
+  }
+
+  if (!nationality.value)  {
+    errorMessages.value.nationality = t('Header_Popup_Auth_Field_Required')
+  }
+
+  return Object.keys(errorMessages.value).length === 0
+}
+
+function isUnder18(birthDate: string | Date): boolean {
+  const birth = new Date(birthDate)
+  const today = new Date()
+
+  const age = today.getFullYear() - birth.getFullYear()
+  const monthDiff = today.getMonth() - birth.getMonth()
+  const dayDiff = today.getDate() - birth.getDate()
+
+  return (
+    age < 18 ||
+    (age === 18 && (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)))
+  )
 }
 </script>
 
@@ -156,6 +263,7 @@ const handleAuth = async () => {
           @focus="setFocus('name')"
           @blur="removeFocus"
         />
+        <span v-if="selectedTab === 'register'" class="auth-form-error">{{ errorMessages.name || '\u00A0' }}</span>
 
         <div class="auth-form-text" v-if="selectedTab === 'register'">{{ t('Header_Popup_Auth_Birthday') }}</div>
         <v-menu
@@ -189,9 +297,25 @@ const handleAuth = async () => {
             </v-row>
           </v-container>
         </v-menu>
+        <span v-if="selectedTab === 'register'" class="auth-form-error">{{ errorMessages.birthDate || '\u00A0' }}</span>
 
-        <div class="auth-form-text">{{ t('Header_Popup_Auth_Email') }}</div>
+        <div class="auth-form-text" v-if="selectedTab === 'login'">{{ t('Header_Popup_Auth_Email_Phone') }}</div>
         <v-text-field
+          v-if="selectedTab === 'login'"
+          v-model="emailOrPhone"
+          class="auth-form-field"
+          :class="{ 'auth-form-field-focus': focusedField === 'emailOrPhone' }"
+          :placeholder="t('Header_Popup_Auth_Placeholder_Email_Phone')"
+          variant="outlined"
+          rounded="lg"
+          @focus="setFocus('emailOrPhone')"
+          @blur="removeFocus"
+        />
+        <span v-if="selectedTab === 'login'" class="auth-form-error">{{ errorMessages.emailOrPhone || '\u00A0' }}</span>
+
+        <div class="auth-form-text" v-if="selectedTab === 'register'">{{ t('Header_Popup_Auth_Email') }}</div>
+        <v-text-field
+          v-if="selectedTab === 'register'"
           v-model="email"
           class="auth-form-field"
           :class="{ 'auth-form-field-focus': focusedField === 'email' }"
@@ -201,19 +325,27 @@ const handleAuth = async () => {
           @focus="setFocus('email')"
           @blur="removeFocus"
         />
-
+        <span v-if="selectedTab === 'register'" class="auth-form-error">{{ errorMessages.email || '\u00A0' }}</span>
+        
         <div class="auth-form-text">{{ t('Header_Popup_Auth_Password') }}</div>
         <v-text-field
           v-model="password"
           class="auth-form-field"
           :class="{ 'auth-form-field-focus': focusedField === 'password' }"
           :placeholder="t('Header_Popup_Auth_Placeholder_Password')"
-          type="password"
+          :type="showPassword"
           variant="outlined"
           rounded="lg"
           @focus="setFocus('password')"
           @blur="removeFocus"
-        />
+        >
+          <template v-slot:append>
+            <v-icon @click="toggleShowPassword">
+              {{ passwordVisible ? 'mdi-eye-off-outline' : 'mdi-eye-outline' }}
+            </v-icon>
+          </template>
+        </v-text-field>
+        <span class="auth-form-error">{{ errorMessages.password || '\u00A0' }}</span>
 
         <div class="auth-form-text" v-if="selectedTab === 'register'">{{ t('Header_Popup_Auth_Phone') }}</div>
         <v-text-field
@@ -227,6 +359,7 @@ const handleAuth = async () => {
           @focus="setFocus('phone')"
           @blur="removeFocus"
         />
+        <span v-if="selectedTab === 'register'" class="auth-form-error">{{ errorMessages.phone || '\u00A0' }}</span>
 
         <div class="auth-form-text" v-if="selectedTab === 'register'">{{ t('Header_Popup_Auth_DNI') }}</div>
         <v-text-field
@@ -240,6 +373,7 @@ const handleAuth = async () => {
           @focus="setFocus('dni')"
           @blur="removeFocus"
         />
+        <span v-if="selectedTab === 'register'" class="auth-form-error">{{ errorMessages.dni || '\u00A0' }}</span>
 
         <div class="auth-form-text" v-if="selectedTab === 'register'">{{ t('Header_Popup_Auth_Nationality') }}</div>
         <v-text-field
@@ -253,9 +387,12 @@ const handleAuth = async () => {
           @focus="setFocus('nationality')"
           @blur="removeFocus"
         />
+        <span v-if="selectedTab === 'register'" class="auth-form-error">{{ errorMessages.nationality || '\u00A0' }}</span>
+
         <v-btn variant="flat" block rounded="lg" class="auth-form-btn" @click="handleAuth">
           {{ selectedTab === 'login' ? t('Header_Popup_Auth_Login') : t('Header_Popup_Auth_Register') }}
         </v-btn>
+        <span v-if="errorMessages.login" class="auth-form-error login-error">{{ errorMessages.login }}</span>
 
       </v-card-text>
     </v-card>
@@ -325,6 +462,7 @@ const handleAuth = async () => {
 
 .auth-form {
   margin: 0 15px;
+  padding: 10px 25px 25px 25px !important;
 }
 
 .auth-form-text {
@@ -335,6 +473,7 @@ const handleAuth = async () => {
 
 .auth-form-field {
   color: v-bind(textColor);
+  height: 60px;
 }
 
 .auth-form-field:hover {
@@ -355,6 +494,7 @@ const handleAuth = async () => {
   padding: 20px 0;
   color: #000000;
   font-size: 0.9rem;
+  margin-top: 15px;
 }
 
 .auth-form-btn:hover {
@@ -364,7 +504,7 @@ const handleAuth = async () => {
 .auth-form-calendar {
   display: flex;
   align-items: center;
-  margin: 10px 0 15px 0;
+  margin-top: 5px;
 }
 
 .auth-form-calendar-btn {
@@ -384,5 +524,19 @@ const handleAuth = async () => {
 .auth-form-calendar-text {
   margin-left: 8px;
   padding-top: 1px;
+}
+
+.auth-form-error {
+  color: #ff0000cc;
+  font-size: 0.7rem;
+  font-weight: bold;
+  display: flex;
+  justify-content: end;
+}
+
+.login-error {
+  justify-content: start;
+  margin-top: 20px;
+  font-size: 0.8rem;
 }
 </style>
