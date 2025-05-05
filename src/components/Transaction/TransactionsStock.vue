@@ -3,7 +3,7 @@ import { ref, computed, onMounted, watch } from 'vue';
 import { useUserPreferencesStore } from '@/stores/userPreferences'
 import type { User } from '@/core/user'
 import { useUsersStore } from '@/stores/users'
-import { useCryptosStore } from '@/stores/cryptos'
+import { useStocksStore } from '@/stores/stocks'
 import { useTransactionsStore } from '@/stores/transactions'
 import { useAuthStore } from '@/stores/auth'
 import { useI18n } from 'vue-i18n'
@@ -14,13 +14,13 @@ const colorDarkGray = computed(() => storeUserPreferences.getTheme().colorDarkGr
 
 const storeUserPreferences = useUserPreferencesStore()
 const storeUsers = useUsersStore()
-const storeCryptos = useCryptosStore()
+const storeStocks = useStocksStore()
 const storeTransactions = useTransactionsStore()
 const storeAuth = useAuthStore()
 
 const { t } = useI18n()
 
-const props = defineProps<{ cryptoId: string }>()
+const props = defineProps<{ stockId: string }>()
 
 const errorMessages = ref<{
   buy?: string,
@@ -30,10 +30,10 @@ const errorMessages = ref<{
 let amountToSend: number | undefined = undefined;
 let assetAmountToSend: number | undefined = undefined;
 
-const userCrypto = computed(() => {
-  return storeTransactions.cryptos.find(c => c.assetId === props.cryptoId);
+const userStock = computed(() => {
+  return storeTransactions.stocks.find(c => c.assetId === props.stockId);
 });
-const crypto = computed(() => storeCryptos.crypto)
+const stock = computed(() => storeStocks.stock)
 
 const selectedAction = ref<'buy' | 'sell'>('buy');
 const selectedOption = ref<'amount' | 'assetAmount'>('amount');
@@ -54,14 +54,14 @@ const loadUserData = async () => {
   userData.value = await storeUsers.GetUserById(userId, token);
 }
 
-const loadCrypto = async () => {
+const loadStock = async () => {
   if (!storeAuth.isLoggedIn()) return;
-  await storeTransactions.GetCryptos(userId, token, props.cryptoId);
+  await storeTransactions.GetStocks(userId, token, props.stockId);
 };
 
 onMounted(async () => {
   await loadUserData();
-  await loadCrypto();
+  await loadStock();
 });
 
 const handleBuy = async () => {
@@ -73,10 +73,10 @@ const handleBuy = async () => {
     assetAmountToSend = parseFloat(amount.value);
   }
 
-  await storeTransactions.BuyCrypto(userId, props.cryptoId, token, amountToSend, assetAmountToSend);
+  await storeTransactions.BuyCrypto(userId, props.stockId, token, amountToSend, assetAmountToSend);
 
   await loadUserData();
-  await loadCrypto();
+  await loadStock();
   successMessage.value = t('TransactionsAsset_Buy_Success');
   setTimeout(() => {
     successMessage.value = null;
@@ -96,10 +96,10 @@ const handleSell = async () => {
     assetAmountToSend = parseFloat(amount.value);
   }
 
-  await storeTransactions.SellCrypto(userId, props.cryptoId, token, amountToSend, assetAmountToSend);
+  await storeTransactions.SellCrypto(userId, props.stockId, token, amountToSend, assetAmountToSend);
 
   await loadUserData();
-  await loadCrypto();
+  await loadStock();
   successMessage.value = t('TransactionsAsset_Sell_Success');
   setTimeout(() => {
     successMessage.value = null;
@@ -110,8 +110,8 @@ const handleSell = async () => {
   assetAmountToSend = undefined;
 };
 
-watch(() => props.cryptoId, async () => {
-  await loadCrypto();
+watch(() => props.stockId, async () => {
+  await loadStock();
 });
 
 watch([selectedAction, selectedOption], () => {
@@ -130,9 +130,9 @@ const validateFields = () => {
   const isBuy = selectedAction.value === 'buy';
   const isSell = selectedAction.value === 'sell';
   const cash = Number(userData.value?.cash);
-  const cryptoPrice = Number(crypto.value?.current_price);
-  const total = userCrypto.value.total;
-  const totalAssetAmount = userCrypto.value.totalAssetAmount;
+  const stockPrice = Number(stock.value?.price);
+  const total = userStock.value.total;
+  const totalAssetAmount = userStock.value.totalAssetAmount;
 
   const fieldName = isBuy ? 'buy' : 'sell';
 
@@ -140,7 +140,7 @@ const validateFields = () => {
     errorMessages.value[fieldName] = t(
       isBuy ? 'TransactionsAsset_Buy_Low_Error' : 'TransactionsAsset_Sell_Low_Error'
     );
-  } else if ((isBuy && amount.value > cash && selectedOption.value === 'amount') || (isBuy && amount.value * cryptoPrice > cash && selectedOption.value === 'assetAmount')) {
+  } else if ((isBuy && amount.value > cash && selectedOption.value === 'amount') || (isBuy && amount.value * stockPrice > cash && selectedOption.value === 'assetAmount')) {
     errorMessages.value[fieldName] = t('TransactionsAsset_Buy_High_Error');
   } else if ((isSell && amount.value > total && selectedOption.value === 'amount') || (isSell && amount.value > totalAssetAmount) && selectedOption.value === 'assetAmount') {
     errorMessages.value[fieldName] = t('TransactionsAsset_Sell_High_Error');
@@ -168,7 +168,7 @@ watch(amount, () => {
           {{ t('TransactionsAsset_Buy_Btn') }}
         </button>
         <button
-          v-if="userCrypto && userCrypto.totalAssetAmount > 0"
+          v-if="userStock && userStock.totalAssetAmount > 0"
           class="action-btn"
           :class="{ selected: selectedAction === 'sell' }"
           @click="selectedAction = 'sell'"
@@ -181,7 +181,7 @@ watch(amount, () => {
         <label v-if="storeAuth.isLoggedIn()" class="amount-input-text">
           {{ selectedAction === 'buy'
             ? `${storeUserPreferences.convertPrice(userCash, storeUserPreferences.selectedCurrency, 'after', true)} ${t('TransactionsAsset_Available_Text')}`
-            : storeUserPreferences.showPrices ? `${userCrypto.totalAssetAmount.toFixed(6)} ${t('TransactionsAsset_Available_Assets_Text')}` : '******'
+            : storeUserPreferences.showPrices ? `${userStock.totalAssetAmount.toFixed(6)} ${t('TransactionsAsset_Available_Assets_Text')}` : '******'
           }}
         </label>
 
@@ -221,8 +221,8 @@ watch(amount, () => {
           <span class="amount-input-title">{{ t('TransactionsAsset_Actives_Text') }}</span>
           <span class="asset-info-value">
             {{
-              crypto && amount && !isNaN(amount)
-                ? storeUserPreferences.convertPriceFullDecimals((parseFloat(amount) / crypto.current_price), storeUserPreferences.selectedCurrency)
+              stock && amount && !isNaN(amount)
+                ? storeUserPreferences.convertPriceFullDecimals((parseFloat(amount) / stock.price), storeUserPreferences.selectedCurrency)
                 : 0
             }} 
           </span>
@@ -230,15 +230,15 @@ watch(amount, () => {
 
         <div v-if="selectedOption === 'assetAmount'" class="asset-info-container">
           <span class="amount-input-title">{{ t('TransactionsAsset_Market_Price_Text') }}</span>
-          <span class="asset-info-value">{{ storeUserPreferences.convertPrice(crypto.current_price, storeUserPreferences.selectedCurrency, 'after') }}</span>
+          <span class="asset-info-value">{{ storeUserPreferences.convertPrice(stock.price, storeUserPreferences.selectedCurrency, 'after') }}</span>
         </div>
 
         <div v-if="selectedOption === 'assetAmount'" class="asset-info-container mt-7">
           <span class="amount-input-title">{{ t('TransactionsAsset_Total_Text') }}</span>
           <span class="asset-info-value">
             {{
-              selectedOption === 'assetAmount' && crypto && amount && !isNaN(amount)
-                ? storeUserPreferences.convertPrice((parseFloat(amount) * crypto.current_price), storeUserPreferences.selectedCurrency, 'after')
+              selectedOption === 'assetAmount' && stock && amount && !isNaN(amount)
+                ? storeUserPreferences.convertPrice((parseFloat(amount) * stock.price), storeUserPreferences.selectedCurrency, 'after')
                 : 0
             }} 
           </span>
@@ -252,14 +252,14 @@ watch(amount, () => {
               (selectedOption === 'amount' && parseFloat(amount) < 1) ||
               (selectedOption === 'assetAmount' && parseFloat(amount) === 0) ||
               (selectedAction === 'buy' && selectedOption === 'amount' && parseFloat(amount) > Number(userData?.cash)) ||
-              (selectedAction === 'buy' && selectedOption === 'assetAmount' && parseFloat(amount) * Number(crypto?.current_price) > Number(userData?.cash)) ||
-              (selectedAction === 'sell' && selectedOption === 'amount' && parseFloat(amount) > userCrypto.total) ||
-              (selectedAction === 'sell' && selectedOption === 'assetAmount' && parseFloat(amount) > userCrypto.totalAssetAmount)"
+              (selectedAction === 'buy' && selectedOption === 'assetAmount' && parseFloat(amount) * Number(stock?.price) > Number(userData?.cash)) ||
+              (selectedAction === 'sell' && selectedOption === 'amount' && parseFloat(amount) > userStock.total) ||
+              (selectedAction === 'sell' && selectedOption === 'assetAmount' && parseFloat(amount) > userStock.totalAssetAmount)"
           >
             {{ selectedAction === 'buy' ? t('TransactionsAsset_Buy_Btn') : t('TransactionsAsset_Sell_Btn') }}
           </button>
         </div>
-        
+
         <span v-if="errorMessages.buy || errorMessages.sell" class="buy-sell-error" :class="selectedOption === 'assetAmount' ? 'asset-amount-message' : ''">
           {{ selectedAction === 'buy' ? errorMessages.buy : errorMessages.sell }}
         </span>
@@ -273,11 +273,11 @@ watch(amount, () => {
       <span class="positions-message">{{ t('TransactionsAsset_Logout_Message') }}</span>
     </div>
 
-    <div v-if="storeAuth.isLoggedIn() && !userCrypto">
+    <div v-if="storeAuth.isLoggedIn() && !userStock">
       <span class="positions-message">{{ t('TransactionsAsset_Position_Message') }}</span>
     </div>
 
-    <div v-if="storeAuth.isLoggedIn() && userCrypto" class="positions-container">
+    <div v-if="storeAuth.isLoggedIn() && userStock" class="positions-container">
       <div class="positions-title">
         <span>{{ t('TransactionsAsset_Position_Text') }}</span>
         <span @click="storeUserPreferences.toggleShowPrices()" class="eye-icon">
@@ -288,19 +288,19 @@ watch(amount, () => {
       <div class="positions-total-content">
         <span class="positions-text">{{ t('TransactionsAsset_Total_Text') }}</span>
         <span class="positions-total-value">
-          {{ storeUserPreferences.convertPrice(userCrypto.total, storeUserPreferences.selectedCurrency, 'after', true) }}
+          {{ storeUserPreferences.convertPrice(userStock.total, storeUserPreferences.selectedCurrency, 'after', true) }}
         </span>
       </div>
 
       <div class="positions-profit-content">
         <span class="positions-text">{{ t('TransactionsAsset_Profitability_Text') }}</span>
-        <span class="positions-profit-value" :style="{ color: storeUserPreferences.getPriceColor(userCrypto.balance) }">
+        <span class="positions-profit-value" :style="{ color: storeUserPreferences.getPriceColor(userStock.balance) }">
           <v-icon class="positions-profit-icon mb-1">
-            {{ storeUserPreferences.getArrowDirection(userCrypto.balance) }}
+            {{ storeUserPreferences.getArrowDirection(userStock.balance) }}
           </v-icon>
-          <span class="mr-2">{{ storeUserPreferences.convertPrice(Math.abs(userCrypto.balance), storeUserPreferences.selectedCurrency, 'after', true) }}</span>
+          <span class="mr-2">{{ storeUserPreferences.convertPrice(Math.abs(userStock.balance), storeUserPreferences.selectedCurrency, 'after', true) }}</span>
           <span>
-            ({{ userCrypto.balancePercentage > 0 ? '+' : '-' }} {{ storeUserPreferences.maskedPrice(Math.abs(userCrypto.balancePercentage)) }} %)
+            ({{ userStock.balancePercentage > 0 ? '+' : '-' }} {{ storeUserPreferences.maskedPrice(Math.abs(userStock.balancePercentage)) }} %)
           </span>
         </span>
       </div>
@@ -308,15 +308,15 @@ watch(amount, () => {
       <div class="positions-info-content">
         <div class="positions-info-assets">
           <span class="positions-text">{{ t('TransactionsAsset_Actives_Text') }}</span>
-          <span class="positions-info-value">{{ storeUserPreferences.convertAssetAmount(userCrypto.totalAssetAmount, true) }}</span>
+          <span class="positions-info-value">{{ storeUserPreferences.convertAssetAmount(userStock.totalAssetAmount, true) }}</span>
         </div>
         <div class="positions-info-purchase-price">
           <span class="positions-text">{{ t('TransactionsAsset_Purchase_Price_Text') }}</span>
-          <span class="positions-info-value">{{ storeUserPreferences.convertPrice(userCrypto.averagePurchasePrice, storeUserPreferences.selectedCurrency, 'after', true) }}</span>
+          <span class="positions-info-value">{{ storeUserPreferences.convertPrice(userStock.averagePurchasePrice, storeUserPreferences.selectedCurrency, 'after', true) }}</span>
         </div>
         <div class="positions-info-percentage">
           <span class="positions-text">{{ t('TransactionsAsset_Purchase_Percentage_Text') }}</span>
-          <span class="positions-info-value">{{ storeUserPreferences.maskedPrice(userCrypto.walletPercentage) }} %</span>
+          <span class="positions-info-value">{{ storeUserPreferences.maskedPrice(userStock.walletPercentage) }} %</span>
         </div>
       </div>
     </div>
