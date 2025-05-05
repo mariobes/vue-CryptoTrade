@@ -54,6 +54,4 @@ const cryptoId = computed(() => route.params.id)
 	color: v-bind(textColor);
 	border-left: solid 1px #80808050;
 }
-
-
 </style>

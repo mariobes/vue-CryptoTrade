@@ -103,245 +103,246 @@ async function toggleFavorite(cryptoId: string) {
 
 onMounted(() => {
   loadWatchlist()
+	window.scrollTo({ top: 0 })
 })
 </script>
 
 <template>
-    <div class="main-container" v-if="crypto">
-			<div>
-				<div class="crypto-content-name-favorite">
-					<div class="crypto-content-name">
-						<img :src="crypto.image" alt="Crypto Logo" class="crypto-image" @error="storeUserPreferences.showDefaultAssetImage(crypto)" />
-						<span class="crypto-name">{{ crypto.name }}</span>
-						<span class="crypto-symbol mt-1">{{ crypto.symbol.toUpperCase() }}</span>
-						<span class="crypto-rank" :style="{ backgroundColor: storeUserPreferences.selectedTheme === 'light' ? '#f0eded' : '#313030' }">
-							#{{ crypto.marketCapRank }}
-						</span>
-					</div>
-					<div class="crypto-content-favorite">
-            <span v-if="storeAuth.isLoggedIn()" @click.stop="toggleFavorite(crypto.id)" class="favorite-icon">
-              <span 
-                v-if="watchlist.includes(crypto.id)" 
-                class="mdi mdi-star favorite-icon-active"
-              ></span>
-              <span 
-                v-else 
-                class="mdi mdi-star-outline"
-              ></span>
-            </span>
-					</div>
+	<div class="main-container" v-if="crypto">
+		<div>
+			<div class="crypto-content-name-favorite">
+				<div class="crypto-content-name">
+					<img :src="crypto.image" alt="Crypto Logo" class="crypto-image" @error="storeUserPreferences.showDefaultAssetImage(crypto)" />
+					<span class="crypto-name">{{ crypto.name }}</span>
+					<span class="crypto-symbol mt-1">{{ crypto.symbol.toUpperCase() }}</span>
+					<span class="crypto-rank" :style="{ backgroundColor: storeUserPreferences.selectedTheme === 'light' ? '#f0eded' : '#313030' }">
+						#{{ crypto.marketCapRank }}
+					</span>
 				</div>
-				<div class="crypto-content-price">
-					<span class="crypto-price">{{ storeUserPreferences.convertPrice(crypto.current_price, storeUserPreferences.selectedCurrency, 'after') }}</span>
-					<span class="crypto-percentage" :style="{ color: storeUserPreferences.getPriceColor(crypto.price_change_percentage_24h) }">
-						<v-icon class="mb-1">
-							{{ storeUserPreferences.getArrowDirection(crypto.price_change_percentage_24h) }}
+				<div class="crypto-content-favorite">
+					<span v-if="storeAuth.isLoggedIn()" @click.stop="toggleFavorite(crypto.id)" class="favorite-icon">
+						<span 
+							v-if="watchlist.includes(crypto.id)" 
+							class="mdi mdi-star favorite-icon-active"
+						></span>
+						<span 
+							v-else 
+							class="mdi mdi-star-outline"
+						></span>
+					</span>
+				</div>
+			</div>
+			<div class="crypto-content-price">
+				<span class="crypto-price">{{ storeUserPreferences.convertPrice(crypto.current_price, storeUserPreferences.selectedCurrency, 'after') }}</span>
+				<span class="crypto-percentage" :style="{ color: storeUserPreferences.getPriceColor(crypto.price_change_percentage_24h) }">
+					<v-icon class="mb-1">
+						{{ storeUserPreferences.getArrowDirection(crypto.price_change_percentage_24h) }}
+					</v-icon>
+					{{ Math.abs(crypto.price_change_percentage_24h).toFixed(2) }}% (1D)
+				</span>
+			</div>
+		</div>
+
+		<div class="crypto-content-cap">
+			<div class="crypto-container-cap crypto-cap">
+				<span class="crypto-content-title">{{ t('CryptoInfoTable_MarketCap') }}</span>
+				<div>
+					<span class="crypto-content-value">{{ storeUserPreferences.convertToAbbreviated(crypto.market_cap, storeUserPreferences.selectedCurrency, 'after') }}</span>
+					<span class="crypto-content-percentage" :style="{ color: storeUserPreferences.getPriceColor(crypto.market_cap_change_percentage_24h) }">
+						<v-icon class="crypto-content-percentage-icon">
+							{{ storeUserPreferences.getArrowDirection(crypto.market_cap_change_percentage_24h) }}
 						</v-icon>
-						{{ Math.abs(crypto.price_change_percentage_24h).toFixed(2) }}% (1D)
+						{{ Math.abs(crypto.market_cap_change_percentage_24h).toFixed(2) }}%
 					</span>
 				</div>
 			</div>
 
-			<div class="crypto-content-cap">
-				<div class="crypto-container-cap crypto-cap">
-					<span class="crypto-content-title">{{ t('CryptoInfoTable_MarketCap') }}</span>
-					<div>
-						<span class="crypto-content-value">{{ storeUserPreferences.convertToAbbreviated(crypto.market_cap, storeUserPreferences.selectedCurrency, 'after') }}</span>
-						<span class="crypto-content-percentage" :style="{ color: storeUserPreferences.getPriceColor(crypto.market_cap_change_percentage_24h) }">
-							<v-icon class="crypto-content-percentage-icon">
-								{{ storeUserPreferences.getArrowDirection(crypto.market_cap_change_percentage_24h) }}
-							</v-icon>
-							{{ Math.abs(crypto.market_cap_change_percentage_24h).toFixed(2) }}%
-						</span>
-					</div>
-				</div>
-
-				<div class="crypto-container-cap">
-					<span class="crypto-content-title">{{ t('CryptoInfoTable_Volume') }}</span>
-					<span class="crypto-content-value">{{ storeUserPreferences.convertToAbbreviated(crypto.total_volume, storeUserPreferences.selectedCurrency, 'after') }}</span>
-				</div>
-
-				<div class="crypto-container-cap">
-					<span class="crypto-content-title">{{ t('CryptoInfoTable_FDV') }}</span>
-					<span class="crypto-content-value">{{ storeUserPreferences.convertToAbbreviated(crypto.fully_diluted_valuation, storeUserPreferences.selectedCurrency, 'after') }}</span>
-				</div>
-
-				<div class="crypto-container-cap">
-					<span class="crypto-content-title">{{ t('CryptoInfoTable_Vol/MktCap') }}</span>
-					<span class="crypto-content-value">
-						{{ ((crypto.total_volume / crypto.market_cap) * 100).toFixed(2) }}%
-					</span>
-				</div>
-
-				<div class="crypto-container-cap">
-					<span class="crypto-content-title">{{ t('CryptoInfoTable_Total_Supply') }}</span>
-					<span class="crypto-content-value">{{ storeUserPreferences.convertToAbbreviated(crypto.total_supply, storeUserPreferences.selectedCurrency) }} {{ crypto.symbol.toLocaleUpperCase() }}</span>
-				</div>
-
-				<div class="crypto-container-cap">
-					<span class="crypto-content-title">{{ t('CryptoInfoTable_MaxSupply') }}</span>
-					<span class="crypto-content-value">{{ storeUserPreferences.convertToAbbreviated(crypto.max_supply, storeUserPreferences.selectedCurrency) }} {{ crypto.symbol.toLocaleUpperCase() }}</span>
-				</div>
-
-				<div class="crypto-container-cap">
-					<span class="crypto-content-title">{{ t('CryptoInfoTable_CirculatingSupply') }}</span>
-					<span class="crypto-content-value">{{ storeUserPreferences.convertToAbbreviated(crypto.circulating_supply, storeUserPreferences.selectedCurrency) }} {{ crypto.symbol.toLocaleUpperCase() }}</span>
-				</div>
-
+			<div class="crypto-container-cap">
+				<span class="crypto-content-title">{{ t('CryptoInfoTable_Volume') }}</span>
+				<span class="crypto-content-value">{{ storeUserPreferences.convertToAbbreviated(crypto.total_volume, storeUserPreferences.selectedCurrency, 'after') }}</span>
 			</div>
 
-			<div class="crypto-links-container">
-				<div class="crypto-links-content">
-					<span class="crypto-links-title">{{ t('CryptoInfoTable_Website') }}</span>
-					<span>
-						<a 
-							v-if="cryptoDetails?.links.homepage?.[0]"
-							:href="cryptoDetails.links.homepage[0]" 
-							target="_blank" 
-							class="crypto-link"
-						>
-							<span class="mdi mdi-web pr-1"></span>
-							<span>Website</span>
-						</a>
-						<a 
-							v-if="cryptoDetails?.links.whitepaper" 
-							:href="cryptoDetails.links.whitepaper" 
-							target="_blank" 
-							class="crypto-link"
-						>
-							<span class="mdi mdi-file-document pr-1"></span>
-							<span>Whitepaper</span>
-						</a>
-					</span>
-				</div>
+			<div class="crypto-container-cap">
+				<span class="crypto-content-title">{{ t('CryptoInfoTable_FDV') }}</span>
+				<span class="crypto-content-value">{{ storeUserPreferences.convertToAbbreviated(crypto.fully_diluted_valuation, storeUserPreferences.selectedCurrency, 'after') }}</span>
+			</div>
 
-				<div class="crypto-links-content">
-					<span class="crypto-links-title">{{ t('CryptoInfoTable_Socials') }}</span>
-					<span>
-						<a 
-							v-if="cryptoDetails?.links.twitter_screen_name" 
-							:href="`https://twitter.com/${cryptoDetails.links.twitter_screen_name}`" 
-							target="_blank" 
-							class="crypto-link"
-						>
-						<span class="mdi mdi-twitter icon-twitter"></span>
-						</a>
-						<a 
-							v-if="cryptoDetails?.links.subreddit_url" 
-							:href="cryptoDetails.links.subreddit_url" 
-							target="_blank" 
-							class="crypto-link"
-						>
-						<span class="mdi mdi-reddit icon-reddit"></span>
-						</a>
-						<a
-							v-if="cryptoDetails?.links.repos_url.github && cryptoDetails.links.repos_url.github.length"
-							:href="cryptoDetails.links.repos_url.github[0]"
-							target="_blank"
-							class="crypto-link"
-						>
-						<span class="mdi mdi-github"></span>
-						</a>
-					</span>
-				</div>
+			<div class="crypto-container-cap">
+				<span class="crypto-content-title">{{ t('CryptoInfoTable_Vol/MktCap') }}</span>
+				<span class="crypto-content-value">
+					{{ ((crypto.total_volume / crypto.market_cap) * 100).toFixed(2) }}%
+				</span>
+			</div>
 
-				<div class="crypto-links-content">
-					<span class="crypto-links-title">{{ t('CryptoInfoTable_Explorers') }}</span>
-					<span class="crypto-explorers">
-						<a
-							v-if="filteredExplorers && filteredExplorers.length"
-							:href="filteredExplorers[0]"
-							target="_blank"
-							class="crypto-link"
-						>
-							<span>{{ getDomainFromUrl(filteredExplorers[0]) }}</span>
-						</a>
-						<v-icon
-							v-if="filteredExplorers && filteredExplorers.length > 1"
-							class="toggle-arrow"
-							@click="showAllExplorers = !showAllExplorers"
-						>
-							{{ showAllExplorers ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
-						</v-icon>
-						<transition name="fade">
-							<template v-if="showAllExplorers">
-								<div class="explorer-popup">
-									<a
-										v-for="(link, index) in filteredExplorers.slice(1)"
-										:key="index"
-										:href="link"
-										target="_blank"
-										class="crypto-link crypto-link-explorer"
-									>
-										<span>{{ getDomainFromUrl(link) }}</span>
-									</a>
-								</div>
-							</template>
-						</transition>
+			<div class="crypto-container-cap">
+				<span class="crypto-content-title">{{ t('CryptoInfoTable_Total_Supply') }}</span>
+				<span class="crypto-content-value">{{ storeUserPreferences.convertToAbbreviated(crypto.total_supply, storeUserPreferences.selectedCurrency) }} {{ crypto.symbol.toLocaleUpperCase() }}</span>
+			</div>
+
+			<div class="crypto-container-cap">
+				<span class="crypto-content-title">{{ t('CryptoInfoTable_MaxSupply') }}</span>
+				<span class="crypto-content-value">{{ storeUserPreferences.convertToAbbreviated(crypto.max_supply, storeUserPreferences.selectedCurrency) }} {{ crypto.symbol.toLocaleUpperCase() }}</span>
+			</div>
+
+			<div class="crypto-container-cap">
+				<span class="crypto-content-title">{{ t('CryptoInfoTable_CirculatingSupply') }}</span>
+				<span class="crypto-content-value">{{ storeUserPreferences.convertToAbbreviated(crypto.circulating_supply, storeUserPreferences.selectedCurrency) }} {{ crypto.symbol.toLocaleUpperCase() }}</span>
+			</div>
+
+		</div>
+
+		<div class="crypto-links-container">
+			<div class="crypto-links-content">
+				<span class="crypto-links-title">{{ t('CryptoInfoTable_Website') }}</span>
+				<span>
+					<a 
+						v-if="cryptoDetails?.links.homepage?.[0]"
+						:href="cryptoDetails.links.homepage[0]" 
+						target="_blank" 
+						class="crypto-link"
+					>
+						<span class="mdi mdi-web pr-1"></span>
+						<span>Website</span>
+					</a>
+					<a 
+						v-if="cryptoDetails?.links.whitepaper" 
+						:href="cryptoDetails.links.whitepaper" 
+						target="_blank" 
+						class="crypto-link"
+					>
+						<span class="mdi mdi-file-document pr-1"></span>
+						<span>Whitepaper</span>
+					</a>
+				</span>
+			</div>
+
+			<div class="crypto-links-content">
+				<span class="crypto-links-title">{{ t('CryptoInfoTable_Socials') }}</span>
+				<span>
+					<a 
+						v-if="cryptoDetails?.links.twitter_screen_name" 
+						:href="`https://twitter.com/${cryptoDetails.links.twitter_screen_name}`" 
+						target="_blank" 
+						class="crypto-link"
+					>
+					<span class="mdi mdi-twitter icon-twitter"></span>
+					</a>
+					<a 
+						v-if="cryptoDetails?.links.subreddit_url" 
+						:href="cryptoDetails.links.subreddit_url" 
+						target="_blank" 
+						class="crypto-link"
+					>
+					<span class="mdi mdi-reddit icon-reddit"></span>
+					</a>
+					<a
+						v-if="cryptoDetails?.links.repos_url.github && cryptoDetails.links.repos_url.github.length"
+						:href="cryptoDetails.links.repos_url.github[0]"
+						target="_blank"
+						class="crypto-link"
+					>
+					<span class="mdi mdi-github"></span>
+					</a>
+				</span>
+			</div>
+
+			<div class="crypto-links-content">
+				<span class="crypto-links-title">{{ t('CryptoInfoTable_Explorers') }}</span>
+				<span class="crypto-explorers">
+					<a
+						v-if="filteredExplorers && filteredExplorers.length"
+						:href="filteredExplorers[0]"
+						target="_blank"
+						class="crypto-link"
+					>
+						<span>{{ getDomainFromUrl(filteredExplorers[0]) }}</span>
+					</a>
+					<v-icon
+						v-if="filteredExplorers && filteredExplorers.length > 1"
+						class="toggle-arrow"
+						@click="showAllExplorers = !showAllExplorers"
+					>
+						{{ showAllExplorers ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
+					</v-icon>
+					<transition name="fade">
+						<template v-if="showAllExplorers">
+							<div class="explorer-popup">
+								<a
+									v-for="(link, index) in filteredExplorers.slice(1)"
+									:key="index"
+									:href="link"
+									target="_blank"
+									class="crypto-link crypto-link-explorer"
+								>
+									<span>{{ getDomainFromUrl(link) }}</span>
+								</a>
+							</div>
+						</template>
+					</transition>
+				</span>
+			</div>
+		</div>
+
+		<div class="historical-data-container">
+
+			<div class="historical-data-content">
+				<div class="historical-data-text">
+					<span class="historical-data-title">{{ t('CryptoInfoTable_Ath') }}</span>
+					<span class="historical-data-date">{{ formatDate(crypto.ath_date) }}</span>
+				</div>
+				<div class="historical-data-price">
+					<span>{{ storeUserPreferences.convertPrice(crypto.ath, storeUserPreferences.selectedCurrency, 'before') }}</span>
+					<span :style="{ color: storeUserPreferences.getPriceColor(crypto.ath_change_percentage) }">
+						{{ crypto.ath_change_percentage.toFixed(2) }}%
 					</span>
 				</div>
 			</div>
 
-			<div class="historical-data-container">
-
-				<div class="historical-data-content">
-					<div class="historical-data-text">
-						<span class="historical-data-title">{{ t('CryptoInfoTable_Ath') }}</span>
-						<span class="historical-data-date">{{ formatDate(crypto.ath_date) }}</span>
-					</div>
-					<div class="historical-data-price">
-						<span>{{ storeUserPreferences.convertPrice(crypto.ath, storeUserPreferences.selectedCurrency, 'before') }}</span>
-						<span :style="{ color: storeUserPreferences.getPriceColor(crypto.ath_change_percentage) }">
-							{{ crypto.ath_change_percentage.toFixed(2) }}%
-						</span>
-					</div>
+			<div class="historical-data-content">
+				<div class="historical-data-text">
+					<span class="historical-data-title">{{ t('CryptoInfoTable_Atl') }}</span>
+					<span class="historical-data-date">{{ formatDate(crypto.atl_date) }}</span>
 				</div>
-
-				<div class="historical-data-content">
-					<div class="historical-data-text">
-						<span class="historical-data-title">{{ t('CryptoInfoTable_Atl') }}</span>
-						<span class="historical-data-date">{{ formatDate(crypto.atl_date) }}</span>
-					</div>
-					<div>
-						<span class="historical-data-price">{{ storeUserPreferences.convertPrice(crypto.atl, storeUserPreferences.selectedCurrency, 'before') }}</span>
-						<span :style="{ color: storeUserPreferences.getPriceColor(crypto.atl_change_percentage) }">
-							{{ crypto.atl_change_percentage > 0 ? '+' : '' }}{{ (crypto.atl_change_percentage ?? 0).toFixed(2) }}%
-						</span>
-					</div>
-				</div>
-
-			</div>
-
-			<div class="converter-container">
-				<div class="converter-title">
-					{{ t('CryptoInfoTable_Converter_1') }} 
-					{{ crypto.symbol.toLocaleUpperCase() }} 
-					{{ t('CryptoInfoTable_Converter_2') }} 
-					{{ storeUserPreferences.selectedCurrency }}
-				</div>
-				<div class="converter-content">
-					<div class="converter-crypto">
-						<label class="converter-text">{{ crypto.symbol.toUpperCase() }}</label>
-						<input
-							class="converter-value"
-							v-model.number="cryptoAmount"
-							@input="convertToFiat"
-							placeholder="0"
-						/>
-					</div>
-					<hr class="bar-divisor">
-					<div class="converter-currency">
-						<label class="converter-text">{{ storeUserPreferences.selectedCurrency }}</label>
-						<input
-							class="converter-value"
-							v-model.number="fiatAmount"
-							@input="convertToCrypto"
-							placeholder="0"
-						/>
-					</div>
+				<div>
+					<span class="historical-data-price">{{ storeUserPreferences.convertPrice(crypto.atl, storeUserPreferences.selectedCurrency, 'before') }}</span>
+					<span :style="{ color: storeUserPreferences.getPriceColor(crypto.atl_change_percentage) }">
+						{{ crypto.atl_change_percentage > 0 ? '+' : '' }}{{ (crypto.atl_change_percentage ?? 0).toFixed(2) }}%
+					</span>
 				</div>
 			</div>
-    </div>
+
+		</div>
+
+		<div class="converter-container">
+			<div class="converter-title">
+				{{ t('CryptoInfoTable_Converter_1') }} 
+				{{ crypto.symbol.toLocaleUpperCase() }} 
+				{{ t('CryptoInfoTable_Converter_2') }} 
+				{{ storeUserPreferences.selectedCurrency }}
+			</div>
+			<div class="converter-content">
+				<div class="converter-crypto">
+					<label class="converter-text">{{ crypto.symbol.toUpperCase() }}</label>
+					<input
+						class="converter-value"
+						v-model.number="cryptoAmount"
+						@input="convertToFiat"
+						placeholder="0"
+					/>
+				</div>
+				<hr class="bar-divisor">
+				<div class="converter-currency">
+					<label class="converter-text">{{ storeUserPreferences.selectedCurrency }}</label>
+					<input
+						class="converter-value"
+						v-model.number="fiatAmount"
+						@input="convertToCrypto"
+						placeholder="0"
+					/>
+				</div>
+			</div>
+		</div>
+	</div>
 </template>
 
 <style scoped>
@@ -388,6 +389,10 @@ onMounted(() => {
 	margin-right: 10px;
 	font-size: 1.6rem;
 	font-weight: bold;
+	overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+	max-width: 230px;
 }
 
 .crypto-symbol {
@@ -467,18 +472,14 @@ a {
   color: v-bind(textColor);
 }
 
-.crypto-links-container {
-	
-}
-
-.crypto-links-title {
-	color: #808080;
-}
-
 .crypto-links-content {
 	display: flex;
 	justify-content: space-between;
 	margin: 15px 0;
+}
+
+.crypto-links-title {
+	color: #808080;
 }
 
 .crypto-link {
