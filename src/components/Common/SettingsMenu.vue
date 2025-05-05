@@ -158,7 +158,7 @@ watch(() => storeAuth.getUserId(), async (newUserId) => {
 			</div>
 
       <div class="settings-user-logged" v-if="storeAuth.isLoggedIn()">
-        <button class="settings-options-btn">
+        <button class="settings-options-btn" @click="router.push({ name: 'userSettings', params: { id: storeAuth.getUserId() } })">
           {{ t('Header_Popup_Auth_Settings') }}
         </button>
 

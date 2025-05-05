@@ -39,21 +39,21 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem('userId')
     },
 
-		async login(email: string, password: string) {
+		async login(emailOrPhone: string, password: string) {
       try {
         const response = await fetch('http://localhost:4746/Auth/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ email, password })
+          body: JSON.stringify({ emailOrPhone, password })
         })
 
         if (response.ok) {
           const token = await response.text()
           this.setToken(token)
 
-          const userData = await this.getUserDataByEmail(email)
+          const userData = await this.getUserDataByEmailOrPhone(emailOrPhone)
           this.setRole(userData.role)
           this.setUserId(userData.id)
 
@@ -92,9 +92,9 @@ export const useAuthStore = defineStore('auth', {
       return false
     },
 
-		async getUserDataByEmail(email: string) {
+		async getUserDataByEmailOrPhone(emailOrPhone: string) {
       try {
-        const userDataResponse = await fetch(`http://localhost:4746/Users/by-email?userEmail=${email}`, {
+        const userDataResponse = await fetch(`http://localhost:4746/Users/by-email-phone?emailOrPhone=${emailOrPhone}`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${this.getToken()}`

@@ -2,9 +2,12 @@
 import { computed } from 'vue'
 import { Doughnut } from 'vue-chartjs'
 import type { UserAssetsSummary } from '@/core/transaction'
+import { useUserPreferencesStore } from '@/stores/userPreferences'
 import { useI18n } from 'vue-i18n'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, Colors } from 'chart.js'
 import type { PropType } from 'vue'
+
+const storeUserPreferences = useUserPreferencesStore()
 
 const { t } = useI18n()
 
@@ -17,23 +20,25 @@ const props = defineProps({
   }
 })
 
+const sortedAssets = computed(() => {
+  return [...props.assets].sort((a, b) => b.walletPercentage - a.walletPercentage)
+})
+
+const topAssets = computed(() => sortedAssets.value.slice(0, 7))
+const otherAssets = computed(() => sortedAssets.value.slice(7))
+
 const chartData = computed(() => {
-  const sortedAssets = [...props.assets].sort((a, b) => b.walletPercentage - a.walletPercentage)
-
-  const topAssets = sortedAssets.slice(0, 7)
-  const otherAssets = sortedAssets.slice(7)
-
-  const data = topAssets.map(a => a.walletPercentage.toFixed(2))
-  const labels = topAssets.map(a => a.symbol.toUpperCase() + '   ' + a.walletPercentage.toFixed(2) + '%')
+  const data = topAssets.value.map(a => a.walletPercentage.toFixed(2))
+  const labels = topAssets.value.map(a => a.symbol.toUpperCase())
   const backgroundColors = [
     '#1F75FE', '#4CAF50', '#FFCE56', '#FF8C00',
     '#5bc0de', '#9966FF', '#FF6384'
   ]
 
-  if (otherAssets.length > 0) {
-    const othersTotal = otherAssets.reduce((acc, a) => acc + a.walletPercentage, 0)
+  if (otherAssets.value.length > 0) {
+    const othersTotal = otherAssets.value.reduce((acc, a) => acc + a.walletPercentage, 0)
     data.push(othersTotal.toString())
-    labels.push('Otros')
+    labels.push(t('UserInfo_Chart_Others'))
     backgroundColors.push('#CCCCCC')
   }
 
@@ -45,6 +50,14 @@ const chartData = computed(() => {
       borderWidth: 0
     }]
   }
+})
+
+const assetNames = computed(() => {
+  const names = topAssets.value.map(a => a.name)
+  if (otherAssets.value.length > 0) {
+    names.push(t('UserInfo_Chart_Others'))
+  }
+  return names
 })
 
 const chartOptions = {
@@ -62,13 +75,19 @@ const chartOptions = {
     },
 		tooltip: {
 			callbacks: {
-				title: (context: any) => {
-					return context[0].label.split(' ')[0]
-				},
-				label: () => {
-					return ''
-				}
-			}
+        title: (context: any) => {
+          const index = context[0].dataIndex
+          return assetNames.value[index]
+        },
+        label: () => {
+          return null
+        }
+			},
+      padding: {
+        top: 7,
+        left: 5,
+        right: 5
+      }
   	}
   }
 }
@@ -93,7 +112,7 @@ const chartOptions = {
 							{{ label.split('   ')[0] }}
 						</span>
 						<span class="legend-percentage">
-							{{ Number(chartData.datasets[0].data[i]).toFixed(2) }}%
+							{{ storeUserPreferences.maskedPrice(Number(chartData.datasets[0].data[i])) }}%
 						</span>
 					</div>
 				</li>
