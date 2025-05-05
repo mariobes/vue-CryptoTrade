@@ -79,7 +79,7 @@ function openAssetInNewTab(asset: Transaction) {
     </thead>
     <tbody>
       <tr
-        v-for="transaction in storeTransactions.transactions"
+        v-for="transaction in storeTransactions.transactions.slice().reverse()"
         :key="transaction.id"
         :class="[
           !assetMap.get(transaction.assetId) ? '' : storeUserPreferences.selectedTheme === 'light' ? 'hover-light' : 'hover-dark'
@@ -126,22 +126,23 @@ function openAssetInNewTab(asset: Transaction) {
 				</td>
 				<td class="text-right">
 					{{ assetMap.get(transaction.assetId)?.price != null ? 
-								storeUserPreferences.convertPrice(transaction.purchasePrice, storeUserPreferences.selectedCurrency, 'before')
+								storeUserPreferences.convertPrice(transaction.purchasePrice, storeUserPreferences.selectedCurrency, 'before', true)
 						 : '- - -' }}
 				</td>
 				<td class="text-right">
 					<div>
 						<div v-if="transaction.concept === '+ Deposit' || transaction.concept === '- Withdrawal'">
 							<span class="total-amount-deposit">
-								{{ storeUserPreferences.convertPrice(transaction.amount, storeUserPreferences.selectedCurrency, 'before') }}
+								{{ storeUserPreferences.convertPrice(transaction.amount, storeUserPreferences.selectedCurrency, 'before', true) }}
 							</span>
 						</div>
 						<div v-else class="transaction-amount">
-							<span :style="{ color: storeUserPreferences.getPriceColor(transaction.assetAmount) }">
-								{{ transaction.assetAmount > 0 ? '+' : '-' }}{{ storeUserPreferences.convertAssetAmount(Math.abs(transaction.assetAmount)) }} {{ assetMap.get(transaction.assetId)?.symbol.toUpperCase() }}
+              <span :style="{ color: transaction.concept.startsWith('+') ? 'green' : 'red' }">
+							<!-- <span :style="{ color: storeUserPreferences.getPriceColor(transaction.assetAmount) }"> -->
+								{{ transaction.concept.startsWith('+') ? '+' : '-' }}{{ storeUserPreferences.convertAssetAmount(Math.abs(transaction.assetAmount), true) }} {{ assetMap.get(transaction.assetId)?.symbol.toUpperCase() }}
 							</span>
 							<span class="total-amount">
-								{{ storeUserPreferences.convertPrice(transaction.amount, storeUserPreferences.selectedCurrency, 'before') }}
+								{{ storeUserPreferences.convertPrice(transaction.amount, storeUserPreferences.selectedCurrency, 'before', true) }}
 							</span>
 						</div>
 					</div>

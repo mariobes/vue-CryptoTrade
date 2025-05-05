@@ -90,7 +90,7 @@ watch(
         <span class="divider-bar">|</span>
         <RouterLink to="/cryptoTable" class="header-component">{{ t('Header_Component_Cryptos') }}</RouterLink>
         <RouterLink to="/stockTable" class="header-component">{{ t('Header_Component_Stocks') }}</RouterLink>
-        <RouterLink to="/" target="_blank" class="header-component">{{ t('Header_Component_Wallet') }}</RouterLink>
+        <RouterLink to="/descentralizedWallet" target="_blank" class="header-component">{{ t('Header_Component_Wallet') }}</RouterLink>
         
         <v-menu open-on-hover content-class="header-component-menu" :style="{ color: backgroundSettings }">
           <template v-slot:activator="{ props }">

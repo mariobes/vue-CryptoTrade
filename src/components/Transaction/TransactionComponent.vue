@@ -22,19 +22,32 @@ const { t } = useI18n()
 
 const props = defineProps<{ cryptoId: string }>()
 
+const errorMessages = ref<{
+  buy?: string,
+  sell?: string,
+}>({})
+
 let amountToSend: number | undefined = undefined;
 let assetAmountToSend: number | undefined = undefined;
 
-const userCrypto = computed(() => storeTransactions.cryptos[0]);
+const userCrypto = computed(() => {
+  return storeTransactions.cryptos.find(c => c.assetId === props.cryptoId);
+});
 const crypto = computed(() => storeCryptos.crypto)
 
 const selectedAction = ref<'buy' | 'sell'>('buy');
 const selectedOption = ref<'amount' | 'assetAmount'>('amount');
 const amount = ref();
+const hasInteracted = ref(false)
+const successMessage = ref<string | null>(null);
 
 const userData = ref<User | null>(null);
 const userId = storeAuth.getUserId()
 const token = storeAuth.getToken()
+
+const userCash = computed(() => {
+  return Number(userData.value?.cash || 0);
+});
 
 const loadUserData = async () => {
   if (!storeAuth.isLoggedIn()) return;
@@ -52,40 +65,46 @@ onMounted(async () => {
 });
 
 const handleBuy = async () => {
+  if (!validateFields()) return
+
   if (selectedOption.value === 'amount') {
     amountToSend = parseFloat(amount.value);
   } else if (selectedOption.value === 'assetAmount') {
     assetAmountToSend = parseFloat(amount.value);
   }
 
-  const success = await storeTransactions.BuyCrypto(userId, props.cryptoId, token, amountToSend, assetAmountToSend);
+  await storeTransactions.BuyCrypto(userId, props.cryptoId, token, amountToSend, assetAmountToSend);
 
-  if (success) {
-    await loadUserData();
-    await loadCrypto();
-  } else {
-    alert('Hubo un error al realizar la compra');
-  }
+  await loadUserData();
+  await loadCrypto();
+  successMessage.value = t('TransactionComponent_Buy_Success');
+  setTimeout(() => {
+    successMessage.value = null;
+  }, 5000);
+
   amount.value = '';
   amountToSend = undefined;
   assetAmountToSend = undefined;
 };
 
 const handleSell = async () => {
+  if (!validateFields()) return
+
   if (selectedOption.value === 'amount') {
     amountToSend = parseFloat(amount.value);
   } else if (selectedOption.value === 'assetAmount') {
     assetAmountToSend = parseFloat(amount.value);
   }
 
-  const success = await storeTransactions.SellCrypto(userId, props.cryptoId, token, amountToSend, assetAmountToSend);
+  await storeTransactions.SellCrypto(userId, props.cryptoId, token, amountToSend, assetAmountToSend);
 
-  if (success) {
-    await loadUserData();
-    await loadCrypto();
-  } else {
-    alert('Hubo un error al realizar la venta');
-  }
+  await loadUserData();
+  await loadCrypto();
+  successMessage.value = t('TransactionComponent_Sell_Success');
+  setTimeout(() => {
+    successMessage.value = null;
+  }, 5000);
+
   amount.value = '';
   amountToSend = undefined;
   assetAmountToSend = undefined;
@@ -97,11 +116,44 @@ watch(() => props.cryptoId, async () => {
 
 watch([selectedAction, selectedOption], () => {
   amount.value = '';
+  errorMessages.value = {}
+  hasInteracted.value = false
 });
 
 watch(selectedAction, () => {
   selectedOption.value = 'amount';
 });
+
+const validateFields = () => {
+  errorMessages.value = {}
+
+  const isBuy = selectedAction.value === 'buy';
+  const isSell = selectedAction.value === 'sell';
+  const cash = Number(userData.value?.cash);
+  const cryptoPrice = Number(crypto.value?.current_price);
+  const total = userCrypto.value.total;
+  const totalAssetAmount = userCrypto.value.totalAssetAmount;
+
+  const fieldName = isBuy ? 'buy' : 'sell';
+
+  if ((amount.value < 1 && selectedOption.value === 'amount') || (amount.value === '0' && selectedOption.value === 'assetAmount')) {
+    errorMessages.value[fieldName] = t(
+      isBuy ? 'TransactionComponent_Buy_Low_Error' : 'TransactionComponent_Sell_Low_Error'
+    );
+  } else if ((isBuy && amount.value > cash && selectedOption.value === 'amount') || (isBuy && amount.value * cryptoPrice > cash && selectedOption.value === 'assetAmount')) {
+    errorMessages.value[fieldName] = t('TransactionComponent_Buy_High_Error');
+  } else if ((isSell && amount.value > total && selectedOption.value === 'amount') || (isSell && amount.value > totalAssetAmount) && selectedOption.value === 'assetAmount') {
+    errorMessages.value[fieldName] = t('TransactionComponent_Sell_High_Error');
+  }
+
+  return Object.keys(errorMessages.value).length === 0
+}
+
+watch(amount, () => {
+  if (hasInteracted.value && !successMessage.value) {
+    validateFields()
+  }
+})
 </script>
 
 <template>
@@ -128,9 +180,8 @@ watch(selectedAction, () => {
       <div v-if="selectedAction" class="amount-input-container">
         <label v-if="storeAuth.isLoggedIn()" class="amount-input-text">
           {{ selectedAction === 'buy'
-            ? `${storeUserPreferences.convertPrice(Number(userData?.cash), storeUserPreferences.selectedCurrency, 'after')} ${t('TransactionComponent_Available_Text')}`
-            : `${userCrypto.totalAssetAmount.toFixed(6)} ${t('TransactionComponent_Available_Assets_Text')}`
-
+            ? `${storeUserPreferences.convertPrice(userCash, storeUserPreferences.selectedCurrency, 'after', true)} ${t('TransactionComponent_Available_Text')}`
+            : storeUserPreferences.showPrices ? `${userCrypto.totalAssetAmount.toFixed(6)} ${t('TransactionComponent_Available_Assets_Text')}` : '******'
           }}
         </label>
 
@@ -158,7 +209,12 @@ watch(selectedAction, () => {
             v-model="amount" 
             class="amount-input-value"
             placeholder="0" 
-            :disabled="!storeAuth.isLoggedIn()" />
+            :disabled="!storeAuth.isLoggedIn()"
+            @input="() => { hasInteracted = true; validateFields(); }" />
+
+            <span class="amount-input-currency">
+              {{ storeUserPreferences.getCurrencySymbol(storeUserPreferences.selectedCurrency) }}
+            </span>
         </div>
 
         <div v-if="selectedOption === 'amount'" class="asset-info-container">
@@ -191,12 +247,25 @@ watch(selectedAction, () => {
         <div class="buy-sell-btn-container">
           <button 
             :class="['buy-sell-btn', selectedAction === 'buy' ? 'buy-btn' : 'sell-btn']"
-            :disabled="!storeAuth.isLoggedIn() || !amount || amount == 0"
             @click="selectedAction === 'buy' ? handleBuy() : handleSell()"
+            :disabled="!storeAuth.isLoggedIn() || !amount ||
+              (selectedOption === 'amount' && parseFloat(amount) < 1) ||
+              (selectedOption === 'assetAmount' && parseFloat(amount) === 0) ||
+              (selectedAction === 'buy' && selectedOption === 'amount' && parseFloat(amount) > Number(userData?.cash)) ||
+              (selectedAction === 'buy' && selectedOption === 'assetAmount' && parseFloat(amount) * Number(crypto?.current_price) > Number(userData?.cash)) ||
+              (selectedAction === 'sell' && selectedOption === 'amount' && parseFloat(amount) > userCrypto.total) ||
+              (selectedAction === 'sell' && selectedOption === 'assetAmount' && parseFloat(amount) > userCrypto.totalAssetAmount)"
           >
             {{ selectedAction === 'buy' ? t('TransactionComponent_Buy_Btn') : t('TransactionComponent_Sell_Btn') }}
           </button>
         </div>
+        
+        <span v-if="errorMessages.buy || errorMessages.sell" class="buy-sell-error" :class="selectedOption === 'assetAmount' ? 'asset-amount-message' : ''">
+          {{ selectedAction === 'buy' ? errorMessages.buy : errorMessages.sell }}
+        </span>
+        <span v-if="successMessage" class="buy-sell-success" :class="selectedOption === 'assetAmount' ? 'asset-amount-message' : ''">
+          {{ successMessage }}
+        </span>
       </div>
     </div>
 
@@ -209,11 +278,17 @@ watch(selectedAction, () => {
     </div>
 
     <div v-if="storeAuth.isLoggedIn() && userCrypto" class="positions-container">
-      <div class="positions-title">{{ t('TransactionComponent_Position_Text') }}</div>
+      <div class="positions-title">
+        <span>{{ t('TransactionComponent_Position_Text') }}</span>
+        <span @click="storeUserPreferences.toggleShowPrices()" class="eye-icon">
+          <span v-if="storeUserPreferences.showPrices" class="mdi mdi-eye-outline"></span>
+          <span v-else class="mdi mdi-eye-off-outline"></span>
+        </span>
+      </div>
       <div class="positions-total-content">
         <span class="positions-text">{{ t('TransactionComponent_Total_Text') }}</span>
         <span class="positions-total-value">
-          {{ storeUserPreferences.convertPrice(userCrypto.total, storeUserPreferences.selectedCurrency, 'after') }}
+          {{ storeUserPreferences.convertPrice(userCrypto.total, storeUserPreferences.selectedCurrency, 'after', true) }}
         </span>
       </div>
 
@@ -223,9 +298,9 @@ watch(selectedAction, () => {
           <v-icon class="positions-profit-icon mb-1">
             {{ storeUserPreferences.getArrowDirection(userCrypto.balance) }}
           </v-icon>
-          <span class="mr-2">{{ storeUserPreferences.convertPrice(Math.abs(userCrypto.balance), storeUserPreferences.selectedCurrency, 'after') }}</span>
+          <span class="mr-2">{{ storeUserPreferences.convertPrice(Math.abs(userCrypto.balance), storeUserPreferences.selectedCurrency, 'after', true) }}</span>
           <span>
-            ({{ userCrypto.balancePercentage > 0 ? '+' : '-' }} {{ Math.abs(userCrypto.balancePercentage).toFixed(2) }} %)
+            ({{ userCrypto.balancePercentage > 0 ? '+' : '-' }} {{ storeUserPreferences.maskedPrice(Math.abs(userCrypto.balancePercentage)) }} %)
           </span>
         </span>
       </div>
@@ -233,15 +308,15 @@ watch(selectedAction, () => {
       <div class="positions-info-content">
         <div class="positions-info-assets">
           <span class="positions-text">{{ t('TransactionComponent_Actives_Text') }}</span>
-          <span class="positions-info-value">{{ storeUserPreferences.convertAssetAmount(userCrypto.totalAssetAmount) }}</span>
+          <span class="positions-info-value">{{ storeUserPreferences.convertAssetAmount(userCrypto.totalAssetAmount, true) }}</span>
         </div>
         <div class="positions-info-purchase-price">
           <span class="positions-text">{{ t('TransactionComponent_Purchase_Price_Text') }}</span>
-          <span class="positions-info-value">{{ storeUserPreferences.convertPrice(userCrypto.averagePurchasePrice, storeUserPreferences.selectedCurrency, 'after') }}</span>
+          <span class="positions-info-value">{{ storeUserPreferences.convertPrice(userCrypto.averagePurchasePrice, storeUserPreferences.selectedCurrency, 'after', true) }}</span>
         </div>
         <div class="positions-info-percentage">
           <span class="positions-text">{{ t('TransactionComponent_Purchase_Percentage_Text') }}</span>
-          <span class="positions-info-value">{{ userCrypto.walletPercentage.toFixed(2) }} %</span>
+          <span class="positions-info-value">{{ storeUserPreferences.maskedPrice(userCrypto.walletPercentage) }} %</span>
         </div>
       </div>
     </div>
@@ -324,7 +399,7 @@ watch(selectedAction, () => {
   color: v-bind(textColor);
   border-radius: 15px;
   text-align: end;
-  padding-right: 20px;
+  padding-right: 25px;
 }
 
 .amount-input-value:hover {
@@ -334,6 +409,12 @@ watch(selectedAction, () => {
 .amount-input-value:focus {
   outline: none;
   box-shadow: none;
+}
+
+.amount-input-currency {
+  position: absolute;
+  transform: translateX(257px);
+  font-size: 0.9rem;
 }
 
 .asset-info-container {
@@ -407,6 +488,12 @@ watch(selectedAction, () => {
   margin-bottom: 30px;
 }
 
+.eye-icon {
+  cursor: pointer;
+  margin-left: 15px;
+  color: #808080;
+}
+
 .positions-text {
   font-size: 0.9rem;
   color: #808080;
@@ -464,5 +551,27 @@ watch(selectedAction, () => {
   flex-direction: column;
   max-width: 30%;
   justify-content: space-between;
+}
+
+.buy-sell-error {
+  color: #ff0000cc;
+  font-size: 0.85rem;
+  font-weight: bold;
+  position: absolute;
+  top: 480px;
+  right: 100px;
+}
+
+.buy-sell-success {
+  color: green;
+  font-size: 0.85rem;
+  font-weight: bold;
+  position: absolute;
+  top: 480px;
+  right: 110px;
+}
+
+.asset-amount-message {
+  margin-top: 50px;
 }
 </style>
