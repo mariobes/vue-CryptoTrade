@@ -26,7 +26,7 @@ const storeUserPreferences = useUserPreferencesStore()
 
 const { t } = useI18n()
 
-const selectedType = ref('Precio')
+const selectedType = ref('Price')
 const selectedTime = ref('1D')
 const isLoading = ref(true)
 
@@ -60,22 +60,22 @@ const chartData = computed(() => {
   const baseline = chart.prices[0][1]
 
   if (isMarketCap) {
-  return {
-    datasets: [{
-      label: 'Market cap',
-      data: rawData.map(([x, y]: number[]) => ({ x, y })),
-      borderColor: '#3b82f6',
-      backgroundColor: 'rgba(59, 130, 246, 0.1)',
-      borderWidth: 2,
-      pointRadius: 0,
-      pointHoverRadius: 5,
-      pointHoverBorderWidth: 1.5,
-      pointHoverBorderColor: 'white',
-      pointHoverBackgroundColor: '#3b82f6',
-      tension: 0,
-    }]
+    return {
+      datasets: [{
+        label: 'Market cap',
+        data: rawData.map(([x, y]: number[]) => ({ x, y })),
+        borderColor: '#3b82f6',
+        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+        borderWidth: 2,
+        pointRadius: 0,
+        pointHoverRadius: 5,
+        pointHoverBorderWidth: 1.5,
+        pointHoverBorderColor: 'white',
+        pointHoverBackgroundColor: '#3b82f6',
+        tension: 0,
+      }]
+    }
   }
-}
 
   const data = rawData.map(([x, y]: number[]) => ({ x, y }))
   const datasets = []
@@ -410,8 +410,8 @@ const chartOptions = computed(() => {
       <div class="chart-btn">
         <button
           class="chart-btn-value"
-          :class="{ selected: selectedType === 'Precio' }"
-          @click="selectType('Precio')"
+          :class="{ selected: selectedType === 'Price' }"
+          @click="selectType('Price')"
         >
           {{ t('AssetChart_Price') }}
         </button>

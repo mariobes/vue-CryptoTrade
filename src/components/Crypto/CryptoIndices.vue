@@ -12,35 +12,6 @@ const storeMarkets = useMarketsStore()
 
 const { t } = useI18n()
 
-// const totalMarketCap = ref()
-// const marketCapChangePercentage = ref()
-// const valueCMC100Index = ref()
-// const CMC100IndexChangePercentage = ref()
-// const fearGreedValue = ref()
-// const fearGreedSentiment = ref()
-
-// onMounted(async () => {
-//   await storeMarkets.GetCryptoIndices();
-//   const cryptoIndicesData = storeMarkets.cryptoIndices;
-
-//   cryptoIndicesData.forEach((index) => {
-//     switch (index.name) {
-//       case 'total-market-cap':
-//         totalMarketCap.value = index.value;
-//         marketCapChangePercentage.value = parseFloat(index.changePercentage?.toFixed(2) || '0');
-//         break;
-//       case 'CMC100-index':
-//         valueCMC100Index.value = index.value;
-//         CMC100IndexChangePercentage.value = parseFloat(index.changePercentage?.toFixed(2) || '0');
-//         break;
-//       case 'fear-greed-index':
-//         fearGreedValue.value = index.value;
-//         fearGreedSentiment.value = index.sentiment;
-//         break;
-//     }
-//   });
-// });
-
 const cryptoIndicesData = computed(() => storeMarkets.cryptoIndices)
 
 const totalMarketCap = computed(() =>
@@ -85,14 +56,14 @@ const getSentimentTranslation = (sentiment: string | null) => {
       <div class="index-section-content index-section-content-cap">
         <p class="title-index cap-index">{{ t('CryptoIndices_Index_1') }}</p>
         <p class="price-index">
-          {{ storeUserPreferences.convertToAbbreviated(totalMarketCap, storeUserPreferences.selectedCurrency, 'before') }}
+          {{ storeUserPreferences.convertToAbbreviated(Number(totalMarketCap), storeUserPreferences.selectedCurrency, 'before') }}
         </p>
         <p>
           <v-icon class="mb-1" :style="{ color: storeUserPreferences.getPriceColor(marketCapChangePercentage) }">
             {{ storeUserPreferences.getArrowDirection(marketCapChangePercentage) }}
           </v-icon>
           <span :style="{ color: storeUserPreferences.getPriceColor(marketCapChangePercentage) }">
-            {{ marketCapChangePercentage }}%
+            {{ Math.abs(marketCapChangePercentage) }}%
           </span>
         </p>
       </div>
@@ -100,7 +71,7 @@ const getSentimentTranslation = (sentiment: string | null) => {
       <div class="index-section-content">
         <p class="title-index cap-index">{{ t('CryptoIndices_Index_2') }}</p>
         <p class="price-index">
-          {{ storeUserPreferences.convertToAbbreviated(valueCMC100Index, storeUserPreferences.selectedCurrency, 'before') }}
+          {{ storeUserPreferences.convertToAbbreviated(Number(valueCMC100Index), storeUserPreferences.selectedCurrency, 'before') }}
         </p>
         <p>
           <v-icon class="mb-1" :style="{ color: storeUserPreferences.getPriceColor(CMC100IndexChangePercentage) }">

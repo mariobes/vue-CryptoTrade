@@ -114,12 +114,12 @@ const profitPercentage = computed(() => {
 					</span>
 					<span :style="{ color: storeUserPreferences.getPriceColor(Number(highestGainer?.balance)) }">
 						<span class="item-asset-value">
-							{{ Number(highestGainer?.balance) > 0 ? '+' : '-' }}{{ storeUserPreferences.convertPrice(Math.abs(Number(highestGainer?.balance.toFixed(2))), storeUserPreferences.selectedCurrency, 'before', true) }}
+							{{ Number(highestGainer?.balance) > 0 ? '+' : '-' }}{{ combinedAssets.length > 0 ? storeUserPreferences.convertPrice(Math.abs(Number(highestGainer?.balance.toFixed(2))), storeUserPreferences.selectedCurrency, 'before', true) : 0 }}
 						</span>
 						<v-icon class="item-icon mb-1 ml-1">
 							{{ storeUserPreferences.getArrowDirection(Number(highestGainer?.balancePercentage)) }}
 						</v-icon>
-						<span class="item-asset-value">{{ storeUserPreferences.maskedPrice(Math.abs(Number(highestGainer?.balancePercentage))) }}%</span>
+						<span class="item-asset-value">{{ combinedAssets.length > 0 ? storeUserPreferences.maskedPrice(Math.abs(Number(highestGainer?.balancePercentage))) : 0 }}%</span>
 					</span>
 				</div>
 
@@ -131,12 +131,12 @@ const profitPercentage = computed(() => {
 					</span>
 					<span :style="{ color: storeUserPreferences.getPriceColor(Number(highestLoser?.balance)) }">
 						<span class="item-asset-value">
-							{{ Number(highestLoser?.balance) > 0 ? '+' : '-' }}{{ storeUserPreferences.convertPrice(Math.abs(Number(highestLoser?.balance.toFixed(2))), storeUserPreferences.selectedCurrency, 'before', true) }}
+							{{ Number(highestLoser?.balance) > 0 ? '+' : '-' }}{{ combinedAssets.length > 0 ? storeUserPreferences.convertPrice(Math.abs(Number(highestLoser?.balance.toFixed(2))), storeUserPreferences.selectedCurrency, 'before', true) : 0 }}
 						</span>
 						<v-icon class="item-icon mb-1 ml-1">
 							{{ storeUserPreferences.getArrowDirection(Number(highestLoser?.balancePercentage)) }}
 						</v-icon>
-						<span class="item-asset-value">{{ storeUserPreferences.maskedPrice(Math.abs(Number(highestLoser?.balancePercentage))) }}%</span>
+						<span class="item-asset-value">{{ combinedAssets.length > 0 ? storeUserPreferences.maskedPrice(Math.abs(Number(highestLoser?.balancePercentage))) : 0 }}%</span>
 					</span>
 				</div>
 

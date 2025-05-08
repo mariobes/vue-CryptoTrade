@@ -110,6 +110,51 @@ export const useTransactionsStore = defineStore('transactions', () => {
     }
   }
 
+  async function BuyStock(userId: number, assetId: string, token: string, amount?: number, assetAmount?: number) {
+    try {
+      const response = await fetch(`http://localhost:4746/Transactions/buy-stock`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userId,
+          assetId,
+          amount,
+          assetAmount
+        })
+      });
+  
+      return response.ok;
+    } catch (error) {
+      console.error('Error al realizar la compra: ', error);
+      return false;
+    }
+  }
+
+  async function SellStock(userId: number, assetId: string, token: string, amount?: number, assetAmount?: number) {
+    try {
+        const response = await fetch(`http://localhost:4746/Transactions/sell-stock`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            userId,
+            assetId,
+            amount,
+            assetAmount
+          })
+        })
+
+      return response.ok
+    } catch (error) {
+        console.error('Error al realizar la venta: ', error)
+    }
+  }
+
   async function GetCryptos(userId: number, token: string, cryptoId?: string) {
     try {
         let url = `http://localhost:4746/Transactions/${userId}/cryptos`
@@ -163,6 +208,8 @@ export const useTransactionsStore = defineStore('transactions', () => {
     GetTransactions,
     BuyCrypto,
     SellCrypto,
+    BuyStock,
+    SellStock,
     GetCryptos,
     GetStocks
   }
