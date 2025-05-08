@@ -116,7 +116,7 @@ const walletInfo = computed(() => {
 	<div class="info-cash-content">
     <div class="info-cash-title">
       <span class="info-cash-text">{{ t('UserInfo_Cash_Title') }}</span>
-      <span class="info-cash-value">{{ storeUserPreferences.convertPrice(userData?.cash, storeUserPreferences.selectedCurrency, 'after', true) }}</span>
+      <span class="info-cash-value">{{ userData?.cash != undefined ? storeUserPreferences.convertPrice(userData?.cash, storeUserPreferences.selectedCurrency, 'after', true) : 0 }}</span>
     </div>
     <div class="info-cash-options">
       <button 

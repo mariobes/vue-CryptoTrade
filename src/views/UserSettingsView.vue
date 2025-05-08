@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import UserSettings from '@/components/User/UserSettings.vue'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
 import { useI18n } from 'vue-i18n'
 
@@ -13,27 +14,13 @@ const { t } = useI18n()
 
 <template>
   <div class="main-container">
-    <div class="title-container">
-      <p class="title-text">User Settings</p>
-    </div>
+    <UserSettings></UserSettings>
   </div>
 </template>
 
 <style scoped>
 .main-container {
-  max-width: 70vw;
-  margin: 0 auto;
+	max-width: 60vw;
+	margin: 50px auto 50px auto;
 }
-
-.title-container {
-  margin: 50px 0;
-}
-
-.title-text {
-  font-size: 2rem;
-  color: v-bind(textColor);
-  font-weight: bold;
-}
-
-
 </style>

@@ -3,7 +3,7 @@ import type { Transaction } from "./transaction"
 export interface User {
     id: number
     name: string
-    birthday: Date
+    birthdate: Date
     email: string
     password: string
     phone: string

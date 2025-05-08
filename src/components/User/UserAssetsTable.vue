@@ -75,7 +75,7 @@ function openAssetInNewTab(asset: UserAssetsSummary) {
 
 <template>
 <div class="main-container">
-	<div class="tables-content">
+	<div class="tables-content" v-if="hasAssets">
 		<span 
 			:class="['table', tableSelected === 'all' ? 'selected' : '']" 
 			@click="tableSelected = 'all'"

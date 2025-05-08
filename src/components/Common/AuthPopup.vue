@@ -72,7 +72,7 @@ const formattedBirthDate = computed(() => {
 
     return `${day}-${month}-${year}`
   }
-  return t('Header_Popup_Auth_Birthday_Text')
+  return t('Header_Popup_Auth_Birthdate_Text')
 })
 
 const handleBirthDate = (val: Date) => {
@@ -98,9 +98,10 @@ watch(selectedTab, () => {
 
 watch(authDialog, (val) => {
   if (val) {
-    clearForm()
+    clearForm();
+    passwordVisible.value = false;
   }
-})
+});
 
 const setFocus = (field: string) => {
   focusedField.value = field
@@ -265,7 +266,7 @@ function isUnder18(birthDate: string | Date): boolean {
         />
         <span v-if="selectedTab === 'register'" class="auth-form-error">{{ errorMessages.name || '\u00A0' }}</span>
 
-        <div class="auth-form-text" v-if="selectedTab === 'register'">{{ t('Header_Popup_Auth_Birthday') }}</div>
+        <div class="auth-form-text" v-if="selectedTab === 'register'">{{ t('Header_Popup_Auth_Birthdate') }}</div>
         <v-menu
           v-if="selectedTab === 'register'"
           v-model="birthDateMenu"

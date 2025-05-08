@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
 import { useUserPreferencesStore } from '@/stores/userPreferences'
 import type { User } from '@/core/user'
@@ -33,6 +33,7 @@ let assetAmountToSend: number | undefined = undefined;
 const userStock = computed(() => {
   return storeTransactions.stocks.find(c => c.assetId === props.stockId);
 });
+
 const stock = computed(() => storeStocks.stock)
 
 const selectedAction = ref<'buy' | 'sell'>('buy');
@@ -574,4 +575,4 @@ watch(amount, () => {
 .asset-amount-message {
   margin-top: 50px;
 }
-</style>
+</style> -->

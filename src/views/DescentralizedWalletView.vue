@@ -28,12 +28,11 @@ const { t } = useI18n()
 .main-container {
   max-width: 30vw;
   height: 75vh;
-  margin: 0 auto;
   background-color: v-bind(backgroundSettings);
   border-radius: 20px;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5) !important;
   border: solid 1px #80808050;
-  margin-top: 50px;
+  margin: 50px auto;
 }
 
 .title-container {

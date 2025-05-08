@@ -37,12 +37,20 @@ const cryptoAmount = ref(1)
 const fiatAmount = ref(0)
 
 const convertToFiat = () => {
-  fiatAmount.value = cryptoAmount.value * crypto.value.current_price
+  fiatAmount.value = cryptoAmount.value * Number(storeUserPreferences.getConvertedPrice(Number(crypto.value?.current_price), storeUserPreferences.selectedCurrency))
 }
 
 const convertToCrypto = () => {
-  cryptoAmount.value = fiatAmount.value / crypto.value.current_price
+  cryptoAmount.value = fiatAmount.value / Number(storeUserPreferences.getConvertedPrice(Number(crypto.value?.current_price), storeUserPreferences.selectedCurrency))
 }
+
+watch(
+  () => storeUserPreferences.selectedCurrency,
+  () => {
+    convertToFiat()
+    convertToCrypto()
+  }
+)
 
 watch(crypto, (newVal) => {
   if (newVal) convertToFiat()

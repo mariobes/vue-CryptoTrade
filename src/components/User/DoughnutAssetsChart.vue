@@ -120,7 +120,7 @@ const chartOptions = {
 		</div>
 
   </div>
-  <div v-else>
+  <div v-else class="no-assets-text">
     {{ t('UserInfo_Chart_Text') }}
   </div>
 </template>
@@ -174,5 +174,12 @@ const chartOptions = {
 
 .legend-percentage {
 	font-size: 0.95rem;
+}
+
+.no-assets-text {
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
 }
 </style>
