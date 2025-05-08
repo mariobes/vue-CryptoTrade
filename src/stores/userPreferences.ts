@@ -212,6 +212,17 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
       return this.formatCurrency(formatted, currency, symbolPosition);
     },
 
+    getConvertedPrice(price: number, currency: CurrencyType): number {
+      const rate = this.getCurrencyConversionRate(currency)
+      return price * rate
+    },
+
+    normalizeInputAmount(amount: number, currency: CurrencyType): string {
+      const conversionRate = this.getCurrencyConversionRate(currency);
+      const normalized = amount * (1 / conversionRate);
+      return normalized.toFixed(2);
+    },
+
     convertPriceFullDecimals(price: number, currency: CurrencyType, symbolPosition?: 'before' | 'after'): string {
       const conversionRate = this.getCurrencyConversionRate(currency);
       const converted = price * conversionRate;

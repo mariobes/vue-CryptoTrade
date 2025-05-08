@@ -4,7 +4,8 @@ import { useRoute } from 'vue-router'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
 import StockInfoTable from '@/components/Stock/StockInfoTable.vue'
 import StockCharts from '@/components/Stock/StockCharts.vue'
-import TransactionsStock from '@/components/Transaction/TransactionsStock.vue'
+import TransactionsAsset from '@/components/Transaction/TransactionsAsset.vue'
+import PositionsAsset from '@/components/Transaction/PositionsAsset.vue'
 
 const textColor = computed(() => storeUserPreferences.getTheme().text)
 
@@ -20,7 +21,10 @@ const stockId = computed(() => route.params.id)
 	<div class="main-container">
 		<StockInfoTable class="container-details" :stockId="stockId" :key="stockId"></StockInfoTable>
 		<StockCharts class="container-chart" :stockId="stockId" :key="stockId"></StockCharts>
-		<TransactionsStock class="container-transactions" :stockId="stockId" :key="stockId"></TransactionsStock>
+		<div class="container-transactions">
+			<TransactionsAsset :assetId="stockId" :key="stockId" :typeOfAsset="'Stock'"></TransactionsAsset>
+			<PositionsAsset :assetId="stockId" :key="stockId" :typeOfAsset="'Stock'"></PositionsAsset>
+		</div>
 	</div>
 </template>
 

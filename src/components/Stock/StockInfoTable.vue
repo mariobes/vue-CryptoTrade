@@ -6,7 +6,6 @@ import { useUserPreferencesStore } from '@/stores/userPreferences'
 import { useAuthStore } from '@/stores/auth'
 import { useI18n } from 'vue-i18n'
 
-const backgroundColor = computed(() => storeUserPreferences.getTheme().background)
 const textColor = computed(() => storeUserPreferences.getTheme().text)
 const colorGray = computed(() => storeUserPreferences.getTheme().colorGray)
 
@@ -34,27 +33,35 @@ watch(
 const stockAmount = ref(1)
 const fiatAmount = ref(0)
 
+const stockPrice = computed(() =>
+  stock.value?.price ? Number(stock.value.price) : NaN
+)
+
 const convertToFiat = () => {
-  fiatAmount.value = stockAmount.value * stock.value?.price
+  const converted = storeUserPreferences.getConvertedPrice(stockPrice.value, storeUserPreferences.selectedCurrency)
+  if (!isNaN(converted)) {
+    fiatAmount.value = stockAmount.value * converted
+  }
 }
 
 const convertToStock = () => {
-  stockAmount.value = fiatAmount.value / stock.value?.price
+  const converted = storeUserPreferences.getConvertedPrice(stockPrice.value, storeUserPreferences.selectedCurrency)
+  if (converted) {
+    stockAmount.value = fiatAmount.value / converted
+  }
 }
+
+watch(
+  () => storeUserPreferences.selectedCurrency,
+  () => {
+    convertToFiat()
+    convertToStock()
+  }
+)
 
 watch(stock, (newVal) => {
   if (newVal) convertToFiat()
 })
-
-const formatDate = (dateString: string) => {
-  if (!dateString) return ''
-  const date = new Date(dateString)
-  return new Intl.DateTimeFormat('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
-  }).format(date)
-}
 
 const userId = storeAuth.getUserId()
 const token = storeAuth.getToken()

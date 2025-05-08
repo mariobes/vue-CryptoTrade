@@ -5,6 +5,7 @@ import type { Stock } from '@/core/stock'
 export const useStocksStore = defineStore('stocks', () => {
   const stocks = ref<Stock[]>([])
   const stock = ref<Stock | null>(null)
+  const chartsStocks = ref<any[]>([])
   const searchStocks = ref<any[]>([])
 
   async function GetStocksApi() {
@@ -45,6 +46,16 @@ export const useStocksStore = defineStore('stocks', () => {
     }
   }
 
+  async function GetStockCharts(symbol: string, time: string) {
+    try {
+        const response = await fetch(`http://localhost:4746/StockApi/stock-charts/${symbol}?time=${time}`)
+        const stockChartsInfo = await response.json()
+        chartsStocks.value = stockChartsInfo
+    } catch (error) {
+        console.error(`Error al obtener las gráficas de la acción ${symbol}: `, error)
+    }
+  }
+
   async function SearchStock(query: string) {
     try {
         const response = await fetch(`http://localhost:4746/Stocks/search-stock?query=${query}`)
@@ -59,10 +70,12 @@ export const useStocksStore = defineStore('stocks', () => {
   return {
     stocks, 
     stock,
+    chartsStocks,
     searchStocks,
     GetStocksApi,
     GetAllStocks, 
     GetStock,
+    GetStockCharts,
     SearchStock
   }
 })
