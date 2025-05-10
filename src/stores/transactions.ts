@@ -4,8 +4,7 @@ import type { Transaction, UserAssetsSummary } from '@/core/transaction'
 
 export const useTransactionsStore = defineStore('transactions', () => {
   const transactions = ref<Transaction[]>([])
-  const cryptos = ref<UserAssetsSummary[]>([])
-  const stocks = ref<UserAssetsSummary[]>([])
+  const assets = ref<UserAssetsSummary[]>([])
 
   async function GetTransactions(userId: number, token: string) {
     try {
@@ -155,12 +154,16 @@ export const useTransactionsStore = defineStore('transactions', () => {
     }
   }
 
-  async function GetCryptos(userId: number, token: string, cryptoId?: string) {
+  async function GetAssets(userId: number, token: string, typeAsset?: string, assetId?: string) {
     try {
-        let url = `http://localhost:4746/Transactions/${userId}/cryptos`
-        if (cryptoId)
-        {
-          url += `?cryptoId=${cryptoId}`
+        let url = `http://localhost:4746/Transactions/${userId}/assets`
+        
+        const params = new URLSearchParams();
+        if (typeAsset) params.append('typeAsset', typeAsset);
+        if (assetId) params.append('assetId', assetId);
+    
+        if (params.toString()) {
+          url += `?${params.toString()}`;
         }
 
         const response = await fetch(url, {
@@ -170,39 +173,18 @@ export const useTransactionsStore = defineStore('transactions', () => {
             'Content-Type': 'application/json'
           }
         })
-        const cryptosInfo = await response.json()
-        cryptos.value = cryptosInfo
+        const assetsInfo = await response.json()
+        assets.value = assetsInfo
+        return true
     } catch (error) {
-        console.error('Error al obtener las criptomonedas: ', error)
-    }
-  }
-
-  async function GetStocks(userId: number, token: string, stockId?: string) {
-    try {
-        let url = `http://localhost:4746/Transactions/${userId}/stocks`
-        if (stockId)
-        {
-          url += `?stockId=${stockId}`
-        }
-
-        const response = await fetch(url, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        })
-        const stocksInfo = await response.json()
-        stocks.value = stocksInfo
-    } catch (error) {
-        console.error('Error al obtener las acciones: ', error)
+        console.error('Error al obtener los activos: ', error)
+        return false
     }
   }
 
   return {
     transactions, 
-    cryptos,
-    stocks,
+    assets,
     MakeDeposit,
     MakeWithdrawal,
     GetTransactions,
@@ -210,8 +192,7 @@ export const useTransactionsStore = defineStore('transactions', () => {
     SellCrypto,
     BuyStock,
     SellStock,
-    GetCryptos,
-    GetStocks
+    GetAssets,
   }
 })
 

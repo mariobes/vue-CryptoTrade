@@ -2,16 +2,13 @@
 import UserInfo from '../components/User/UserInfo.vue'
 import UserCharts from '../components/User/UserAssetCharts.vue'
 
-
 </script>
 
 <template>
-
-<div class="main-container">
-	<UserInfo></UserInfo>
-	<UserCharts></UserCharts>
-</div>
-
+	<div class="main-container">
+		<UserInfo></UserInfo>
+		<UserCharts></UserCharts>
+	</div>
 </template>
 
 <style scoped>

@@ -7,8 +7,10 @@ import CryptoTable from '@/components/Crypto/CryptoTable.vue'
 import StockTable from '@/components/Stock/StockTable.vue'
 import { useCryptosStore } from '@/stores/cryptos'
 import { useStocksStore } from '@/stores/stocks'
+import { useTransactionsStore } from '@/stores/transactions'
 import { useMarketsStore } from '@/stores/markets'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
+import { useAuthStore } from '@/stores/auth'
 import { useI18n } from 'vue-i18n'
 
 const textColor = computed(() => storeUserPreferences.getTheme().text)
@@ -16,7 +18,9 @@ const textColor = computed(() => storeUserPreferences.getTheme().text)
 const storeCryptos = useCryptosStore()
 const storeStocks = useStocksStore()
 const storeMarkets = useMarketsStore()
+const storeTransactions = useTransactionsStore()
 const storeUserPreferences = useUserPreferencesStore()
+const storeAuth = useAuthStore()
 
 const { t } = useI18n()
 
@@ -51,6 +55,14 @@ const updateAssetsDatabase = async () => {
 
     await storeStocks.GetStocksApi();
     await storeStocks.GetAllStocks(0, 0)
+
+    if (storeAuth.isLoggedIn())
+    {
+      const success = await storeTransactions.GetAssets(storeAuth.getUserId(), storeAuth.getToken());
+      if (success) {
+        console.log('Activos del usuario actualizados en base de datos con éxito.');
+      }
+    }
   }
 };
 
