@@ -33,11 +33,7 @@ let amountToSend: number | undefined = undefined;
 let assetAmountToSend: number | undefined = undefined;
 
 const userAsset = computed(() => {
-  if (props.typeOfAsset === 'Crypto') {
-    return storeTransactions.cryptos.find(c => c.assetId === props.assetId);
-  } else {
-    return storeTransactions.stocks.find(s => s.assetId === props.assetId);
-  }
+  return storeTransactions.assets.find(a => a.assetId === props.assetId);
 });
 
 const crypto = computed(() => storeCryptos.crypto)
@@ -74,9 +70,9 @@ const loadAsset = async () => {
   if (!storeAuth.isLoggedIn()) return;
 
   if (props.typeOfAsset === 'Crypto') {
-    await storeTransactions.GetCryptos(userId, token, props.assetId);
+    await storeTransactions.GetAssets(userId, token, 'Crypto', props.assetId);
   } else {
-    await storeTransactions.GetStocks(userId, token, props.assetId);
+    await storeTransactions.GetAssets(userId, token, 'Stock', props.assetId);
   }
 };
 

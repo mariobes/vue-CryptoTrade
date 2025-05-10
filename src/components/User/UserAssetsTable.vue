@@ -18,52 +18,43 @@ const $router = useRouter()
 const { t } = useI18n()
 
 const tableSelected = ref<'all' | 'cryptos' | 'stocks'>('all')
-const assets = ref<UserAssetsSummary[]>([])
 
 const userId = storeAuth.getUserId()
 const token = storeAuth.getToken()
 
 onMounted(async () => {
-  await Promise.all([
-    storeTransactions.GetCryptos(userId, token),
-    storeTransactions.GetStocks(userId, token)
-  ]);
-
-  assets.value = [
-    ...storeTransactions.cryptos,
-    ...storeTransactions.stocks
-  ].sort((a, b) => b.total - a.total);
+	await storeTransactions.GetAssets(userId, token);
 });
 
-watch(
-  () => [storeTransactions.cryptos, storeTransactions.stocks],
-  () => {
-    assets.value = [
-      ...storeTransactions.cryptos,
-      ...storeTransactions.stocks
-    ].sort((a, b) => b.total - a.total);
-  },
-  { deep: true }
-);
+// watch(
+//   () => [storeTransactions.cryptos, storeTransactions.stocks],
+//   () => {
+//     assets.value = [
+//       ...storeTransactions.cryptos,
+//       ...storeTransactions.stocks
+//     ].sort((a, b) => b.total - a.total);
+//   },
+//   { deep: true }
+// );
 
 const filteredAssets = computed(() => {
   if (tableSelected.value === 'cryptos') {
-    return storeTransactions.cryptos;
+    return storeTransactions.assets.filter(asset => asset.typeOfAsset === 'Crypto');
   }
   if (tableSelected.value === 'stocks') {
-    return storeTransactions.stocks;
+    return storeTransactions.assets.filter(asset => asset.typeOfAsset === 'Stock');
   }
-  return assets.value;
+  return storeTransactions.assets;
 });
 
 const hasAssets = computed(() => {
   if (tableSelected.value === 'cryptos') {
-    return storeTransactions.cryptos.length > 0;
+    return storeTransactions.assets.some(asset => asset.typeOfAsset === 'Crypto');
   }
   if (tableSelected.value === 'stocks') {
-    return storeTransactions.stocks.length > 0;
+    return storeTransactions.assets.some(asset => asset.typeOfAsset === 'Stock');
   }
-  return assets.value.length > 0;
+  return storeTransactions.assets.length > 0;
 });
 
 function openAssetInNewTab(asset: UserAssetsSummary) {
