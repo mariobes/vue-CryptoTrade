@@ -36,7 +36,7 @@ onMounted(async () => {
 });
 
 const combinedAssets = computed(() => {
-  return [...storeTransactions.cryptos, ...storeTransactions.stocks]
+	return storeTransactions.assets
 })
 
 const highestGainer = computed(() => {

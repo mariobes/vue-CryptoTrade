@@ -35,7 +35,11 @@ storeMarkets.GetStocksLosers()
       >
         <td>
           <div class="table-content-name">
-            <img :src="stock.image" alt="Stock Logo" class="stock-image" @error="storeUserPreferences.showDefaultAssetImage(stock)" />
+            <img :src="stock.image" alt="Stock Logo" 
+              @error="storeUserPreferences.showDefaultAssetImage(stock)" 
+              class="stock-image" 
+              :class="{ 'stock-image-light': storeUserPreferences.selectedTheme === 'light' }"
+            />
             <span class="stock-name mt-1">{{ stock.name }}</span>
           </div>
         </td>
@@ -92,6 +96,11 @@ storeMarkets.GetStocksLosers()
   height: 30px;
   margin-right: 10px;
   border-radius: 50%;
+}
+
+.stock-image-light {
+  background-color: #0f0f0f38;
+  border: solid 1px #0f0f0f38;
 }
 
 .stock-name {

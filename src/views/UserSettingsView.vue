@@ -1,14 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
 import UserSettings from '@/components/User/UserSettings.vue'
-import { useUserPreferencesStore } from '@/stores/userPreferences'
-import { useI18n } from 'vue-i18n'
-
-const textColor = computed(() => storeUserPreferences.getTheme().text)
-
-const storeUserPreferences = useUserPreferencesStore()
-
-const { t } = useI18n()
 
 </script>
 

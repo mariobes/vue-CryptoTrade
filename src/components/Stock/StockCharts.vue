@@ -34,7 +34,6 @@ const timeToDays = {
   '7D': '5min',
   '1M': '30min',
   '3M': '1hour',
-  '1Y': '1day',
   '5Y': '1day',
 } as const
 
@@ -185,7 +184,7 @@ const chartOptions = computed(() => {
             let price
             if (isVolume) {
               price = storeUserPreferences.convertToAbbreviated(value, storeUserPreferences.selectedCurrency, 'after')
-              return `Volume: ${price}`
+              return `${t('AssetChart_Volume')}: ${price}`
             } else {
               price = storeUserPreferences.convertPrice(value, storeUserPreferences.selectedCurrency, 'after')
               return `${t('AssetChart_Price')}: ${price}`
@@ -284,14 +283,12 @@ const chartOptions = computed(() => {
         min: first.getTime(),
         max: last.getTime(),
         time: {
-          unit: selectedTime.value === '1Y' ? 'month' :
-                selectedTime.value === '1M' ? 'day' :
+          unit: selectedTime.value === '1M' ? 'day' :
                 selectedTime.value === '3M' ? 'day' : 'hour',
           stepSize: selectedTime.value === '1D' ? 2 :
                     selectedTime.value === '7D' ? 12 :
                     selectedTime.value === '3M' ? 14 : 1,
-          tooltipFormat: selectedTime.value === '1Y' ? 'MMM yyyy' :
-                         selectedTime.value === '1M' ? 'dd MMM' :
+          tooltipFormat: selectedTime.value === '1M' ? 'dd MMM' :
                          selectedTime.value === '3M' ? 'dd MMM' : 'HH:mm dd MMM',
           displayFormats: {
             hour: 'HH:mm',
@@ -315,7 +312,7 @@ const chartOptions = computed(() => {
               return month.charAt(0).toUpperCase() + month.slice(1)
             }
 
-            if (selectedTime.value === '1Y' || selectedTime.value === '5Y') {
+            if (selectedTime.value === '5Y') {
               const month = formatMonth(date)
               const year = String(date.getFullYear()).slice(-2)
               return `${month} '${year}`
@@ -437,13 +434,6 @@ const chartOptions = computed(() => {
           @click="selectTime('3M')"
         >
           3M
-        </button>
-        <button
-          class="chart-btn-value time-btn"
-          :class="{ selected: selectedTime === '1Y' }"
-          @click="selectTime('1Y')"
-        >
-          1Y
         </button>
         <button
           class="chart-btn-value time-btn"

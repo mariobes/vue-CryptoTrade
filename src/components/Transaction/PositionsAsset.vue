@@ -17,11 +17,7 @@ const { t } = useI18n()
 const props = defineProps<{ assetId: string, typeOfAsset: string }>()
 
 const userAsset = computed(() => {
-  if (props.typeOfAsset === 'Crypto') {
-    return storeTransactions.cryptos.find(c => c.assetId === props.assetId);
-  } else {
-    return storeTransactions.stocks.find(s => s.assetId === props.assetId);
-  }
+  return storeTransactions.assets.find(a => a.assetId === props.assetId);
 });
 
 const userData = ref<User | null>(null);

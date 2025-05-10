@@ -195,21 +195,21 @@ watch(() => props.visible, (newVal) => {
           </div>
         </div>
 
-        <div v-if="props.visible && props.action === 'withdrawal'" class="panel-payment">
+        <div v-if="props.visible && props.action === 'withdrawal'" class="panel-payment-container">
           <span class="mdi mdi-bank-outline panel-payment-icon"></span>
           <span class="panel-payment-title">{{ t('UserInfo_Panel_Bank_Transfer_Title') }}</span>
         </div>
 
-        <div v-if="props.action === 'deposit' && selectedPaymentMethod !== null" class="panel-payment">
-          <div v-if="selectedPaymentMethod === 0">
+        <div v-if="props.action === 'deposit' && selectedPaymentMethod !== null" class="panel-payment-container">
+          <div v-if="selectedPaymentMethod === 0" class="panel-payment-content">
             <span class="mdi mdi-bank-outline panel-payment-icon"></span>
             <span class="panel-payment-title">{{ t('UserInfo_Panel_Bank_Transfer_Title') }}</span>
           </div>
-          <div v-else-if="selectedPaymentMethod === 1">
+          <div v-else-if="selectedPaymentMethod === 1" class="panel-payment-content">
             <span class="mdi mdi-credit-card-outline panel-payment-icon"></span>
             <span class="panel-payment-title">{{ t('UserInfo_Panel_Credit_Card_Title') }}</span>
           </div>
-          <div v-else-if="selectedPaymentMethod === 2">
+          <div v-else-if="selectedPaymentMethod === 2" class="panel-payment-content">
             <span class="mdi mdi-google panel-payment-icon"></span>
             <span class="panel-payment-title">{{ t('UserInfo_Panel_Google_pay_Title') }}</span>
           </div>
@@ -365,8 +365,13 @@ watch(() => props.visible, (newVal) => {
   text-align: start;
 }
 
-.panel-payment {
+.panel-payment-container {
   margin: 0 0 100px 30px;
+  display: flex;
+  align-items: center;
+}
+
+.panel-payment-content {
   display: flex;
   align-items: center;
 }
