@@ -164,9 +164,9 @@ const getSentimentTranslation = (sentiment: string | null) => {
   transform: translate(-50%, -70%);
   width: 20px;
   height: 20px;
-  background-color: white;
+  background-color: var(--white-color);
   border-radius: 50%;
-  border: 2px solid black;
+  border: 2px solid var(--black-color);
 }
 
 .feeling-value {

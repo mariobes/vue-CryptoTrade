@@ -95,12 +95,12 @@ onMounted(async () => {
 .selection-btn {
   font-size: 1.2rem;
   margin-right: 30px;
-  color: #808080;
+  color: var(--gray-color);
   font-weight: bold;
 }
 
 .selected {
-  border-bottom: solid 2px #FF8C00;
+  border-bottom: solid 2px var(--primary-color);
   border-radius: 2px;
   color: v-bind(textColor);
 }

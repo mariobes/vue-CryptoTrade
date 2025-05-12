@@ -50,24 +50,26 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
     getTheme() {
       const themes = {
         light: {
-          background: "#f8f9fa",
-          text: "#000000",
-          table: "#e9ecef",
-          settings: "#e9ecef",
-          colorGray: "#e9ecef",
-          colorDarkGray: "#d6d2d2"
+          background: this.getCssVariable('--background-light'),
+          text: this.getCssVariable('--text-color-light'),
+          table: this.getCssVariable('--background-table-light'),
+          colorGray: this.getCssVariable('--gray-color-light'),
+          colorDarkGray: this.getCssVariable('--dark-gray-color-light'),
         },
         dark: {
-          background: "#0f0f0f",
-          text: "#ffffff",
-          table: "#232323",
-          settings: "#232323",
-          colorGray: "#80808062",
-          colorDarkGray: "#232323"
+          background: this.getCssVariable('--background-dark'),
+          text: this.getCssVariable('--text-color-dark'),
+          table: this.getCssVariable('--background-table-dark'),
+          colorGray: this.getCssVariable('--gray-color-dark'),
+          colorDarkGray: this.getCssVariable('--dark-gray-color-dark'),
         }
       };
 
       return themes[this.selectedTheme] || themes.light;
+    },
+
+    getCssVariable(variable: string): string {
+      return getComputedStyle(document.documentElement).getPropertyValue(variable).trim();
     },
 
     getPriceColor(price: number): string {

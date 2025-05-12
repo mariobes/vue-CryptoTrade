@@ -7,7 +7,7 @@ import { useStocksStore } from '../../stores/stocks';
 import { useUserPreferencesStore } from '@/stores/userPreferences'
 
 const textColor = computed(() => storeUserPreferences.getTheme().text)
-const backgroundSettings = computed(() => storeUserPreferences.getTheme().settings)
+const backgroundTable = computed(() => storeUserPreferences.getTheme().table)
 
 const { t } = useI18n()
 const router = useRouter()
@@ -104,7 +104,7 @@ const goToStock = (id: string) => {
 
 <template>
 	<v-dialog v-model="searchDialog" class="search-container">
-		<v-card rounded="lg" :style="{ backgroundColor: backgroundSettings, color: textColor }">
+		<v-card rounded="lg" :style="{ backgroundColor: backgroundTable, color: textColor }">
 			<div class="popup-content">
 				<v-card-text>
 					<v-text-field
@@ -154,7 +154,7 @@ const goToStock = (id: string) => {
 										<span class="popup-asset-name">
 											{{ crypto.name }} 
 										</span>
-										<span class="popup-asset-rank" :style="{ backgroundColor: storeUserPreferences.selectedTheme === 'light' ? '#f0eded' : '#313030' }">
+										<span class="popup-asset-rank" :style="{ backgroundColor: storeUserPreferences.selectedTheme === 'light' ? 'var(--asset-rank-background-light)' : 'var(--asset-rank-background-dark)' }">
 											#{{ crypto.marketCapRank }}
 										</span>
 									</div>
@@ -228,7 +228,7 @@ const goToStock = (id: string) => {
 										<span class="popup-asset-name">
 											{{ stock.companyName }} 
 										</span>
-										<span class="popup-asset-rank" :style="{ backgroundColor: storeUserPreferences.selectedTheme === 'light' ? '#f0eded' : '#313030' }">
+										<span class="popup-asset-rank" :style="{ backgroundColor: storeUserPreferences.selectedTheme === 'light' ? 'var(--asset-rank-background-light)' : 'var(--asset-rank-background-dark)' }">
 											#{{ stock.marketCapRank }}
 										</span>
 									</div>
@@ -316,7 +316,7 @@ const goToStock = (id: string) => {
 }
 
 .popup-search {
-	color: #ffffff !important;
+	color: var(--white-color) !important;
 }
 
 .popup-results {
@@ -333,14 +333,14 @@ const goToStock = (id: string) => {
 
 .popup-title {
 	font-size: 0.9rem;
-	color: #808080;
+	color: var(--gray-color);
 	font-weight: bold;
 	margin-left: 15px;
 }
 
 .popup-no-results-text {
 	font-size: 0.9rem;
-	color: #808080;
+	color: var(--gray-color);
 	margin: 15px 0 0 15px
 }
 
@@ -355,7 +355,6 @@ const goToStock = (id: string) => {
 	align-items: center;
 	padding: 10px;
 	border-radius: 10px;
-	background-color: #363535;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.336) !important;
 }
 
@@ -364,9 +363,9 @@ const goToStock = (id: string) => {
 }
 
 .popup-results-btn:hover {
-	background-color: #a55a0452 !important;
-	border: solid 2px #a55a0452;
-	box-shadow: 0 3px 5px #a55a0452 !important;
+	background-color: var(--primary-color-dark-hover) !important;
+	border: solid 2px var(--primary-color-dark-hover);
+	box-shadow: 0 3px 5px var(--primary-color-dark-hover) !important;
 }
 
 .popup-results-asset {
@@ -382,8 +381,8 @@ const goToStock = (id: string) => {
 }
 
 .popup-stock-image {
-	background-color: #0f0f0f38;
-  border: solid 1px #0f0f0f38;
+	background-color: var(--background-stock-image);
+  border: solid 1px var(--background-stock-image);
 }
 
 .popup-results-asset-name {
@@ -411,7 +410,7 @@ const goToStock = (id: string) => {
 }
 
 .popup-asset-rank {
-	color: #808080;
+	color: var(--gray-color);
 	padding: 0 3px;
 	border-radius: 5px;
 	margin-left: 3px;
@@ -421,7 +420,7 @@ const goToStock = (id: string) => {
 
 .popup-asset-symbol {
 	font-size: 0.8rem;
-	color: #808080;
+	color: var(--gray-color);
 }
 
 .popup-results-asset-cap {
@@ -442,7 +441,7 @@ const goToStock = (id: string) => {
 
 .popup-asset-marketCap-text, .popup-asset-volume-text {
 	font-size: 0.9rem;
-	color: #808080;
+	color: var(--gray-color);
 }
 
 .popup-asset-price {
@@ -457,13 +456,13 @@ const goToStock = (id: string) => {
 
 .popup-show-more-btn {
   font-size: 0.9rem;
-  color: #a55a04;
+  color: var(--primary-color-brown-hover);
   text-transform: none;
 	padding: 5px;
 	margin: 10px 15px;
 }
 
 .popup-show-more-btn:hover {
-  background-color: #a55a0452;
+  background-color: var(--primary-color-dark-hover);
 }
 </style>

@@ -6,7 +6,7 @@ import { useAuthStore } from '@/stores/auth'
 import { useI18n } from 'vue-i18n'
 
 const textColor = computed(() => storeUserPreferences.getTheme().text)
-const backgroundSettings = computed(() => storeUserPreferences.getTheme().settings)
+const backgroundTable = computed(() => storeUserPreferences.getTheme().table)
 
 const { t } = useI18n()
 
@@ -220,7 +220,7 @@ function isUnder18(birthDate: string | Date): boolean {
 
 <template>
   <v-dialog v-model="authDialog" width="500px" :class="['auth-container', { 'auth-container-login': selectedTab === 'login' }]">
-    <v-card rounded="xl" :style="{ backgroundColor: backgroundSettings, color: textColor }">
+    <v-card rounded="xl" :style="{ backgroundColor: backgroundTable, color: textColor }">
       <div class="auth-titles">
         <span 
           class="auth-title auth-title-login"
@@ -291,8 +291,8 @@ function isUnder18(birthDate: string | Date): boolean {
               <v-date-picker 
                 v-model="birthDate"
                 @update:modelValue="handleBirthDate"
-                :style="{ background: backgroundSettings, color: textColor }"
-                color="#FF8C00"
+                :style="{ background: backgroundTable, color: textColor }"
+                color="var(--primary-color)"
                 width="400"
               ></v-date-picker>
             </v-row>
@@ -427,7 +427,7 @@ function isUnder18(birthDate: string | Date): boolean {
   margin-bottom: 5px;
   width: 30px;
   height: 6px;
-  background-color: #FF8C00;
+  background-color: var(--primary-color);
   border-radius: 10px;
 }
 
@@ -437,7 +437,7 @@ function isUnder18(birthDate: string | Date): boolean {
   margin: 10px 20px;
   font-size: 1.4rem;
   font-weight: bold;
-  color: #808080;
+  color: var(--gray-color);
 }
 
 .popup-close-btn {
@@ -478,28 +478,28 @@ function isUnder18(birthDate: string | Date): boolean {
 }
 
 .auth-form-field:hover {
-  color: #FF8C00;
+  color: var(--primary-color);
 }
 
 ::v-deep(.auth-form-field input:focus) {
-  box-shadow: 0 0 3px 2px #ff8c0099 !important;
+  box-shadow: 0 0 3px 2px var(--primary-color-brown-hover) !important;
   border-radius: 8px;
 }
 
 .auth-form-field-focus {
-  color: #FF8C00;
+  color: var(--primary-color);
 }
 
 .auth-form-btn {
-  background-color: #FF8C00;
+  background-color: var(--primary-color);
   padding: 20px 0;
-  color: #000000;
+  color: var(--black-color);
   font-size: 0.9rem;
   margin-top: 15px;
 }
 
 .auth-form-btn:hover {
-  background-color: #ffd796;
+  background-color: var(--primary-color-light-hover);
 }
 
 .auth-form-calendar {
@@ -517,9 +517,9 @@ function isUnder18(birthDate: string | Date): boolean {
 }
 
 .auth-form-calendar-btn:hover {
-  color: #ff8c0099;
-  border: solid 1px #ff8c0099;
-  box-shadow: 0 0 3px 2px #ff8c0099 !important;
+  color: var(--primary-color-brown-hover);
+  border: solid 1px var(--primary-color-brown-hover);
+  box-shadow: 0 0 3px 2px var(--primary-color-brown-hover) !important;
 }
 
 .auth-form-calendar-text {
@@ -528,7 +528,7 @@ function isUnder18(birthDate: string | Date): boolean {
 }
 
 .auth-form-error {
-  color: #ff0000cc;
+  color: var(--red-color);
   font-size: 0.7rem;
   font-weight: bold;
   display: flex;

@@ -123,7 +123,7 @@ onMounted(() => {
 					<img :src="crypto.image" alt="Crypto Logo" class="crypto-image" @error="storeUserPreferences.showDefaultAssetImage(crypto)" />
 					<span class="crypto-name">{{ crypto.name }}</span>
 					<span class="crypto-symbol mt-1">{{ crypto.symbol.toUpperCase() }}</span>
-					<span class="crypto-rank" :style="{ backgroundColor: storeUserPreferences.selectedTheme === 'light' ? '#f0eded' : '#313030' }">
+					<span class="crypto-rank" :style="{ backgroundColor: storeUserPreferences.selectedTheme === 'light' ? 'var(--asset-rank-background-light)' : 'var(--asset-rank-background-dark)' }">
 						#{{ crypto.marketCapRank }}
 					</span>
 				</div>
@@ -372,7 +372,7 @@ onMounted(() => {
 }
 
 .favorite-icon-active {
-  color: gold;
+  color: var(--gold-color);
 }
 
 .favorite-icon {
@@ -383,7 +383,7 @@ onMounted(() => {
 }
 
 .favorite-icon:hover {
-  color: gold;
+  color: var(--gold-color);
 }
 
 .crypto-image {
@@ -406,11 +406,11 @@ onMounted(() => {
 .crypto-symbol {
 	font-size: 1.2rem;
 	font-weight: bold;
-	color: #808080;
+	color: var(--gray-color);
 }
 
 .crypto-rank {
-	color: #808080;
+	color: var(--gray-color);
 	padding: 0 3px;
 	border-radius: 5px;
 	margin-left: 5px;
@@ -450,14 +450,14 @@ onMounted(() => {
   text-align: center;
   font-weight: bold;
   border-radius: 10px;
-	border: solid 1px #80808050;
+	border: solid 1px var(--dark-gray-color);
 	margin: 5px;
 	display: flex;
 	flex-direction: column;
 }
 
 .crypto-content-title {
-	color: #808080;
+	color: var(--gray-color);
 	font-size: 0.8rem;
 }
 
@@ -487,7 +487,7 @@ a {
 }
 
 .crypto-links-title {
-	color: #808080;
+	color: var(--gray-color);
 }
 
 .crypto-link {
@@ -499,7 +499,7 @@ a {
 }
 
 .crypto-link:hover {
-	background-color: #FF8C00;
+	background-color: var(--primary-color);
 }
 
 .icon-twitter {
@@ -531,7 +531,7 @@ a {
   margin-bottom: 5px;
   font-size: 0.8rem;
   color: v-bind(textColor);
-	border: solid 1px #80808062;
+	border: solid 1px var(--dark-gray-color);
 	max-width: 100px;
 	overflow: hidden; 
   text-overflow: ellipsis; 
@@ -549,7 +549,7 @@ a {
 }
 
 .toggle-arrow:hover {
-  background-color: #FF8C00;
+  background-color: var(--primary-color);
 }
 
 .historical-data-container {
@@ -574,12 +574,12 @@ a {
 }
 
 .historical-data-title {
-	color: #808080;
+	color: var(--gray-color);
 	padding-bottom: 2px;
 }
 
 .historical-data-date {
-	color: #808080;
+	color: var(--gray-color);
 	font-size: 0.85rem;
 }
 
@@ -588,7 +588,7 @@ a {
   flex-direction: column;
   gap: 10px;
   margin-top: 5px;
-  border: solid 3px #80808050;
+  border: solid 3px var(--dark-gray-color);
   border-radius: 10px;
 }
 
@@ -605,7 +605,7 @@ a {
 }
 
 .converter-text {
-	color: #808080;
+	color: var(--gray-color);
 	font-weight: bold;
 }
 
@@ -628,7 +628,7 @@ a {
 
 .bar-divisor {
   height: 1px;
-  background-color: #80808050;
+  background-color: var(--dark-gray-color);
   border: none;
 }
 </style>

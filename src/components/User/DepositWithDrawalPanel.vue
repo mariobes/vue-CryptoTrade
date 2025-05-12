@@ -7,7 +7,7 @@ import { useTransactionsStore } from '@/stores/transactions'
 import { useAuthStore } from '@/stores/auth'
 import { useI18n } from 'vue-i18n'
 
-const backgroundSettings = computed(() => storeUserPreferences.getTheme().settings)
+const backgroundTable = computed(() => storeUserPreferences.getTheme().table)
 const textColor = computed(() => storeUserPreferences.getTheme().text)
 const colorGray = computed(() => storeUserPreferences.getTheme().colorGray)
 
@@ -272,7 +272,7 @@ watch(() => props.visible, (newVal) => {
   right: 0;
   width: 450px;
   height: 100%;
-  background-color: v-bind(backgroundSettings);
+  background-color: v-bind(backgroundTable);
   box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3);
   z-index: 1000;
   display: flex;
@@ -340,7 +340,7 @@ watch(() => props.visible, (newVal) => {
 }
 
 .panel-payment-btn:hover {
-  background-color: #ffffff22;
+  background-color: var(--dark-gray-color);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.336);
 }
 
@@ -361,7 +361,7 @@ watch(() => props.visible, (newVal) => {
 
 .panel-payment-text {
   font-size: 0.8rem;
-  color: #808080;
+  color: var(--gray-color);
   text-align: start;
 }
 
@@ -393,7 +393,7 @@ watch(() => props.visible, (newVal) => {
 }
 
 .panel-input-value:hover {
-  background-color: #ffffff49 !important;
+  background-color: var(--gray-color-hover) !important;
 }
 
 .panel-input-value:focus {
@@ -409,38 +409,38 @@ watch(() => props.visible, (newVal) => {
 
 .cash-available-text {
   font-size: 0.9rem;
-  color: #808080;
+  color: var(--gray-color);
   margin: 10px 0 0 30px;
 }
 
 .panel-input-btn {
   border-radius: 10px;
-  background-color: #ffffff;
+  background-color: var(--white-color);
   box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3);
-  color: #000000;
+  color: var(--black-color);
   max-width: 60%;
   margin: 30px 0 0 30px;
   padding: 8px;
 }
 
+.panel-input-btn:hover {
+  background-color: var(--white-color-hover);
+}
+
 .panel-input-btn:disabled {
-  background-color: #cccccc;
+  background-color: var(--gray-color);
   cursor: not-allowed;
   opacity: 0.6;
 }
 
 .panel-input-btn:disabled {
-  background-color: #eeeeee;
-  color: #aaaaaa;
+  background-color: var(--white-color);
+  color: var(--gray-color);
   cursor: not-allowed;
 }
 
-.panel-input-btn:hover {
-  background-color: #ffffffc2;
-}
-
 .deposit-withdrawal-error {
-  color: #ff0000cc;
+  color: var(--red-color);
   font-size: 0.95rem;
   display: flex;
   justify-content: center;

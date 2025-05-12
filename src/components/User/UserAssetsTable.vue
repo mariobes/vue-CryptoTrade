@@ -194,7 +194,7 @@ function openAssetInNewTab(asset: UserAssetsSummary) {
 }
 
 .table.selected {
-	border-bottom: solid 2px #FF8C00;
+	border-bottom: solid 2px var(--primary-color);
 	color: v-bind(textColor);
 	font-weight: bold;
 }
@@ -213,21 +213,21 @@ function openAssetInNewTab(asset: UserAssetsSummary) {
 }
 
 .v-table thead th {
-  border-bottom: solid 1px #80808050 !important;
+  border-bottom: solid 1px var(--dark-gray-color) !important;
 }
 
 .v-table tbody td {
-  border-bottom: solid 1px #80808050 !important;
+  border-bottom: solid 1px var(--dark-gray-color) !important;
   padding: 25px 16px !important; 
   font-size: 1.0rem !important;
 }
 
 .hover-light:hover {
-	background-color: #ced1d3 !important;
+	background-color: var(--table-color-hover-light) !important;
 }
 
 .hover-dark:hover {
-  background-color: #232323 !important;
+  background-color: var(--table-color-hover-dark) !important;
 }
 
 .asset-container {
@@ -243,8 +243,8 @@ function openAssetInNewTab(asset: UserAssetsSummary) {
 }
 
 .stock-image-light {
-  background-color: #0f0f0f38;
-  border: solid 1px #0f0f0f38;
+  background-color: var(--background-stock-image);
+  border: solid 1px var(--background-stock-image);
 }
 
 .asset-name {
@@ -260,7 +260,7 @@ function openAssetInNewTab(asset: UserAssetsSummary) {
 .asset-symbol {
   padding-top: 2px;
   font-size: 0.85rem;
-  color: #808080;
+  color: var(--gray-color);
   white-space: nowrap;
 	font-weight: bold;
 }
@@ -273,7 +273,7 @@ function openAssetInNewTab(asset: UserAssetsSummary) {
 
 .asset-total-amount-asset {
 	font-size: 0.85rem;
-	color: #808080;
+	color: var(--gray-color);
 	font-weight: bold;
 }
 

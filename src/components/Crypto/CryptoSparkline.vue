@@ -72,5 +72,4 @@ const options = {
   height: 60px;
   margin-left: auto;
 }
-
 </style>

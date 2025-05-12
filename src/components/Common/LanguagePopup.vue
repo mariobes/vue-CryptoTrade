@@ -4,7 +4,7 @@ import { useUserPreferencesStore } from '../../stores/userPreferences';
 import { useI18n } from 'vue-i18n'
 
 const textColor = computed(() => storeUserPreferences.getTheme().text)
-const backgroundSettings = computed(() => storeUserPreferences.getTheme().settings)
+const backgroundTable = computed(() => storeUserPreferences.getTheme().table)
 
 const storeUserPreferences = useUserPreferencesStore()
 
@@ -42,7 +42,7 @@ const changeLanguage = (language: string) => {
 
 <template>
 	<v-dialog v-model="languageDialog" width="1000px">
-		<v-card class="popup-container" :style="{ background: backgroundSettings }">
+		<v-card class="popup-container" :style="{ background: backgroundTable }">
       <v-btn 
           icon 
           @click="languageDialog = false" 
@@ -63,8 +63,7 @@ const changeLanguage = (language: string) => {
 							class="popup-text"
 							block
 							@click="changeLanguage(value)"
-							:class="{ 'selected-value': value === selectedLanguage }"
-							:style="{ background: backgroundSettings }"
+							:style="{ background: backgroundTable }"
 						>
 							<div class="language-content">
 								<div class="language-text" :style="{ color: textColor }">
@@ -110,7 +109,7 @@ const changeLanguage = (language: string) => {
 }
 
 .popup-title {
-  color: #ffffff;
+  color: var(--white-color);
   display: flex;
   justify-content: center;
   margin: 15px 50px 0 50px;
@@ -118,14 +117,8 @@ const changeLanguage = (language: string) => {
 }
 
 .popup-text {
-  color: #ffffff;
-  background-color: #232323;
   box-shadow: none;
   padding: 30px 0;
-}
-
-.selected-value {
-  background-color: #4b4a4a;
 }
 
 .language-content {
@@ -135,16 +128,16 @@ const changeLanguage = (language: string) => {
 }
 
 .language-text {
-  color: #ffffff;
+  color: var(--white-color);
 }
 
 .language-label {
-  color: #808080;
+  color: var(--gray-color);
   margin-top: 5px;
 }
 
 .selected-icon {
-  color: green;
+  color: var(--green-color);
   padding-left: 30px;
 }
 </style>
