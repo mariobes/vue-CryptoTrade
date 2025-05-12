@@ -8,7 +8,7 @@ import { useAuthStore } from '@/stores/auth'
 import { useI18n } from 'vue-i18n'
 
 const textColor = computed(() => storeUserPreferences.getTheme().text)
-const backgroundSettings = computed(() => storeUserPreferences.getTheme().settings)
+const backgroundTable = computed(() => storeUserPreferences.getTheme().table)
 
 const storeUserPreferences = useUserPreferencesStore()
 const storeUsers = useUsersStore()
@@ -94,7 +94,7 @@ watch(() => storeAuth.getUserId(), async (newUserId) => {
 				<v-icon>mdi-account-cog</v-icon>
 			</v-btn>
 		</template>
-		<v-card class="settings-container" :style="{ backgroundColor: backgroundSettings, color: textColor }">
+		<v-card class="settings-container" :style="{ backgroundColor: backgroundTable, color: textColor }">
 			<div class="settings-user-auth" v-if="!storeAuth.isLoggedIn()">
 				<v-btn 
           class="settings-user-btn login-btn" 
@@ -148,7 +148,7 @@ watch(() => storeAuth.getUserId(), async (newUserId) => {
 					<v-switch
 						v-model="selectedTheme"
 						class="switch-icon"
-						color="#FF8C00"
+						color="var(--primary-color)"
 						@change="changeTheme" 
 						@click.stop      
 						:true-value="'dark'"
@@ -184,7 +184,7 @@ watch(() => storeAuth.getUserId(), async (newUserId) => {
 }
 
 .header-icons:hover {
-  background-color: #ff8c0077;
+  background-color: var(--primary-color-brown-hover);
 }
 
 .icon-user {
@@ -206,13 +206,13 @@ watch(() => storeAuth.getUserId(), async (newUserId) => {
   justify-content: center;
   margin-bottom: 10px;
   padding-bottom: 20px;
-  border-bottom: solid 1px #8080803a;
+  border-bottom: solid 1px var(--dark-gray-color);
 }
 
 .settings-user-logged {
   margin-top: 5px;
   padding-top: 10px;
-  border-top: solid 1px #8080803a;
+  border-top: solid 1px var(--dark-gray-color);
 }
 
 .settings-user-btn {
@@ -224,8 +224,8 @@ watch(() => storeAuth.getUserId(), async (newUserId) => {
 
 .login-btn {
   margin-right: 10px;
-  color: #000000;
-  background-color: #FF8C00;
+  color: var(--black-color);
+  background-color: var(--primary-color);
   padding: 0 10px;
   font-size: 0.8rem;
   box-shadow: none;
@@ -233,26 +233,26 @@ watch(() => storeAuth.getUserId(), async (newUserId) => {
 }
 
 .login-btn:hover {
-  background-color: #ffd796;
+  background-color: var(--primary-color-light-hover);
   box-shadow: none;
 }
 
 .register-btn {
-  color: #FF8C00;
-  border: solid 1px #FF8C00;
+  color: var(--primary-color);
+  border: solid 1px var(--primary-color);
   padding: 0 10px;
   box-shadow: none;
 }
 
 .register-btn:hover {
-  background-color: #ffd79621;
+  background-color: var(--dark-gray-color);
 }
 
 .settings-text-logged {
   display: flex;
   align-items: center;
   padding-bottom: 10px;
-  border-bottom: solid 1px #8080803a;
+  border-bottom: solid 1px var(--dark-gray-color);
 }
 
 .settings-icon-content {
@@ -261,7 +261,7 @@ watch(() => storeAuth.getUserId(), async (newUserId) => {
 
 .settings-icon-img {
   font-size: 2.4rem;
-  color: #FF8C00;
+  color: var(--primary-color);
 }
 
 .settings-text-content {
@@ -276,7 +276,7 @@ watch(() => storeAuth.getUserId(), async (newUserId) => {
 
 .settings-text-email {
   font-size: 0.85rem;
-  color: #808080;
+  color: var(--gray-color);
 }
 
 .settings-options {
@@ -295,16 +295,16 @@ watch(() => storeAuth.getUserId(), async (newUserId) => {
 
 .settings-options-value {
   display: flex;
-  color: #808080;
+  color: var(--gray-color);
 }
 
 .settings-options-arrow {
-  color: #808080;
+  color: var(--gray-color);
   font-size: 1.0rem;
 }
 
 .settings-options-btn:hover {
-  background-color: #ffffff22;
+  background-color: var(--dark-gray-color);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.336);
 }
 

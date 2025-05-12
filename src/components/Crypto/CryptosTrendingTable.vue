@@ -20,7 +20,7 @@ storeMarkets.GetCryptosTrending()
     <thead>
       <tr>
         <th class="text-left" colspan="2">
-          <v-icon class="mb-2" color="#FF8C00">mdi-fire</v-icon> 
+          <v-icon class="mb-2" color="var(--primary-color)">mdi-fire</v-icon> 
           <span class="title-table">{{ t('CryptosTrendingTable_Title') }}</span>
         </th>
       </tr>
@@ -75,11 +75,11 @@ storeMarkets.GetCryptosTrending()
 }
 
 .hover-light:hover {
-  background-color: #ced1d3 !important;
+  background-color: var(--table-market-color-hover-light) !important;
 }
 
 .hover-dark:hover {
-  background-color: #444343 !important;
+  background-color: var(--table-market-color-hover-dark) !important;
 }
 
 .table-content-name {
@@ -118,6 +118,5 @@ storeMarkets.GetCryptosTrending()
   max-width: 58px;
   justify-content: end;
 }
-
 </style>
 

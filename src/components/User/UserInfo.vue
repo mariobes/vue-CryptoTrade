@@ -163,7 +163,7 @@ const walletInfo = computed(() => {
 }
 
 .info-wallet-text {
-  color: #808080;
+  color: var(--gray-color);
   font-size: 1.4em;
   font-weight: bold;
 }
@@ -179,7 +179,7 @@ const walletInfo = computed(() => {
   cursor: pointer;
   font-size: 1.8rem;
   margin-left: 10px;
-  color: #808080;
+  color: var(--gray-color);
   position: relative;
   top: -5px;
 }
@@ -207,7 +207,7 @@ const walletInfo = computed(() => {
 }
 
 .info-cash-text {
-  color: #808080;
+  color: var(--gray-color);
   font-size: 1.4rem;
   font-weight: bold;
 }
@@ -239,25 +239,25 @@ const walletInfo = computed(() => {
 }
 
 .withdrawal-btn {
-  color: #000000;
-  background-color: #ffffff;
+  color: var(--black-color);
+  background-color: var(--white-color);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.336);
 }
 
 .withdrawal-btn:hover {
-  background-color: #ced1d3 !important;
+  background-color: var(--white-color-hover) !important;
 }
 
 .deposit-hover-light:hover {
-	background-color: #8d8989 !important;
+	background-color: var(--gray-color) !important;
 }
 
 .deposit-hover-dark:hover {
-  background-color: #ffffff22 !important;
+  background-color: var(--dark-gray-color) !important;
 }
 
 .buy-sell-success {
-  color: green;
+  color: var(--green-color);
   font-size: 0.95rem;
   font-weight: bold;
   position: absolute;

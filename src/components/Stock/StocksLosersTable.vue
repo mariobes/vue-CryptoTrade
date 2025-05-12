@@ -79,11 +79,11 @@ storeMarkets.GetStocksLosers()
 }
 
 .hover-light:hover {
-  background-color: #ced1d3 !important;
+  background-color: var(--table-market-color-hover-light) !important;
 }
 
 .hover-dark:hover {
-  background-color: #444343 !important;
+  background-color: var(--table-market-color-hover-dark) !important;
 }
 
 .table-content-name {
@@ -99,8 +99,8 @@ storeMarkets.GetStocksLosers()
 }
 
 .stock-image-light {
-  background-color: #0f0f0f38;
-  border: solid 1px #0f0f0f38;
+  background-color: var(--background-stock-image);
+  border: solid 1px var(--background-stock-image);
 }
 
 .stock-name {
@@ -127,6 +127,5 @@ storeMarkets.GetStocksLosers()
   max-width: 58px;
   justify-content: end;
 }
-
 </style>
 

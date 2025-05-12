@@ -8,7 +8,7 @@ import { useAuthStore } from '@/stores/auth'
 import { useI18n } from 'vue-i18n'
 
 const textColor = computed(() => storeUserPreferences.getTheme().text)
-const backgroundSettings = computed(() => storeUserPreferences.getTheme().settings)
+const backgroundTable = computed(() => storeUserPreferences.getTheme().table)
 
 const storeUserPreferences = useUserPreferencesStore()
 const storeUsers = useUsersStore()
@@ -323,8 +323,12 @@ const formatDate = (dateInput: string | Date | undefined): string => {
     <span class="popup-delete-title">{{ t('UserSettings_Popup_Delete_Account_Title') }}</span>
     <p>{{ t('UserSettings_Popup_Delete_Account_Text') }}</p>
     <div class="popup-delete-btn">
-      <button @click="confirmDelete" class="delete-confirm-btn">{{ t('UserSettings_Popup_Delete_Account_Btn') }}</button>
-      <button @click="showDeleteModal = false" class="delete-cancel-btn">{{ t('UserSettings_Popup_Cancel_Btn') }}</button>
+      <button @click="confirmDelete" class="delete-confirm-btn">
+        {{ t('UserSettings_Popup_Delete_Account_Btn') }}
+      </button>
+      <button @click="showDeleteModal = false" class="delete-cancel-btn" :class="[ storeUserPreferences.selectedTheme === 'light' ? 'delete-cancel-btn-light' : 'delete-cancel-btn-dark' ]">
+        {{ t('UserSettings_Popup_Cancel_Btn') }}
+      </button>
     </div>
   </div>
 </div>
@@ -352,7 +356,7 @@ const formatDate = (dateInput: string | Date | undefined): string => {
 .user-option-btn {
   font-size: 1.2rem;
   margin-right: 30px;
-  color: #808080;
+  color: var(--gray-color);
   display: flex;
   padding-left: 15px;
   border-left: 3px solid transparent;
@@ -360,11 +364,11 @@ const formatDate = (dateInput: string | Date | undefined): string => {
 }
 
 .user-option-btn:hover {
-  border-left: solid 3px #808080;
+  border-left: solid 3px var(--gray-color);
 }
 
 .selected {
-  border-left: solid 3px #FF8C00;
+  border-left: solid 3px var(--primary-color);
   color: v-bind(textColor);
 }
 
@@ -372,7 +376,7 @@ const formatDate = (dateInput: string | Date | undefined): string => {
   width: 70%;
   display: flex;
   flex-direction: column;
-  border-left: solid 1px #80808050;
+  border-left: solid 1px var(--dark-gray-color);
   padding-left: 80px;
 }
 
@@ -383,7 +387,7 @@ const formatDate = (dateInput: string | Date | undefined): string => {
 }
 
 .login-item:not(:last-child) {
-  border-bottom: solid 1px #80808050;
+  border-bottom: solid 1px var(--dark-gray-color);
   margin-bottom: 20px;
   padding-bottom: 20px;
 }
@@ -400,7 +404,7 @@ const formatDate = (dateInput: string | Date | undefined): string => {
 
 .login-item-text {
   font-size: 0.9;
-  color: #808080;
+  color: var(--gray-color);
 }
 
 .login-item-value {
@@ -414,7 +418,7 @@ const formatDate = (dateInput: string | Date | undefined): string => {
 }
 
 .login-item-btn {
-  background-color: red;
+  background-color: var(--red-color);
   border-radius: 10px;
   padding: 10px 15px;
   color: v-bind(textColor);
@@ -423,7 +427,7 @@ const formatDate = (dateInput: string | Date | undefined): string => {
 }
 
 .login-item-btn:hover {
-  background-color: rgb(230, 99, 99);
+  background-color: var(--red-color-hover);
 }
 
 .login-item-value {
@@ -435,7 +439,7 @@ const formatDate = (dateInput: string | Date | undefined): string => {
 
 .login-item-value input {
   border: none;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid var(--white-color);
   padding: 5px;
   font-weight: bold;
   background: transparent;
@@ -449,7 +453,7 @@ const formatDate = (dateInput: string | Date | undefined): string => {
 
 .login-item-value input:disabled {
   border-bottom: none;
-  color: #888;
+  color: var(--gray-color);
   background: transparent;
 }
 
@@ -457,7 +461,7 @@ const formatDate = (dateInput: string | Date | undefined): string => {
   background: none;
   border: none;
   cursor: pointer;
-  color: #666;
+  color: var(--gray-color);
   font-size: 1.2rem;
 }
 
@@ -467,7 +471,7 @@ button:disabled {
 }
 
 .login-item-field {
-  color: #808080;
+  color: var(--gray-color);
   font-weight: bold;
 }
 
@@ -484,7 +488,7 @@ button:disabled {
 }
 
 .popup-delete-content {
-  background: v-bind(backgroundSettings);
+  background: v-bind(backgroundTable);
   color: v-bind(textColor);
   padding: 30px;
   border-radius: 15px;
@@ -506,7 +510,7 @@ button:disabled {
 }
 
 .delete-confirm-btn {
-  background-color: red;
+  background-color: var(--red-color);
   color: v-bind(textColor);
   padding: 10px 20px;
   font-weight: bold;
@@ -514,29 +518,33 @@ button:disabled {
 }
 
 .delete-confirm-btn:hover {
-  background-color: rgb(230, 99, 99);
+  background-color: var(--red-color-hover);
 }
 
 .delete-cancel-btn {
-  background-color: #ccc;
-  color: #000;
+  background-color: var(--white-color);
+  color: var(--black-color);
   padding: 10px 20px;
   font-weight: bold;
   border-radius: 8px;
 }
 
-.delete-cancel-btn:hover {
-  background-color: #979595;
+.delete-cancel-btn-light:hover {
+  background-color: var(--dark-gray-color);
+}
+
+.delete-cancel-btn-dark:hover {
+  background-color: var(--white-color-hover);
 }
 
 .field-error {
-  color: red;
+  color: var(--red-color);
   font-size: 0.85rem;
   margin-top: 5px;
 }
 
 .field-success {
-  color: green;
+  color: var(--green-color);
   font-size: 0.85rem;
   margin-top: 5px;
 }

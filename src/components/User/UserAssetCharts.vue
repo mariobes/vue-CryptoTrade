@@ -11,7 +11,7 @@ import { useAuthStore } from '@/stores/auth'
 import { useI18n } from 'vue-i18n'
 
 const textColor = computed(() => storeUserPreferences.getTheme().text)
-const backgroundSettings = computed(() => storeUserPreferences.getTheme().settings)
+const backgroundTable = computed(() => storeUserPreferences.getTheme().table)
 
 const storeUsers = useUsersStore()
 const storeUserPreferences = useUserPreferencesStore()
@@ -171,15 +171,15 @@ const profitPercentage = computed(() => {
 	display: flex;
 	gap: 30px;
 	margin-bottom: 20px;
-	color: #808080;
+	color: var(--gray-color);
 }
 
 .border-options-light {
-  border-bottom: solid 1px #bdbaba;
+  border-bottom: solid 1px var(--border-gray-light);
 }
 
 .border-options-dark {
-  border-bottom: solid 1px #4e4e4e;
+  border-bottom: solid 1px var(--border-gray-dark);
 }
 
 .option {
@@ -189,7 +189,7 @@ const profitPercentage = computed(() => {
 }
 
 .option.active {
-	border-bottom: solid 2px #FF8C00;
+	border-bottom: solid 2px var(--primary-color);
 	color: v-bind(textColor);
 }
 
@@ -209,7 +209,7 @@ const profitPercentage = computed(() => {
 .chart-assets-content {
 	width: 42%;
 	height: 280px;
-	background-color: v-bind(backgroundSettings);
+	background-color: v-bind(backgroundTable);
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.336);
 	border-radius: 10px;
 }
@@ -227,7 +227,7 @@ const profitPercentage = computed(() => {
 .mini-chart-item {
   display: flex;
 	flex-direction: column;
-	background-color: v-bind(backgroundSettings);
+	background-color: v-bind(backgroundTable);
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.336);
 	border-radius: 10px;
 	padding: 15px 25px;
@@ -238,7 +238,7 @@ const profitPercentage = computed(() => {
 }
 
 .item-title {
-	color: #808080;
+	color: var(--gray-color);
 }
 
 .item-value {
@@ -251,7 +251,7 @@ const profitPercentage = computed(() => {
 
 .item-date {
 	font-size: 0.85rem;
-	color: #808080;
+	color: var(--gray-color);
 	margin-top: 5px;
 }
 

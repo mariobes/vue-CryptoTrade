@@ -315,12 +315,12 @@ watch(amount, () => {
 .action-btn {
   font-size: 1.2rem;
   margin-right: 30px;
-  color: #808080;
+  color: var(--gray-color);
   font-weight: bold;
 }
 
 .selected {
-  border-bottom: solid 2px #FF8C00;
+  border-bottom: solid 2px var(--primary-color);
   border-radius: 2px;
   color: v-bind(textColor);
 }
@@ -331,7 +331,7 @@ watch(amount, () => {
 
 .amount-input-text {
   font-size: 0.8rem;
-  color: #808080;
+  color: var(--gray-color);
 }
 
 .select-option-content {
@@ -358,7 +358,7 @@ watch(amount, () => {
 }
 
 .amount-input-title {
-  color: #808080;
+  color: var(--gray-color);
   font-weight: bold;
   font-size: 0.95rem;
 }
@@ -411,39 +411,37 @@ watch(amount, () => {
   padding: 10px;
   font-size: 1.2rem;
   font-weight: bold;
-  color: #ffffff;
+  color: var(--white-color);
 }
 
 .buy-btn {
-  background-color: green;
+  background-color: var(--green-color);
 }
 
 .buy-btn:hover {
-  background-color: #008000c0;
+  background-color: var(--green-color-hover);
 }
 
 .sell-btn {
-  background-color: red;
+  background-color: var(--red-color);
 }
 
 .sell-btn:hover {
-  background-color: #ff0000b7;
+  background-color: var(--red-color-hover);
 }
 
 .buy-sell-btn:disabled {
-  background-color: #cccccc;
+  background-color: var(--gray-color);
   cursor: not-allowed;
   opacity: 0.6;
 }
 
 .amount-input-value:disabled {
-  background-color: #eeeeee;
-  color: #aaaaaa;
   cursor: not-allowed;
 }
 
 .buy-sell-error {
-  color: #ff0000cc;
+  color: var(--red-color);
   font-size: 0.85rem;
   font-weight: bold;
   position: absolute;
@@ -452,7 +450,7 @@ watch(amount, () => {
 }
 
 .buy-sell-success {
-  color: green;
+  color: var(--green-color);
   font-size: 0.85rem;
   font-weight: bold;
   position: absolute;

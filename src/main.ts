@@ -10,6 +10,8 @@ import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 
+import '@/assets/colors.scss'
+
 import { createI18n } from 'vue-i18n';
 
 import type { LanguageType } from './stores/userPreferences'

@@ -182,17 +182,17 @@ function openAssetInNewTab(asset: Transaction) {
 }
 
 .transaction-date {
-	color: #808080;
+	color: var(--gray-color);
 	font-weight: bold;
 	font-size: 0.9rem;
 }
 
 .v-table thead th {
-  border-bottom: solid 1px #80808050 !important;
+  border-bottom: solid 1px var(--dark-gray-color) !important;
 }
 
 .v-table tbody td {
-  border-bottom: solid 1px #80808050 !important;
+  border-bottom: solid 1px var(--dark-gray-color) !important;
   padding: 10px 16px !important; 
   font-size: 1.0rem !important;
 }
@@ -202,11 +202,11 @@ function openAssetInNewTab(asset: Transaction) {
 }
 
 .hover-light:hover {
-  background-color: #ced1d3 !important;
+  background-color: var(--table-color-hover-light) !important;
 }
 
 .hover-dark:hover {
-  background-color: #232323 !important;
+  background-color: var(--table-color-hover-dark) !important;
 }
 
 .asset-container {
@@ -222,8 +222,8 @@ function openAssetInNewTab(asset: Transaction) {
 }
 
 .stock-image-light {
-  background-color: #0f0f0f38;
-  border: solid 1px #0f0f0f38;
+  background-color: var(--background-stock-image);
+  border: solid 1px var(--background-stock-image);
 }
 
 .asset-name {
@@ -239,7 +239,7 @@ function openAssetInNewTab(asset: Transaction) {
 .asset-symbol {
   padding-top: 2px;
   font-size: 0.85rem;
-  color: #808080;
+  color: var(--gray-color);
   white-space: nowrap;
   font-weight: bold;
 }
