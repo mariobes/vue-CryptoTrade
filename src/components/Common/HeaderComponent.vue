@@ -13,8 +13,10 @@ import CurrencyPopup from '@/components/Common/CurrencyPopup.vue'
 import AuthPopup from '@/components/Common/AuthPopup.vue'
 
 const backgroundColor = computed(() => storeUserPreferences.getTheme().background)
-const backgroundSettings = computed(() => storeUserPreferences.getTheme().settings)
+const backgroundTable = computed(() => storeUserPreferences.getTheme().table)
 const textColor = computed(() => storeUserPreferences.getTheme().text)
+const grayColor = computed(() => storeUserPreferences.getTheme().colorGray)
+const darkGrayColor = computed(() => storeUserPreferences.getTheme().colorDarkGray)
 
 const storeUserPreferences = useUserPreferencesStore()
 const storeAuth = useAuthStore()
@@ -92,11 +94,11 @@ watch(
         <RouterLink to="/stockTable" class="header-component">{{ t('Header_Component_Stocks') }}</RouterLink>
         <RouterLink to="/descentralizedWallet" target="_blank" class="header-component">{{ t('Header_Component_Wallet') }}</RouterLink>
         
-        <v-menu open-on-hover content-class="header-component-menu" :style="{ color: backgroundSettings }">
+        <v-menu open-on-hover content-class="header-component-menu" :style="{ color: backgroundTable }">
           <template v-slot:activator="{ props }">
             <RouterLink to="" class="header-component" v-bind="props">{{ t('Header_Component_Documentation') }}</RouterLink>
           </template>
-          <v-list class="menu-container" :style="{ background: backgroundSettings, color: textColor }">
+          <v-list class="menu-container" :style="{ background: backgroundTable, color: textColor }">
             <v-list-item>
                 <v-list-item-title class="menu-container-item">
                   <a href="https://www.coingecko.com/en/api" target="_blank" class="menu-container-item-link">
@@ -170,7 +172,7 @@ watch(
 .header-container {
   height: 65px;
   background-color: v-bind(backgroundColor);
-  border-bottom: solid 1px #80808050;
+  border-bottom: solid 1px var(--dark-gray-color);
 }
 
 .header-logo {
@@ -190,7 +192,7 @@ watch(
 
 .divider-bar {
   margin-right: 10px;
-  color: #808080;
+  color: var(--gray-color);
 }
 
 .header-component {
@@ -201,7 +203,7 @@ watch(
 }
 
 .header-component:hover {
-  color: #FF8C00;
+  color: var(--primary-color);
 }
 
 a {
@@ -237,7 +239,7 @@ a {
 }
 
 .menu-container-item-link:hover {
-  color: #FF8C00;
+  color: var(--primary-color);
 }
 
 .v-btn {
@@ -253,8 +255,7 @@ a {
 }
 
 .header-icons:hover {
-  background-color: #ff8c0077;
-  /* ffffff22 */
+  background-color: var(--primary-color-brown-hover);
 }
 
 .header-icons-text {
@@ -270,27 +271,27 @@ a {
   margin-right: 5px;
   justify-content: start;
   font-size: 0.9rem;
-  color: #9e9e9e ;
-  background-color: #ffffff22;
+  color: var(--gray-color);
+  background-color: v-bind(grayColor);
   margin: 0 10px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .header-icons-search-text {
   font-size: 0.9rem;
-  color: #9e9e9e;
+  color: var(--gray-color);
   margin-left: 5px;
   font-weight: normal;
 }
 
 .header-icons-search:hover {
-  background-color: #ff8c0077;
+  background-color: var(--primary-color-brown-hover);
 }
 
 .login-btn {
   margin-right: 10px;
-  color: #000000;
-  background-color: #FF8C00;
+  color: var(--black-color);
+  background-color: var(--primary-color);
   padding: 0 10px;
   font-size: 0.8rem;
   box-shadow: none;
@@ -298,7 +299,7 @@ a {
 }
 
 .login-btn:hover {
-  background-color: #ffd796;
+  background-color: var(--primary-color-light-hover);
   box-shadow: none;
 }
 </style>

@@ -71,7 +71,7 @@ const storeUserPreferences = useUserPreferencesStore()
 .main-container {
 	background-color: v-bind(backgroundColor);
 	padding: 50px 150px;
-	border-top: solid 1px #80808050;
+	border-top: solid 1px var(--dark-gray-color);
 	display: flex;
 	justify-content: space-between;
 	color: v-bind(textColor);
@@ -101,7 +101,7 @@ const storeUserPreferences = useUserPreferencesStore()
 
 .footer-info-text {
   font-size: 0.95rem;
-	color: #808080;
+	color: var(--gray-color);
 	margin-bottom: 200px;
 	text-align: justify;
 }
@@ -109,7 +109,7 @@ const storeUserPreferences = useUserPreferencesStore()
 .footer-info-copyright {
 	font-size: 0.95rem;
 	font-weight: bold;
-	color: #808080;
+	color: var(--gray-color);
 }
 
 .footer-links-content {
@@ -128,7 +128,7 @@ const storeUserPreferences = useUserPreferencesStore()
 .footer-links-text {
 	cursor: pointer;
 	font-size: 0.9rem;
-	color: #808080;
+	color: var(--gray-color);
 	margin-bottom: 20px;
 }
 </style>

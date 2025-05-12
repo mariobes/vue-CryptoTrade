@@ -11,7 +11,7 @@ import annotationPlugin from 'chartjs-plugin-annotation'
 ChartJS.register(Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, TimeScale, PointElement, Filler, annotationPlugin)
 
 const backgroundColor = computed(() => storeUserPreferences.getTheme().background)
-const backgroundSettings = computed(() => storeUserPreferences.getTheme().settings)
+const backgroundTable = computed(() => storeUserPreferences.getTheme().table)
 const textColor = computed(() => storeUserPreferences.getTheme().text)
 const colorGray = computed(() => storeUserPreferences.getTheme().colorGray)
 const colorDarkGray = computed(() => storeUserPreferences.getTheme().colorDarkGray)
@@ -147,6 +147,14 @@ const chartOptions = computed(() => {
   const first = new Date(chart.prices[0][0])
   const last = new Date(chart.prices[chart.prices.length - 1][0])
 
+  // Hora de inicio: 11:30 AM
+  const startHour = new Date(first)
+  startHour.setHours(11, 30, 0, 0) // 11:30 AM
+
+  // Hora de finalización: 18:00 PM
+  const endHour = new Date(first)
+  endHour.setHours(18, 0, 0, 0) // 18:00 PM
+
   return {
     responsive: true,
     animation: { duration: 0 },
@@ -280,8 +288,8 @@ const chartOptions = computed(() => {
     scales: {
       x: {
         type: 'time',
-        min: first.getTime(),
-        max: last.getTime(),
+        min: selectedTime.value === '1D' ? startHour.getTime() : first.getTime(),
+        max: selectedTime.value === '1D' ? endHour.getTime() : last.getTime(),
         time: {
           unit: selectedTime.value === '1M' ? 'day' :
                 selectedTime.value === '3M' ? 'day' : 'hour',
@@ -482,7 +490,7 @@ const chartOptions = computed(() => {
   background-color: transparent;
   box-shadow: none;
   font-size: 0.9rem;
-  color: #808080;
+  color: var(--gray-color);
   font-weight: bold;
   padding: 5px 15px;
   border-radius: 6px;
@@ -502,8 +510,8 @@ const chartOptions = computed(() => {
 }
 
 .crypto-chart {
-	background-color: v-bind(backgroundSettings) !important;
-  border: solid 1px #80808050;
+	background-color: v-bind(backgroundTable) !important;
+  border: solid 1px var(--dark-gray-color);
 }
 
 .description-container {

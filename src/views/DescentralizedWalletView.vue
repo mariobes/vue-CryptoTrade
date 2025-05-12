@@ -5,7 +5,7 @@ import { useI18n } from 'vue-i18n'
 
 const backgroundColor = computed(() => storeUserPreferences.getTheme().background)
 const textColor = computed(() => storeUserPreferences.getTheme().text)
-const backgroundSettings = computed(() => storeUserPreferences.getTheme().settings)
+const backgroundTable = computed(() => storeUserPreferences.getTheme().table)
 
 const storeUserPreferences = useUserPreferencesStore()
 
@@ -28,10 +28,10 @@ const { t } = useI18n()
 .main-container {
   max-width: 30vw;
   height: 75vh;
-  background-color: v-bind(backgroundSettings);
+  background-color: v-bind(backgroundTable);
   border-radius: 20px;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5) !important;
-  border: solid 1px #80808050;
+  border: solid 1px var(--dark-gray-color);
   margin: 50px auto;
 }
 
@@ -39,7 +39,7 @@ const { t } = useI18n()
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
   background-color: v-bind(backgroundColor);
-  border-bottom: solid 1px #80808050;
+  border-bottom: solid 1px var(--dark-gray-color);
   padding: 10px 0;
   display: flex;
   justify-content: center;

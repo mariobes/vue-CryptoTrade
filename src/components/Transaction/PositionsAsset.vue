@@ -100,7 +100,7 @@ onMounted(async () => {
 .positions-message {
   font-size: 0.9rem;
   font-weight: bold;
-  color: #808080;
+  color: var(--gray-color);
   margin-top: 30px;
 }
 
@@ -119,12 +119,12 @@ onMounted(async () => {
 .eye-icon {
   cursor: pointer;
   margin-left: 15px;
-  color: #808080;
+  color: var(--gray-color);
 }
 
 .positions-text {
   font-size: 0.9rem;
-  color: #808080;
+  color: var(--gray-color);
   margin-bottom: 10px;
 }
 
@@ -171,7 +171,6 @@ onMounted(async () => {
   flex-direction: column;
   max-width: 40%;
   justify-content: space-between;
-  /* white-space: nowrap; */
 }
 
 .positions-info-percentage {

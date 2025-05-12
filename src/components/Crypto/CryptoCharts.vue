@@ -11,7 +11,7 @@ import annotationPlugin from 'chartjs-plugin-annotation'
 ChartJS.register(Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, TimeScale, PointElement, Filler, annotationPlugin)
 
 const backgroundColor = computed(() => storeUserPreferences.getTheme().background)
-const backgroundSettings = computed(() => storeUserPreferences.getTheme().settings)
+const backgroundTable = computed(() => storeUserPreferences.getTheme().table)
 const textColor = computed(() => storeUserPreferences.getTheme().text)
 const colorGray = computed(() => storeUserPreferences.getTheme().colorGray)
 const colorDarkGray = computed(() => storeUserPreferences.getTheme().colorDarkGray)
@@ -499,7 +499,7 @@ const chartOptions = computed(() => {
   background-color: transparent;
   box-shadow: none;
   font-size: 0.9rem;
-  color: #808080;
+  color: var(--gray-color);
   font-weight: bold;
   padding: 5px 15px;
   border-radius: 6px;
@@ -519,8 +519,8 @@ const chartOptions = computed(() => {
 }
 
 .crypto-chart {
-	background-color: v-bind(backgroundSettings) !important;
-  border: solid 1px #80808050;
+	background-color: v-bind(backgroundTable) !important;
+  border: solid 1px var(--dark-gray-color);
 }
 
 .description-container {

@@ -3,8 +3,8 @@ import { computed } from "vue";
 import { useUserPreferencesStore } from '../../stores/userPreferences';
 import { useI18n } from 'vue-i18n'
 
+const backgroundTable = computed(() => storeUserPreferences.getTheme().table)
 const textColor = computed(() => storeUserPreferences.getTheme().text)
-const backgroundSettings = computed(() => storeUserPreferences.getTheme().settings)
 
 const storeUserPreferences = useUserPreferencesStore()
 
@@ -49,7 +49,7 @@ const changeCurrency = (currency: string) => {
 
 <template>
 	<v-dialog v-model="currencyDialog" width="1000px">
-		<v-card class="popup-container" :style="{ background: backgroundSettings }">
+		<v-card class="popup-container" :style="{ background: backgroundTable }">
       <v-btn 
         icon 
         @click="currencyDialog = false" 
@@ -70,8 +70,7 @@ const changeCurrency = (currency: string) => {
 							class="popup-text"
 							block
 							@click="changeCurrency(value)"
-							:class="{ 'selected-value': value === selectedCurrency }"
-							:style="{ background: backgroundSettings }"
+							:style="{ background: backgroundTable }"
 						>
 							<div class="currency-content">
 								<div class="currency-text" :style="{ color: textColor }">
@@ -117,7 +116,7 @@ const changeCurrency = (currency: string) => {
 }
 
 .popup-title {
-  color: #ffffff;
+  color: var(--white-color);
   display: flex;
   justify-content: center;
   margin: 15px 50px 0 50px;
@@ -125,14 +124,8 @@ const changeCurrency = (currency: string) => {
 }
 
 .popup-text {
-  color: #ffffff;
-  background-color: #232323;
   box-shadow: none;
   padding: 30px 0;
-}
-
-.selected-value {
-  background-color: #4b4a4a;
 }
 
 .currency-content {
@@ -142,16 +135,16 @@ const changeCurrency = (currency: string) => {
 }
 
 .currency-text {
-  color: #ffffff;
+  color: var(--white-color);
 }
 
 .currency-label {
-  color: #808080;
+  color: var(--gray-color);
   margin-top: 5px;
 }
 
 .selected-icon {
-  color: green;
+  color: var(--green-color);
   padding-left: 30px;
 }
 </style>

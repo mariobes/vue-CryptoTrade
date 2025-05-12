@@ -109,7 +109,7 @@ onMounted(() => {
 					/>
 					<span class="stock-name">{{ stock.companyName }}</span>
 					<span class="stock-symbol mt-1">{{ stock.symbol.toUpperCase() }}</span>
-					<span class="stock-rank" :style="{ backgroundColor: storeUserPreferences.selectedTheme === 'light' ? '#f0eded' : '#313030' }">
+					<span class="stock-rank" :style="{ backgroundColor: storeUserPreferences.selectedTheme === 'light' ? 'var(--asset-rank-background-light)' : 'var(--asset-rank-background-dark)' }">
 						#{{ stock.marketCapRank }}
 					</span>
 				</div>
@@ -262,8 +262,8 @@ onMounted(() => {
 }
 
 .stock-image-light {
-  background-color: #0f0f0f38;
-  border: solid 1px #0f0f0f38;
+  background-color: var(--background-stock-image);
+  border: solid 1px var(--background-stock-image);
 }
 
 .stock-name {
@@ -276,11 +276,11 @@ onMounted(() => {
 .stock-symbol {
 	font-size: 1.2rem;
 	font-weight: bold;
-	color: #808080;
+	color: var(--gray-color);
 }
 
 .stock-rank {
-	color: #808080;
+	color: var(--gray-color);
 	padding: 0 3px;
 	border-radius: 5px;
 	margin-left: 5px;
@@ -300,7 +300,7 @@ onMounted(() => {
 }
 
 .favorite-icon-active {
-  color: gold;
+  color: var(--gold-color);
 }
 
 .favorite-icon {
@@ -311,7 +311,7 @@ onMounted(() => {
 }
 
 .favorite-icon:hover {
-  color: gold;
+  color: var(--gold-color);
 }
 
 .stock-price {
@@ -341,14 +341,14 @@ onMounted(() => {
   text-align: center;
   font-weight: bold;
   border-radius: 10px;
-	border: solid 1px #80808050;
+	border: solid 1px var(--dark-gray-color);
 	margin: 5px;
 	display: flex;
 	flex-direction: column;
 }
 
 .stock-content-title {
-	color: #808080;
+	color: var(--gray-color);
 	font-size: 0.8rem;
 }
 
@@ -380,7 +380,7 @@ onMounted(() => {
 }
 
 .info-item-text {
-	color: #808080;
+	color: var(--gray-color);
 }
 
 .info-item-value {
@@ -401,7 +401,7 @@ a {
 }
 
 .stock-link:hover {
-	background-color: #FF8C00;
+	background-color: var(--primary-color);
 }
 
 .converter-content {
@@ -409,7 +409,7 @@ a {
   flex-direction: column;
   gap: 10px;
   margin-top: 5px;
-  border: solid 3px #80808050;
+  border: solid 3px var(--dark-gray-color);
   border-radius: 10px;
 }
 
@@ -426,7 +426,7 @@ a {
 }
 
 .converter-text {
-	color: #808080;
+	color: var(--gray-color);
 	font-weight: bold;
 }
 
@@ -449,7 +449,7 @@ a {
 
 .bar-divisor {
   height: 1px;
-  background-color: #80808050;
+  background-color: var(--dark-gray-color);
   border: none;
 }
 </style>

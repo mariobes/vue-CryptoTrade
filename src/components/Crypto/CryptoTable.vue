@@ -267,25 +267,25 @@ onMounted(async () => {
 }
 
 .v-table thead th {
-  border-bottom: solid 1px #80808050 !important;
+  border-bottom: solid 1px var(--dark-gray-color) !important;
 }
 
 .v-table tbody td {
-  border-bottom: solid 1px #80808050 !important;
+  border-bottom: solid 1px var(--dark-gray-color) !important;
   padding: 25px 16px !important; 
   font-size: 1.0rem !important;
 }
 
 .hover-light:hover {
-  background-color: #ced1d3 !important;
+  background-color: var(--table-color-hover-light) !important;
 }
 
 .hover-dark:hover {
-  background-color: #232323 !important;
+  background-color: var(--table-color-hover-dark) !important;
 }
 
 .favorite-icon-active {
-  color: gold;
+  color: var(--gold-color);
 }
 
 .favorite-icon {
@@ -293,7 +293,7 @@ onMounted(async () => {
 }
 
 .favorite-icon:hover {
-  color: gold;
+  color: var(--gold-color);
 }
 
 .crypto-container {
@@ -321,7 +321,7 @@ onMounted(async () => {
 .crypto-symbol {
   padding-top: 2px;
   font-size: 0.85rem;
-  color: #808080;
+  color: var(--gray-color);
   white-space: nowrap;
   font-weight: bold;
 }
@@ -338,7 +338,6 @@ onMounted(async () => {
 }
 
 .cryptos-see-all:hover {
-  color: #FF8C00 !important;
+  color: var(--primary-color) !important;
 }
-
 </style>

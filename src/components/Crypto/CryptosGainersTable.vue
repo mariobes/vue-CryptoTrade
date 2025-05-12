@@ -76,11 +76,11 @@ storeCryptos.GetCryptosGainers()
 }
 
 .hover-light:hover {
-  background-color: #ced1d3 !important;
+  background-color: var(--table-market-color-hover-light) !important;
 }
 
 .hover-dark:hover {
-  background-color: #444343 !important;
+  background-color: var(--table-market-color-hover-dark) !important;
 }
 
 .table-content-name {
@@ -119,6 +119,5 @@ storeCryptos.GetCryptosGainers()
   max-width: 58px;
   justify-content: end;
 }
-
 </style>
 

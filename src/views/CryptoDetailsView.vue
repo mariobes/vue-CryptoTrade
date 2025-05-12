@@ -40,7 +40,7 @@ const cryptoId = computed(() => route.params.id)
 .container-details {
 	width: 25vw;
 	color: v-bind(textColor);
-	border-right: solid 1px #80808050;
+	border-right: solid 1px var(--dark-gray-color);
 }
 
 .container-chart {
@@ -55,6 +55,6 @@ const cryptoId = computed(() => route.params.id)
 .container-transactions {
 	width: 20vw;
 	color: v-bind(textColor);
-	border-left: solid 1px #80808050;
+	border-left: solid 1px var(--dark-gray-color);
 }
 </style>

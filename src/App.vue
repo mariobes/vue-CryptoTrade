@@ -37,6 +37,5 @@ html, body, #app, .v-application {
   padding: 0;
   min-height: 100vh;
   font-family: 'Roboto', sans-serif;
-  /* font-family: 'Montserrat', sans-serif; */
 }
 </style>
