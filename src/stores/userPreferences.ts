@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 
-export type LanguageType = "ES" | "EN";
+export type LanguageType = "ES" | "EN" | "RU" | "FR" | "DE" | "PT" | "PL" | "IT" | "NL" | "SV" | "UK" | "RO" | "SR" | "CS" | "EL" | "HU";
 export type CurrencyType = "USD" | "EUR" | "GBP" | "JPY" | "CAD" | "AUD" | "CNY" | "MXN" | "BRL" | "INR" | "RUB" | "ZAR";
 export type ThemeType = "light" | "dark";
 
@@ -87,13 +87,27 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
     },
 
     getLanguages(): LanguageType[] {
-      return ["ES", "EN"];
+      return ["ES", "EN", "RU", "FR", "DE", "PT", "PL", "IT", "NL", "SV", "UK", "RO", "SR", "CS", "EL", "HU"];
     },
     
     getLanguageLabel(language: LanguageType): string {
       const languageLabels: { [key in LanguageType]: string } = {
         ES: "Español",
         EN: "English",
+        RU: "Русский",
+        FR: "Français",
+        DE: "Deutsch",
+        PT: "Português",
+        PL: "Polski",
+        IT: "Italiano",
+        NL: "Nederlands",
+        SV: "Svenska",
+        UK: "Українська",
+        RO: "Română",
+        SR: "Srpski",
+        CS: "Čeština",
+        EL: "Ελληνικά",
+        HU: "Magyar",
       };
       return languageLabels[language] || language;
     },
@@ -259,7 +273,7 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
       } else if (converted >= 1e3) {
         formatted = (converted / 1e3).toFixed(2) + 'K';
       } else {
-        formatted = converted.toFixed(2); // mostrar 2 decimales si es menor a 1000
+        formatted = converted.toFixed(2);
       }
       if (!symbolPosition) return formatted;
       return this.formatCurrency(formatted, currency, symbolPosition);
@@ -277,9 +291,8 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
       } else if (amount >= 1) {
         return amount.toFixed(2);
       } else if (amount > 0) {
-        // Cuenta cuántos decimales tiene antes de un número distinto de 0
         const decimalStr = amount.toFixed(8);
-        const trimmed = decimalStr.replace(/0+$/, ''); // eliminar ceros finales
+        const trimmed = decimalStr.replace(/0+$/, '');
         const [_, decimals = ''] = trimmed.split('.');
         const visibleDecimals = Math.min(Math.max(decimals.length, 4), 8);
         return amount.toFixed(visibleDecimals);

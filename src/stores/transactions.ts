@@ -8,7 +8,7 @@ export const useTransactionsStore = defineStore('transactions', () => {
 
   async function GetTransactions(userId: number, token: string) {
     try {
-        const response = await fetch(`http://localhost:4746/Transactions/${userId}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/Transactions/${userId}`, {
             method: 'GET',
             headers: {
               'Authorization': `Bearer ${token}`
@@ -23,7 +23,7 @@ export const useTransactionsStore = defineStore('transactions', () => {
 
   async function MakeDeposit(userId: number, amount: number, paymentMethod: number, token: string) {
     try {
-      const response = await fetch(`http://localhost:4746/Transactions/deposit`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/Transactions/deposit`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -45,7 +45,7 @@ export const useTransactionsStore = defineStore('transactions', () => {
 
   async function MakeWithdrawal(userId: number, amount: number, token: string) {
     try {
-      const response = await fetch(`http://localhost:4746/Transactions/withdrawal`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/Transactions/withdrawal`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -66,7 +66,7 @@ export const useTransactionsStore = defineStore('transactions', () => {
 
   async function BuyCrypto(userId: number, assetId: string, token: string, amount?: number, assetAmount?: number) {
     try {
-      const response = await fetch(`http://localhost:4746/Transactions/buy-crypto`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/Transactions/buy-crypto`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -89,7 +89,7 @@ export const useTransactionsStore = defineStore('transactions', () => {
 
   async function SellCrypto(userId: number, assetId: string, token: string, amount?: number, assetAmount?: number) {
     try {
-        const response = await fetch(`http://localhost:4746/Transactions/sell-crypto`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/Transactions/sell-crypto`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -111,7 +111,7 @@ export const useTransactionsStore = defineStore('transactions', () => {
 
   async function BuyStock(userId: number, assetId: string, token: string, amount?: number, assetAmount?: number) {
     try {
-      const response = await fetch(`http://localhost:4746/Transactions/buy-stock`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/Transactions/buy-stock`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -134,7 +134,7 @@ export const useTransactionsStore = defineStore('transactions', () => {
 
   async function SellStock(userId: number, assetId: string, token: string, amount?: number, assetAmount?: number) {
     try {
-        const response = await fetch(`http://localhost:4746/Transactions/sell-stock`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/Transactions/sell-stock`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -156,7 +156,7 @@ export const useTransactionsStore = defineStore('transactions', () => {
 
   async function GetAssets(userId: number, token: string, typeAsset?: string, assetId?: string) {
     try {
-        let url = `http://localhost:4746/Transactions/${userId}/assets`
+        let url = `${import.meta.env.VITE_API_URL}/Transactions/${userId}/assets`
         
         const params = new URLSearchParams();
         if (typeAsset) params.append('typeAsset', typeAsset);

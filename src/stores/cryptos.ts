@@ -13,7 +13,7 @@ export const useCryptosStore = defineStore('cryptos', () => {
 
   async function GetCryptosApi() {
     try {
-        const response = await fetch('http://localhost:4746/CryptoApi/cryptos', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/CryptoApi/cryptos`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -31,8 +31,7 @@ export const useCryptosStore = defineStore('cryptos', () => {
     
   async function GetAllCryptos(sortBy: number, order: number) {
     try {
-        // const response = await fetch(`${import.meta.env.VITE_API_URL}/Cryptos?SortBy=${sortBy}&Order=${order}`)
-        const response = await fetch(`http://localhost:4746/Cryptos?SortBy=${sortBy}&Order=${order}`)
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/Cryptos?SortBy=${sortBy}&Order=${order}`)
         const cryptosInfo = await response.json()
         cryptos.value = cryptosInfo
     } catch (error) {
@@ -42,7 +41,7 @@ export const useCryptosStore = defineStore('cryptos', () => {
 
   async function GetCrypto(id: string) {
     try {
-        const response = await fetch(`http://localhost:4746/Cryptos/${id}`)
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/Cryptos/${id}`)
         const cryptoInfo = await response.json()
         crypto.value = cryptoInfo
     } catch (error) {
@@ -52,7 +51,7 @@ export const useCryptosStore = defineStore('cryptos', () => {
 
   async function GetCryptoDetails(id: string) {
     try {
-        const response = await fetch(`http://localhost:4746/CryptoApi/crypto-details/${id}`)
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/CryptoApi/crypto-details/${id}`)
         const cryptoDetailsInfo = await response.json()
         cryptoDetails.value = cryptoDetailsInfo
     } catch (error) {
@@ -62,7 +61,7 @@ export const useCryptosStore = defineStore('cryptos', () => {
 
   async function GetCryptoCharts(id: string, days: number) {
     try {
-        const response = await fetch(`http://localhost:4746/CryptoApi/crypto-charts/${id}?days=${days}`)
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/CryptoApi/crypto-charts/${id}?days=${days}`)
         const cryptoChartsInfo = await response.json()
         chartsCryptos.value = cryptoChartsInfo
     } catch (error) {
@@ -72,7 +71,7 @@ export const useCryptosStore = defineStore('cryptos', () => {
 
   async function GetCryptosGainers() {
     try {
-        const response = await fetch(`http://localhost:4746/CryptoApi/cryptos-gainers`)
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/CryptoApi/cryptos-gainers`)
         const cryptosGainersInfo = await response.json()
         gainersCryptos.value = cryptosGainersInfo
     } catch (error) {
@@ -82,7 +81,7 @@ export const useCryptosStore = defineStore('cryptos', () => {
 
   async function GetCryptosLosers() {
     try {
-        const response = await fetch(`http://localhost:4746/CryptoApi/cryptos-losers`)
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/CryptoApi/cryptos-losers`)
         const cryptosLosersInfo = await response.json()
         losersCryptos.value = cryptosLosersInfo
     } catch (error) {
@@ -92,7 +91,7 @@ export const useCryptosStore = defineStore('cryptos', () => {
 
   async function SearchCrypto(query: string) {
     try {
-        const response = await fetch(`http://localhost:4746/Cryptos/search-crypto?query=${query}`)
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/Cryptos/search-crypto?query=${query}`)
         if (!response.ok) return []
         const searchCryptosInfo = await response.json()
         return Array.isArray(searchCryptosInfo) ? searchCryptosInfo : []
