@@ -5,6 +5,7 @@ CryptoTrade es una aplicación web construida con Vue 3, diseñada para proporci
 <h2>Características</h2>
 <ul>
   <li>Interfaz de usuario intuitiva y adaptativa.</li>
+  <li>Diseño responsive para una experiencia fluida en dispositivos móviles y de escritorio.</li>
   <li>Comunicaciones eficientes con la API backend.</li>
   <li>Implementación de "rutas protegidas" utilizando autenticación JWT.</li>
   <li>Visualización dinámica de datos actualizados, como precios de criptomonedas y acciones, con soporte para gráficos interactivos.</li>
@@ -31,4 +32,4 @@ npm run dev
 ```
 <hr style="height: 4px;">
 <h2>Aplicación</h2>
-<h3>Acceder a la aplicación en tu navegador: <a href="http://localhost:5173/">http://localhost:5173</a></h3>
+<h4>Acceder a la aplicación en tu navegador: <a href="http://localhost:5173/">http://localhost:5173</a></h4>

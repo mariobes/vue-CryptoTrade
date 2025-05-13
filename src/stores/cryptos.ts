@@ -31,6 +31,7 @@ export const useCryptosStore = defineStore('cryptos', () => {
     
   async function GetAllCryptos(sortBy: number, order: number) {
     try {
+        // const response = await fetch(`${import.meta.env.VITE_API_URL}/Cryptos?SortBy=${sortBy}&Order=${order}`)
         const response = await fetch(`http://localhost:4746/Cryptos?SortBy=${sortBy}&Order=${order}`)
         const cryptosInfo = await response.json()
         cryptos.value = cryptosInfo

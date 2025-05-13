@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import UserSettings from '@/components/User/UserSettings.vue'
-
 </script>
 
 <template>

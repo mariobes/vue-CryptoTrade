@@ -254,6 +254,7 @@ onMounted(async () => {
   font-size: 2rem;
   color: v-bind(textColor);
   font-weight: bold;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .table-container {

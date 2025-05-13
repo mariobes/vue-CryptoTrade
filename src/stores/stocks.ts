@@ -28,6 +28,7 @@ export const useStocksStore = defineStore('stocks', () => {
 
   async function GetAllStocks(sortBy: number, order: number) {
     try {
+        // const response = await fetch(`${import.meta.env.VITE_API_URL}/Stocks?SortBy=${sortBy}&Order=${order}`)
         const response = await fetch(`http://localhost:4746/Stocks?SortBy=${sortBy}&Order=${order}`)
         const stocksInfo = await response.json()
         stocks.value = stocksInfo

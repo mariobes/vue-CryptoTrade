@@ -4,17 +4,15 @@ import CryptosTrendingTable from '@/components/Crypto/CryptosTrendingTable.vue'
 import CryptosGainersTable from '@/components/Crypto/CryptosGainersTable.vue'
 import CryptosLosersTable from '@/components/Crypto/CryptosLosersTable.vue'
 import CryptoTable from '@/components/Crypto/CryptoTable.vue'
-
 </script>
 
 <template>
-
   <div class="main-container">
     <div class="content-container"> 
       <CryptoIndices class="content-item"></CryptoIndices>
-      <CryptosTrendingTable class="content-item"></CryptosTrendingTable>
-      <CryptosGainersTable class="content-item"></CryptosGainersTable>
-      <CryptosLosersTable class="content-item"></CryptosLosersTable>
+      <CryptosTrendingTable class="content-item crypto-trending"></CryptosTrendingTable>
+      <CryptosGainersTable class="content-item crypto-gainers"></CryptosGainersTable>
+      <CryptosLosersTable class="content-item crypto-losers"></CryptosLosersTable>
     </div>
 
     <CryptoTable></CryptoTable>
@@ -40,4 +38,22 @@ import CryptoTable from '@/components/Crypto/CryptoTable.vue'
   margin-right:15px;
 }
 
+/* Responsive */
+@media (max-width: 1500px) {
+  .crypto-losers {
+    display: none;
+  }
+}
+
+@media (max-width: 1200px) {
+  .crypto-gainers {
+    display: none;
+  }
+}
+
+@media (max-width: 775px) {
+  .crypto-trending {
+    display: none;
+  }
+}
 </style>

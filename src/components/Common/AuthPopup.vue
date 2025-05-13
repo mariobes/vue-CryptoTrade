@@ -8,10 +8,10 @@ import { useI18n } from 'vue-i18n'
 const textColor = computed(() => storeUserPreferences.getTheme().text)
 const backgroundTable = computed(() => storeUserPreferences.getTheme().table)
 
-const { t } = useI18n()
-
 const storeUserPreferences = useUserPreferencesStore()
 const storeAuth = useAuthStore()
+
+const { t } = useI18n()
 
 const props = defineProps<{
   modelValue: boolean
@@ -252,6 +252,8 @@ function isUnder18(birthDate: string | Date): boolean {
       </v-btn>
 
       <v-card-text class="auth-form" @keyup.enter="handleAuth" tabindex="0">
+
+        <!-- Campo de nombre -->
         <div class="auth-form-text" v-if="selectedTab === 'register'">{{ t('Header_Popup_Auth_Name') }}</div>
         <v-text-field
           v-if="selectedTab === 'register'"
@@ -266,6 +268,7 @@ function isUnder18(birthDate: string | Date): boolean {
         />
         <span v-if="selectedTab === 'register'" class="auth-form-error">{{ errorMessages.name || '\u00A0' }}</span>
 
+        <!-- Campo de fecha de nacimiento -->
         <div class="auth-form-text" v-if="selectedTab === 'register'">{{ t('Header_Popup_Auth_Birthdate') }}</div>
         <v-menu
           v-if="selectedTab === 'register'"
@@ -300,6 +303,7 @@ function isUnder18(birthDate: string | Date): boolean {
         </v-menu>
         <span v-if="selectedTab === 'register'" class="auth-form-error">{{ errorMessages.birthDate || '\u00A0' }}</span>
 
+        <!-- Campo de número de teléfono/dirección de correo del login -->
         <div class="auth-form-text" v-if="selectedTab === 'login'">{{ t('Header_Popup_Auth_Email_Phone') }}</div>
         <v-text-field
           v-if="selectedTab === 'login'"
@@ -314,6 +318,7 @@ function isUnder18(birthDate: string | Date): boolean {
         />
         <span v-if="selectedTab === 'login'" class="auth-form-error">{{ errorMessages.emailOrPhone || '\u00A0' }}</span>
 
+        <!-- Campo de dirección de correo -->
         <div class="auth-form-text" v-if="selectedTab === 'register'">{{ t('Header_Popup_Auth_Email') }}</div>
         <v-text-field
           v-if="selectedTab === 'register'"
@@ -328,6 +333,7 @@ function isUnder18(birthDate: string | Date): boolean {
         />
         <span v-if="selectedTab === 'register'" class="auth-form-error">{{ errorMessages.email || '\u00A0' }}</span>
         
+        <!-- Campo de contraseña -->
         <div class="auth-form-text">{{ t('Header_Popup_Auth_Password') }}</div>
         <v-text-field
           v-model="password"
@@ -348,6 +354,7 @@ function isUnder18(birthDate: string | Date): boolean {
         </v-text-field>
         <span class="auth-form-error">{{ errorMessages.password || '\u00A0' }}</span>
 
+        <!-- Campo de número de teléfono -->
         <div class="auth-form-text" v-if="selectedTab === 'register'">{{ t('Header_Popup_Auth_Phone') }}</div>
         <v-text-field
           v-if="selectedTab === 'register'"
@@ -376,6 +383,7 @@ function isUnder18(birthDate: string | Date): boolean {
         />
         <span v-if="selectedTab === 'register'" class="auth-form-error">{{ errorMessages.dni || '\u00A0' }}</span>
 
+        <!-- Campo de nacionalidad -->
         <div class="auth-form-text" v-if="selectedTab === 'register'">{{ t('Header_Popup_Auth_Nationality') }}</div>
         <v-text-field
           v-if="selectedTab === 'register'"

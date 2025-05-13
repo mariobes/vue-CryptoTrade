@@ -274,4 +274,31 @@ const profitPercentage = computed(() => {
 .item-asset-value {
 	font-size: 0.95rem;
 }
+
+/* Responsive */
+@media (max-width: 1200px) {
+	.user-charts-container {
+		flex-direction: column;
+		align-items: center;
+		gap: 20px;
+	}
+
+	.chart-assets-content {
+		width: 50%;
+	}
+}
+
+@media (max-width: 1000px) {
+	.chart-assets-content {
+		width: 70%;
+		display: flex;
+		justify-content: center;
+	}
+}
+
+@media (max-width: 750px) {
+	.chart-assets-content {
+		width: 100%;
+	}
+}
 </style>

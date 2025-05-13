@@ -78,8 +78,8 @@ onMounted(async () => {
     </div>
     <div class="content-container"> 
       <CryptoIndices class="content-item"></CryptoIndices>
-      <CryptosTrendingTable class="content-item"></CryptosTrendingTable>
-      <StocksTrendingTable class="content-item"></StocksTrendingTable>
+      <CryptosTrendingTable class="content-item crypto-trending"></CryptosTrendingTable>
+      <StocksTrendingTable class="content-item stock-trending"></StocksTrendingTable>
     </div>
 
     <CryptoTable></CryptoTable>
@@ -101,6 +101,7 @@ onMounted(async () => {
   font-size: 2rem;
   color: v-bind(textColor);
   font-weight: bold;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .content-container {
@@ -113,5 +114,24 @@ onMounted(async () => {
 
 .content-item:not(:last-child) {
   margin-right:30px;
+}
+
+/* Responsive */
+@media (max-width: 1400px) {
+  .main-container {
+    max-width: 90vw;
+  }
+}
+
+@media (max-width: 1250px) {
+  .stock-trending {
+    display: none;
+  }
+}
+
+@media (max-width: 775px) {
+  .crypto-trending {
+    display: none;
+  }
 }
 </style>
