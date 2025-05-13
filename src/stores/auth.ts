@@ -41,7 +41,7 @@ export const useAuthStore = defineStore('auth', {
 
 		async login(emailOrPhone: string, password: string) {
       try {
-        const response = await fetch('http://localhost:4746/Auth/login', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/Auth/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -68,7 +68,7 @@ export const useAuthStore = defineStore('auth', {
 
 		async register(name: string, birthdate: Date, email: string, password: string, phone: string, dni: string, nationality: string) {
       try {
-        const response = await fetch('http://localhost:4746/Auth/register', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/Auth/register`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -94,7 +94,7 @@ export const useAuthStore = defineStore('auth', {
 
 		async getUserDataByEmailOrPhone(emailOrPhone: string) {
       try {
-        const userDataResponse = await fetch(`http://localhost:4746/Users/by-email-phone?emailOrPhone=${emailOrPhone}`, {
+        const userDataResponse = await fetch(`${import.meta.env.VITE_API_URL}/Users/by-email-phone?emailOrPhone=${emailOrPhone}`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${this.getToken()}`
@@ -109,7 +109,7 @@ export const useAuthStore = defineStore('auth', {
 
     async getUserDataById(id: number) {
       try {
-        const userDataResponse = await fetch(`http://localhost:4746/Users/${id}`, {
+        const userDataResponse = await fetch(`${import.meta.env.VITE_API_URL}/Users/${id}`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${this.getToken()}`

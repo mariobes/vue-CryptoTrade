@@ -10,7 +10,7 @@ export const useStocksStore = defineStore('stocks', () => {
 
   async function GetStocksApi() {
     try {
-        const response = await fetch('http://localhost:4746/StockApi/stocks', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/StockApi/stocks`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -28,8 +28,7 @@ export const useStocksStore = defineStore('stocks', () => {
 
   async function GetAllStocks(sortBy: number, order: number) {
     try {
-        // const response = await fetch(`${import.meta.env.VITE_API_URL}/Stocks?SortBy=${sortBy}&Order=${order}`)
-        const response = await fetch(`http://localhost:4746/Stocks?SortBy=${sortBy}&Order=${order}`)
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/Stocks?SortBy=${sortBy}&Order=${order}`)
         const stocksInfo = await response.json()
         stocks.value = stocksInfo
     } catch (error) {
@@ -39,7 +38,7 @@ export const useStocksStore = defineStore('stocks', () => {
 
   async function GetStock(id: string) {
     try {
-        const response = await fetch(`http://localhost:4746/Stocks/${id}`)
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/Stocks/${id}`)
         const stockInfo = await response.json()
         stock.value = stockInfo
     } catch (error) {
@@ -49,7 +48,7 @@ export const useStocksStore = defineStore('stocks', () => {
 
   async function GetStockCharts(symbol: string, time: string) {
     try {
-        const response = await fetch(`http://localhost:4746/StockApi/stock-charts/${symbol}?time=${time}`)
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/StockApi/stock-charts/${symbol}?time=${time}`)
         const stockChartsInfo = await response.json()
         chartsStocks.value = stockChartsInfo
     } catch (error) {
@@ -59,7 +58,7 @@ export const useStocksStore = defineStore('stocks', () => {
 
   async function SearchStock(query: string) {
     try {
-        const response = await fetch(`http://localhost:4746/Stocks/search-stock?query=${query}`)
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/Stocks/search-stock?query=${query}`)
         if (!response.ok) return []
         const searchStocksInfo = await response.json()
         return Array.isArray(searchStocksInfo) ? searchStocksInfo : []

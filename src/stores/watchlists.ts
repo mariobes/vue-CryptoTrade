@@ -7,7 +7,7 @@ export const useWatchlistsStore = defineStore('watchlists', () => {
 
   async function CreateWatchlist(userId: number, assetId: string, typeAsset: string, token: string) {
     try {
-        const response = await fetch('http://localhost:4746/Watchlist', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/Watchlist`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -28,7 +28,7 @@ export const useWatchlistsStore = defineStore('watchlists', () => {
 
   async function DeleteWatchlist(userId: number, assetId: string, typeAsset: string, token: string) {
     try {
-        const response = await fetch('http://localhost:4746/Watchlist', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/Watchlist`, {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -49,7 +49,7 @@ export const useWatchlistsStore = defineStore('watchlists', () => {
 
   async function GetAllWatchlists(userId: number, typeAsset: string, token: string) {
     try {
-        const response = await fetch(`http://localhost:4746/Watchlist?userId=${userId}&typeAsset=${typeAsset}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/Watchlist?userId=${userId}&typeAsset=${typeAsset}`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
