@@ -147,4 +147,16 @@ const changeCurrency = (currency: string) => {
   color: var(--green-color);
   padding-left: 30px;
 }
+
+/* Responsive */
+@media (max-width: 800px) {
+  .v-col {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+  }
+
+  .popup-text {
+    padding: 20px 0;
+  }
+}
 </style>

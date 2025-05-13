@@ -374,10 +374,6 @@ watch(amount, () => {
   padding-right: 25px;
 }
 
-.amount-input-value:hover {
-  background-color: v-bind(colorGray);
-}
-
 .amount-input-value:focus {
   outline: none;
   box-shadow: none;

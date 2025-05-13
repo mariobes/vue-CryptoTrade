@@ -17,7 +17,6 @@ const cryptoDetails = computed(() => storeCryptos.cryptoDetails)
 
 const route = useRoute()
 const cryptoId = computed(() => route.params.id)
-
 </script>
 
 <template>
@@ -56,5 +55,50 @@ const cryptoId = computed(() => route.params.id)
 	width: 20vw;
 	color: v-bind(textColor);
 	border-left: solid 1px var(--dark-gray-color);
+}
+
+/* Responsive */
+@media (max-width: 1800px) {
+  .container-transactions {
+    display: none;
+  }
+
+	.container-chart {
+		width: 75vw;
+	}
+}
+
+@media (max-width: 1550px) {
+	.container-details {
+		width: 30vw;
+	}
+
+	.container-chart {
+		width: 70vw;
+	}
+}
+
+@media (max-width: 1300px) {
+	.container-details {
+		width: 40vw;
+	}
+
+	.container-chart {
+		width: 60vw;
+	}
+}
+
+@media (max-width: 950px) {
+	.main-container {
+		flex-direction: column;
+	}
+
+	.container-details {
+		width: 100vw;
+	}
+
+	.container-chart {
+		width: 90vw;
+	}
 }
 </style>

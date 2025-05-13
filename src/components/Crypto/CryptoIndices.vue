@@ -180,5 +180,12 @@ const getSentimentTranslation = (sentiment: string | null) => {
   font-weight: bold;
   font-size: 1.2rem;
 }
+
+/* Responsive */
+@media (max-width: 775px) {
+  .index-content {
+    padding-bottom: 30px;
+  }
+}
 </style>
 

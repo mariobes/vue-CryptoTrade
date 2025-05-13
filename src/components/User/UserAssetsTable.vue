@@ -26,17 +26,6 @@ onMounted(async () => {
 	await storeTransactions.GetAssets(userId, token);
 });
 
-// watch(
-//   () => [storeTransactions.cryptos, storeTransactions.stocks],
-//   () => {
-//     assets.value = [
-//       ...storeTransactions.cryptos,
-//       ...storeTransactions.stocks
-//     ].sort((a, b) => b.total - a.total);
-//   },
-//   { deep: true }
-// );
-
 const filteredAssets = computed(() => {
   if (tableSelected.value === 'cryptos') {
     return storeTransactions.assets.filter(asset => asset.typeOfAsset === 'Crypto');
@@ -66,7 +55,7 @@ function openAssetInNewTab(asset: UserAssetsSummary) {
 
 <template>
 <div class="main-container">
-	<div class="tables-content" v-if="hasAssets">
+	<div class="tables-content">
 		<span 
 			:class="['table', tableSelected === 'all' ? 'selected' : '']" 
 			@click="tableSelected = 'all'"

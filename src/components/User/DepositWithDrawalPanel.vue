@@ -239,6 +239,7 @@ watch(() => props.visible, (newVal) => {
         <button 
           v-if="(props.action === 'withdrawal') || (props.action === 'deposit' && selectedPaymentMethod !== null)"
           class="panel-input-btn"
+          :class="storeUserPreferences.selectedTheme === 'light' ? 'panel-input-btn-hover-light' : 'panel-input-btn-hover-dark'"
           @click="props.action === 'withdrawal' ? handleWithdrawal() : handleDeposit()" 
           :disabled="!amount || amount < 10 || 
            (props.action === 'deposit' && amount >= 10000) || 
@@ -387,13 +388,9 @@ watch(() => props.visible, (newVal) => {
   border-radius: 10px;
   color: v-bind(textColor);
   padding: 0 20px;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.336);
   text-align: end;
   padding-right: 40px;
-}
-
-.panel-input-value:hover {
-  background-color: var(--gray-color-hover) !important;
 }
 
 .panel-input-value:focus {
@@ -416,15 +413,19 @@ watch(() => props.visible, (newVal) => {
 .panel-input-btn {
   border-radius: 10px;
   background-color: var(--white-color);
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.336);
   color: var(--black-color);
   max-width: 60%;
   margin: 30px 0 0 30px;
   padding: 8px;
 }
 
-.panel-input-btn:hover {
-  background-color: var(--white-color-hover);
+.panel-input-btn-hover-light:hover {
+	background-color: var(--dark-gray-color) !important;
+}
+
+.panel-input-btn-hover-dark:hover {
+  background-color: var(--white-color-hover) !important;
 }
 
 .panel-input-btn:disabled {

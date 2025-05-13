@@ -9,12 +9,12 @@ import { useUserPreferencesStore } from '@/stores/userPreferences'
 const textColor = computed(() => storeUserPreferences.getTheme().text)
 const backgroundTable = computed(() => storeUserPreferences.getTheme().table)
 
-const { t } = useI18n()
-const router = useRouter()
-
 const storeCryptos = useCryptosStore()
 const storeStocks = useStocksStore()
 const storeUserPreferences = useUserPreferencesStore()
+
+const { t } = useI18n()
+const router = useRouter()
 
 const searchQuery = ref('')
 const cryptoResults = ref([])
@@ -72,7 +72,6 @@ watch(() => props.modelValue, (newVal) => {
     if (containerCrypto) savedCryptoScrollTop = containerCrypto.scrollTop
     if (containerStock) savedStockScrollTop = containerStock.scrollTop
   } else {
-    // Restauramos el scroll al abrir
     nextTick(() => {
       const containerCrypto = cryptoScrollContainer.value
 			const containerStock = stockScrollContainer.value
