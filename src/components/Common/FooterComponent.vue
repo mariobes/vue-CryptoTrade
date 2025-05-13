@@ -6,21 +6,22 @@ import { useI18n } from 'vue-i18n'
 const backgroundColor = computed(() => storeUserPreferences.getTheme().background)
 const textColor = computed(() => storeUserPreferences.getTheme().text)
 
-const { t } = useI18n()
-
 const storeUserPreferences = useUserPreferencesStore()
 
+const { t } = useI18n()
 </script>
 
 <template>
 	<div class="main-container">
 		<div class="footer-info-content">
 			<div class="info-logo-content">
-				<img src="@/assets/logo.png" alt="Logo" class="info-logo-image" />
+				<img src="@/assets/logo.jpg" alt="Logo" class="info-logo-image" />
 				<span class="info-logo-title">Crypto Trade</span>
 			</div>
 			<p class="footer-info-text">{{ t('FooterComponent_Description') }}</p>			
-		<div class="footer-info-copyright">&copy; Crypto Trade. {{ t('FooterComponent_Copyright') }}</div>
+			<div class="footer-info-copyright">
+				&copy; {{ new Date().getFullYear() }} Crypto Trade. {{ t('FooterComponent_Copyright') }}
+			</div>
 		</div>
 		<div class="footer-links-content">
 			<div>
@@ -96,7 +97,7 @@ const storeUserPreferences = useUserPreferencesStore()
 
 .info-logo-title {
   font-size: 1.6rem;
-	font-weight: bold;
+	font-family: 'Montserrat', sans-serif;
 }
 
 .footer-info-text {
@@ -130,5 +131,50 @@ const storeUserPreferences = useUserPreferencesStore()
 	font-size: 0.9rem;
 	color: var(--gray-color);
 	margin-bottom: 20px;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+	.main-container {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.footer-info-content {
+		width: 100%;
+	}
+
+	.footer-info-text {
+		margin-bottom: 50px;
+	}
+
+	.footer-links-content {
+		width: 100%;
+		display: flex;
+		justify-content: center;
+	}
+}
+
+@media (max-width: 700px) {
+	.main-container {
+		padding: 50px 100px;
+	}
+
+	.footer-links-content {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		gap: 30px;
+	}
+
+	.footer-links-content > div {
+		width: 40%;
+	}
+}
+
+@media (max-width: 600px) {
+	.main-container {
+		padding: 50px;
+	}
 }
 </style>

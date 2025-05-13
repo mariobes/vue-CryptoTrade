@@ -414,7 +414,6 @@ const formatDate = (dateInput: string | Date | undefined): string => {
 .input-group {
   display: flex;
   flex-direction: column;
-  
 }
 
 .login-item-btn {
@@ -434,7 +433,6 @@ const formatDate = (dateInput: string | Date | undefined): string => {
   display: flex;
   align-items: center;
   gap: 10px;
-  
 }
 
 .login-item-value input {
@@ -547,5 +545,42 @@ button:disabled {
   color: var(--green-color);
   font-size: 0.85rem;
   margin-top: 5px;
+}
+
+/* Responsive */
+@media (max-width: 1700px) {
+  .main-container {
+    width: 70vw;
+  }
+}
+
+@media (max-width: 1400px) {
+  .main-container {
+    width: 90vw;
+  }
+
+  .user-options-content {
+    display: none;
+  }
+
+  .user-info-content {
+    width: 70%;
+    border-left: none;
+  }
+}
+
+@media (max-width: 1000px) {
+  .main-container {
+    width: 100vw;
+    margin: 0;
+  }
+
+  .user-info-content {
+    padding: 0;
+  }
+
+  .login-item-text {
+    display: none;
+  }
 }
 </style>

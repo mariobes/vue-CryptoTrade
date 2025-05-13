@@ -128,6 +128,7 @@ const walletInfo = computed(() => {
       </button>
       <button 
         class="info-cash-btn withdrawal-btn"
+        :class="storeUserPreferences.selectedTheme === 'light' ? 'withdrawal-hover-light' : 'withdrawal-hover-dark'"
         @click="openWithdrawalPanel"
       >
       {{ t('UserInfo_Withdrawal_Btn') }}
@@ -166,6 +167,7 @@ const walletInfo = computed(() => {
   color: var(--gray-color);
   font-size: 1.4em;
   font-weight: bold;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .info-wallet-value {
@@ -210,6 +212,7 @@ const walletInfo = computed(() => {
   color: var(--gray-color);
   font-size: 1.4rem;
   font-weight: bold;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .info-cash-value {
@@ -244,16 +247,20 @@ const walletInfo = computed(() => {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.336);
 }
 
-.withdrawal-btn:hover {
-  background-color: var(--white-color-hover) !important;
-}
-
 .deposit-hover-light:hover {
 	background-color: var(--gray-color) !important;
 }
 
 .deposit-hover-dark:hover {
   background-color: var(--dark-gray-color) !important;
+}
+
+.withdrawal-hover-light:hover {
+	background-color: var(--dark-gray-color) !important;
+}
+
+.withdrawal-hover-dark:hover {
+  background-color: var(--white-color-hover) !important;
 }
 
 .buy-sell-success {
@@ -263,5 +270,34 @@ const walletInfo = computed(() => {
   position: absolute;
   top: 290px;
   right: 520px;
+}
+
+/* Responsive */
+@media (max-width: 1250px) {
+  .info-wallet-content {
+    width: 100%;
+  }
+
+  .info-cash-content {
+    width: 100%;
+  }
+}
+
+@media (max-width: 800px) {
+  .info-wallet-content {
+    margin-right: 20px;
+  }
+
+  .eye-icon {
+    display: none;
+  }
+
+  .info-cash-title {
+    justify-content: end;
+  }
+
+  .info-cash-text {
+    display: none;
+  }
 }
 </style>

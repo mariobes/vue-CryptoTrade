@@ -145,7 +145,7 @@
     "TransactionsAsset_Market_Price_Text": "Purchase price",
     "TransactionsAsset_Total_Text": "Total",
     "TransactionsAsset_Logout_Message": "Log in to trade assets.",
-    "TransactionsAsset_Position_Message": "You don't have any positions in this cryptocurrency yet.",
+    "TransactionsAsset_Position_Message": "You don't have any positions in this asset yet.",
     "TransactionsAsset_Position_Text": "Position",
     "TransactionsAsset_Profitability_Text": "Profitability",
     "TransactionsAsset_Purchase_Price_Text": "Purchase price",

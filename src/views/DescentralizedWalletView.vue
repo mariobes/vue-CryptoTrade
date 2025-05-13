@@ -10,7 +10,6 @@ const backgroundTable = computed(() => storeUserPreferences.getTheme().table)
 const storeUserPreferences = useUserPreferencesStore()
 
 const { t } = useI18n()
-
 </script>
 
 <template>
@@ -62,5 +61,18 @@ const { t } = useI18n()
 
 .content-text {
   font-size: 2rem;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .main-container {
+    max-width: 50vw;
+  }
+}
+
+@media (max-width: 700px) {
+  .main-container {
+    max-width: 80vw;
+  }
 }
 </style>

@@ -82,13 +82,11 @@ watch(
     <v-toolbar extended class="header-container">
       <div>
         <RouterLink to="/">
-          <img src="@/assets/logo.png" alt="Logo" class="header-logo" />
+          <img src="@/assets/logo.jpg" alt="Logo" class="header-logo" />
         </RouterLink>
       </div>
       <nav>
-        <RouterLink to="/" class="header-title">
-          {{ t('Header_Title') }}
-        </RouterLink>
+        <RouterLink to="/" class="header-title">{{ t('Header_Title') }}</RouterLink>
         <span class="divider-bar">|</span>
         <RouterLink to="/cryptoTable" class="header-component">{{ t('Header_Component_Cryptos') }}</RouterLink>
         <RouterLink to="/stockTable" class="header-component">{{ t('Header_Component_Stocks') }}</RouterLink>
@@ -153,16 +151,12 @@ watch(
       </template>
     </v-toolbar>
 
-    <!-- Popup selector de buscador -->
     <SearchPopup v-model="searchDialog" />
 
-    <!-- Popup selector de idioma -->
     <LanguagePopup v-model="languageDialog" />
 
-    <!-- Popup selector de moneda -->
     <CurrencyPopup v-model="currencyDialog" />
 
-    <!-- Popup selector de auth -->
     <AuthPopup v-model="authDialog" v-model:selected-tab="selectedTab" />
 
   </v-card>
@@ -188,6 +182,7 @@ watch(
   color: v-bind(textColor);
   margin-right: 20px;
   padding-left: 10px;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .divider-bar {
@@ -200,6 +195,7 @@ watch(
   text-decoration: none;
   color: v-bind(textColor);
   margin: 0 20px;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .header-component:hover {
@@ -263,6 +259,7 @@ a {
   text-transform: none;
   padding-left: 5px;
   color: v-bind(textColor);
+  font-family: 'Montserrat', sans-serif;
 }
 
 .header-icons-search {
@@ -301,5 +298,44 @@ a {
 .login-btn:hover {
   background-color: var(--primary-color-light-hover);
   box-shadow: none;
+}
+
+/* Responsive */
+@media (max-width: 1600px) {
+  .header-icons {
+    display: none;
+  }
+
+  .header-icons-search {
+    display: flex;
+    width: 250px;
+  }
+}
+
+@media (max-width: 1300px) {
+  .header-icons-search {
+    display: none;
+  }
+}
+
+@media (max-width: 1100px) {
+  .header-component {
+    display: none;
+  }
+
+  .header-icons {
+    display: flex;
+  }
+}
+
+@media (max-width: 850px) {
+  .header-icons {
+    display: none;
+  }
+
+  .header-icons-search {
+    display: flex;
+    width: 150px;
+  }
 }
 </style>
