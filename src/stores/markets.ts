@@ -12,7 +12,7 @@ export const useMarketsStore = defineStore('markets', () => {
 
   async function GetTotalMarketCapApi() {
     try {
-        const response = await fetch('http://localhost:4746/MarketApi/total-market-cap', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/MarketApi/total-market-cap`, {
 					method: 'GET',
 					headers: {
 						'Accept': 'application/json',
@@ -30,7 +30,7 @@ export const useMarketsStore = defineStore('markets', () => {
 
   async function GetFearGreedIndexApi() {
     try {
-				const response = await fetch('http://localhost:4746/MarketApi/fear-greed-index', {
+				const response = await fetch(`${import.meta.env.VITE_API_URL}/MarketApi/fear-greed-index`, {
 					method: 'GET',
 					headers: {
 						'Accept': 'application/json',
@@ -48,7 +48,7 @@ export const useMarketsStore = defineStore('markets', () => {
 
   async function GetCMC100IndexApi() {
     try {
-				const response = await fetch('http://localhost:4746/MarketApi/CMC100-index', {
+				const response = await fetch(`${import.meta.env.VITE_API_URL}/MarketApi/CMC100-index`, {
 					method: 'GET',
 					headers: {
 						'Accept': 'application/json',
@@ -66,7 +66,7 @@ export const useMarketsStore = defineStore('markets', () => {
 
   async function GetCryptosTrendingApi() {
     try {
-				const response = await fetch('http://localhost:4746/MarketApi/cryptos-trending', {
+				const response = await fetch(`${import.meta.env.VITE_API_URL}/MarketApi/cryptos-trending`, {
 					method: 'GET',
 					headers: {
 						'Accept': 'application/json',
@@ -84,7 +84,7 @@ export const useMarketsStore = defineStore('markets', () => {
 
 	async function GetStocksTrendingApi() {
     try {
-				const response = await fetch('http://localhost:4746/MarketApi/stocks-trending', {
+				const response = await fetch(`${import.meta.env.VITE_API_URL}/MarketApi/stocks-trending`, {
 					method: 'GET',
 					headers: {
 						'Accept': 'application/json',
@@ -102,7 +102,7 @@ export const useMarketsStore = defineStore('markets', () => {
 
   async function GetStocksGainersApi() {
     try {
-				const response = await fetch('http://localhost:4746/MarketApi/stocks-gainers', {
+				const response = await fetch(`${import.meta.env.VITE_API_URL}/MarketApi/stocks-gainers`, {
 					method: 'GET',
 					headers: {
 						'Accept': 'application/json',
@@ -120,7 +120,7 @@ export const useMarketsStore = defineStore('markets', () => {
 
   async function GetStocksLosersApi() {
     try {
-				const response = await fetch('http://localhost:4746/MarketApi/stocks-losers', {
+				const response = await fetch(`${import.meta.env.VITE_API_URL}/MarketApi/stocks-losers`, {
 					method: 'GET',
 					headers: {
 						'Accept': 'application/json',
@@ -138,7 +138,7 @@ export const useMarketsStore = defineStore('markets', () => {
 
 	async function GetStocksMostActivesApi() {
     try {
-				const response = await fetch('http://localhost:4746/MarketApi/stocks-most-actives', {
+				const response = await fetch(`${import.meta.env.VITE_API_URL}/MarketApi/stocks-most-actives`, {
 					method: 'GET',
 					headers: {
 						'Accept': 'application/json',
@@ -156,7 +156,7 @@ export const useMarketsStore = defineStore('markets', () => {
 
 	async function GetCryptoIndices() {
     try {
-        const response = await fetch('http://localhost:4746/Market/crypto-indices')
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/Market/crypto-indices`)
         const cryptoIndicesInfo = await response.json()
         cryptoIndices.value = cryptoIndicesInfo
     } catch (error) {
@@ -166,7 +166,7 @@ export const useMarketsStore = defineStore('markets', () => {
 
 	async function GetCryptosTrending() {
     try {
-        const response = await fetch('http://localhost:4746/Market/cryptos-trending')
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/Market/cryptos-trending`)
         const cryptosTrendingInfo = await response.json()
         cryptosTrending.value = cryptosTrendingInfo
     } catch (error) {
@@ -176,7 +176,7 @@ export const useMarketsStore = defineStore('markets', () => {
 
 	async function GetStocksTrending() {
     try {
-        const response = await fetch('http://localhost:4746/Market/stocks-trending')
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/Market/stocks-trending`)
         const stocksTrendingInfo = await response.json()
         stocksTrending.value = stocksTrendingInfo
     } catch (error) {
@@ -186,7 +186,7 @@ export const useMarketsStore = defineStore('markets', () => {
 
 	async function GetStocksGainers() {
     try {
-        const response = await fetch('http://localhost:4746/Market/stocks-gainers')
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/Market/stocks-gainers`)
         const stocksGainersInfo = await response.json()
         stocksGainers.value = stocksGainersInfo
     } catch (error) {
@@ -196,7 +196,7 @@ export const useMarketsStore = defineStore('markets', () => {
 
 	async function GetStocksLosers() {
     try {
-        const response = await fetch('http://localhost:4746/Market/stocks-losers')
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/Market/stocks-losers`)
         const stocksLosersInfo = await response.json()
         stocksLosers.value = stocksLosersInfo
     } catch (error) {
@@ -206,7 +206,7 @@ export const useMarketsStore = defineStore('markets', () => {
 
 	async function GetStocksMostActives() {
     try {
-        const response = await fetch('http://localhost:4746/Market/stocks-most-actives')
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/Market/stocks-most-actives`)
         const stocksMostActivesInfo = await response.json()
         stocksMostActives.value = stocksMostActivesInfo
     } catch (error) {

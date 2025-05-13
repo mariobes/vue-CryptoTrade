@@ -7,7 +7,7 @@ export const useUsersStore = defineStore('users', () => {
 
     async function GetUserById(id: number, token: string) {
       try {
-        const response = await fetch(`http://localhost:4746/Users/${id}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/Users/${id}`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`
@@ -23,7 +23,7 @@ export const useUsersStore = defineStore('users', () => {
 
     async function UpdateUser(id: number, token: string, email?: string, password?: string, phone?: string): Promise<boolean> {
       try {
-        const response = await fetch(`http://localhost:4746/Users/${id}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/Users/${id}`, {
             method: 'PUT',
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -45,7 +45,7 @@ export const useUsersStore = defineStore('users', () => {
 
     async function DeleteUser(id: number, token: string) {
       try {
-        const response = await fetch(`http://localhost:4746/Users/${id}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/Users/${id}`, {
             method: 'DELETE',
             headers: {
               'Authorization': `Bearer ${token}`
