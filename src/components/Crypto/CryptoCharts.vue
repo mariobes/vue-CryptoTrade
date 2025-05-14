@@ -195,7 +195,6 @@ const chartOptions = computed(() => {
             const chart = storeCryptos.chartsCryptos
             const timestamp = context.parsed.x
 
-            // Buscar volumen correspondiente al timestamp más cercano
             if (!chart?.total_volumes?.length) return ''
 
             let closest = chart.total_volumes.reduce((prev, curr) => {
@@ -336,7 +335,6 @@ const chartOptions = computed(() => {
             }
 
             if (selectedTime.value === '1M' || selectedTime.value === '7D' || selectedTime.value === '1D') {
-              // Si la hora es 00:00, mostrar solo día y mes
               if (date.getHours() === 0 && date.getMinutes() === 0) {
                 return date.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' })
                   .replace(/^(\d{2}) (\w+)/, (_, day, month) => {
@@ -344,12 +342,10 @@ const chartOptions = computed(() => {
                     return `${day} ${capitalizedMonth}`
                   })
               }
-              // Si no es 00:00, mostrar hora y minutos
               return date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: false })
             }
 
             if (selectedTime.value === '3M') {
-              // Para 3M, mostramos solo día y mes
               return date.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' })
                 .replace(/^(\d{2}) (\w+)/, (_, day, month) => {
                   const capitalizedMonth = month.charAt(0).toUpperCase() + month.slice(1)
@@ -383,7 +379,6 @@ const chartOptions = computed(() => {
           const chart = storeCryptos.chartsCryptos
           if (!chart) return
 
-          // Seleccionar los datos correctos según el tipo
           const data = selectedType.value === 'Market cap'
             ? chart.market_caps
             : chart.prices
@@ -393,7 +388,7 @@ const chartOptions = computed(() => {
           const values = data.map(([_, y]) => y)
           const min = Math.min(...values)
           const max = Math.max(...values)
-          const padding = (max - min) * 0.1  // 10% de margen
+          const padding = (max - min) * 0.1
 
           scale.min = min - padding
           scale.max = max + padding
@@ -415,6 +410,7 @@ const chartOptions = computed(() => {
         >
           {{ t('AssetChart_Price') }}
         </button>
+
         <button
           class="chart-btn-value"
           :class="{ selected: selectedType === 'Market cap' }"
@@ -423,6 +419,7 @@ const chartOptions = computed(() => {
           Market cap
         </button>
       </div>
+
       <div class="chart-btn">
         <button
           class="chart-btn-value time-btn"
@@ -431,6 +428,7 @@ const chartOptions = computed(() => {
         >
           1D
         </button>
+
         <button
           class="chart-btn-value time-btn"
           :class="{ selected: selectedTime === '7D' }"
@@ -438,6 +436,7 @@ const chartOptions = computed(() => {
         >
           7D
         </button>
+
         <button
           class="chart-btn-value time-btn"
           :class="{ selected: selectedTime === '1M' }"
@@ -445,6 +444,7 @@ const chartOptions = computed(() => {
         >
           1M
         </button>
+
         <button
           class="chart-btn-value time-btn"
           :class="{ selected: selectedTime === '3M' }"
@@ -452,6 +452,7 @@ const chartOptions = computed(() => {
         >
           3M
         </button>
+
         <button
           class="chart-btn-value time-btn"
           :class="{ selected: selectedTime === '1Y' }"
@@ -461,10 +462,12 @@ const chartOptions = computed(() => {
         </button>
       </div>
     </div>
+
     <div class="crypto-chart">
       <Line v-if="!isLoading" :data="chartData" :options="chartOptions" />
       <span v-else :style="{ color: textColor }">{{ t('AssetChart_Loading') }}</span>
     </div>
+    
     <div v-if="props.cryptoDetails?.description?.en" class="description-container">
       <p class="description-title">
         {{ t('AssetChart_Title_1') }} 

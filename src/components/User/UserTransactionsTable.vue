@@ -60,21 +60,11 @@ function openAssetInNewTab(asset: Transaction) {
   <v-table class="table-container">
     <thead>
       <tr>
-        <th class="text-left">
-          {{ t('UserInfo_Transactions_Table_Type') }}
-        </th>
-        <th class="text-left">
-          {{ t('UserInfo_Transactions_Table_Date') }}
-        </th>
-				<th class="text-left">
-          {{ t('UserInfo_Transactions_Table_Asset_Payment') }}
-        </th>
-				<th class="text-right">
-          {{ t('UserInfo_Transactions_Table_Purchase_Price') }}
-        </th>
-				<th class="text-right">
-          {{ t('UserInfo_Transactions_Table_Amount') }}
-        </th>
+        <th class="text-left">{{ t('UserInfo_Transactions_Table_Type') }}</th>
+        <th class="text-left">{{ t('UserInfo_Transactions_Table_Date') }}</th>
+				<th class="text-left">{{ t('UserInfo_Transactions_Table_Asset_Payment') }}</th>
+				<th class="text-right"> {{ t('UserInfo_Transactions_Table_Purchase_Price') }}</th>
+				<th class="text-right">{{ t('UserInfo_Transactions_Table_Amount') }}</th>
       </tr>
     </thead>
     <tbody>
@@ -138,7 +128,6 @@ function openAssetInNewTab(asset: Transaction) {
 						</div>
 						<div v-else class="transaction-amount">
               <span :style="{ color: transaction.concept.startsWith('+') ? 'green' : 'red' }">
-							<!-- <span :style="{ color: storeUserPreferences.getPriceColor(transaction.assetAmount) }"> -->
 								{{ transaction.concept.startsWith('+') ? '+' : '-' }}{{ storeUserPreferences.convertAssetAmount(Math.abs(transaction.assetAmount), true) }} {{ assetMap.get(transaction.assetId)?.symbol.toUpperCase() }}
 							</span>
 							<span class="total-amount">

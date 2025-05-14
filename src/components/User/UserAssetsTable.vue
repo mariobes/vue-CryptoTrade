@@ -54,113 +54,101 @@ function openAssetInNewTab(asset: UserAssetsSummary) {
 </script>
 
 <template>
-<div class="main-container">
-	<div class="tables-content">
-		<span 
-			:class="['table', tableSelected === 'all' ? 'selected' : '']" 
-			@click="tableSelected = 'all'"
-		>
-			{{ t('UserInfo_All_Text') }}
-		</span>
-		<span 
-			:class="['table', tableSelected === 'cryptos' ? 'selected' : '']" 
-			@click="tableSelected = 'cryptos'"
-		>
-			{{ t('UserInfo_Cryptocurrencies_Text') }}
-		</span>
-		<span 
-			:class="['table', tableSelected === 'stocks' ? 'selected' : '']" 
-			@click="tableSelected = 'stocks'"
-		>
-			{{ t('UserInfo_Stocks_Text') }}
-		</span>
-	</div>
-
-	<v-table v-if="hasAssets" class="table-container">
-		<thead>
-			<tr>
-				<th class="text-left column-fixed">
-					{{ t('UserInfo_Table_Name') }}
-				</th>
-				<th class="text-right">
-					{{ t('UserInfo_Table_Price') }}
-				</th>
-				<th class="text-right">
-					{{ t('UserInfo_Table_24h') }}
-				</th>
-				<th class="text-right">
-					{{ t('UserInfo_Table_Holdings') }}
-				</th>
-				<th class="text-right">
-					{{ t('UserInfo_Table_Purchase_Price') }}
-				</th>
-				<th class="text-right">
-					{{ t('UserInfo_Table_Profit_Loss') }}
-				</th>
-				<th class="text-right">
-					{{ t('UserInfo_Table_Percentage') }}
-				</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr
-				v-for="asset in filteredAssets"        
-				:key="asset.assetId"
-				:class="storeUserPreferences.selectedTheme === 'light' ? 'hover-light' : 'hover-dark'"
-				@click="openAssetInNewTab(asset)"
-				style="cursor: pointer"
+	<div class="main-container">
+		<div class="tables-content">
+			<span 
+				:class="['table', tableSelected === 'all' ? 'selected' : '']" 
+				@click="tableSelected = 'all'"
 			>
-				<td>
-					<div class="asset-container">
-						<img :src="asset.image" alt="Asset Logo" 
-							class="asset-image" 
-							:class="{ 'stock-image-light': storeUserPreferences.selectedTheme === 'light' && asset.typeOfAsset === 'Stock' }"
-							@error="storeUserPreferences.showDefaultAssetImage(asset)"
-						/>
-						<span class="asset-name">{{ asset.name }}</span>
-						<span class="asset-symbol">{{ asset.symbol.toUpperCase() }}</span>	
-					</div>
-				</td>
-				<td class="text-right">
-					{{ storeUserPreferences.convertPrice(asset.price, storeUserPreferences.selectedCurrency, 'before') }}
-				</td>
-				<td class="text-right" :style="{ color: storeUserPreferences.getPriceColor(asset.changesPercentage24h) }">
-					<v-icon class="mb-1">
-						{{ storeUserPreferences.getArrowDirection(asset.changesPercentage24h) }}
-					</v-icon>
-					{{ Math.abs(asset.changesPercentage24h).toFixed(2) }}%
-				</td>
-				<td class="text-right">
-					<div class="asset-total">
-						<span>
-							{{ storeUserPreferences.convertPrice(Number(asset.total.toFixed(2)), storeUserPreferences.selectedCurrency, 'before', true) }}
-						</span>
-						<span class="asset-total-amount-asset">
-							{{ storeUserPreferences.convertAssetAmount(asset.totalAssetAmount, true) }} {{ asset.symbol.toUpperCase() }}
-						</span>
-					</div>
-				</td>
-				<td class="text-right">{{ storeUserPreferences.convertPrice(asset.averagePurchasePrice, storeUserPreferences.selectedCurrency, 'before', true) }}</td>
-				<td class="text-right">
-					<div class="asset-profit">
-						<span :style="{ color: storeUserPreferences.getPriceColor(asset.balance) }">
-							{{ asset.balance > 0 ? '+' : '' }}{{ storeUserPreferences.convertPrice(Number(asset.balance.toFixed(2)), storeUserPreferences.selectedCurrency, 'after', true) }}
-						</span>
-						<div :style="{ color: storeUserPreferences.getPriceColor(asset.balancePercentage) }">
-							<v-icon class="mb-1">
-								{{ storeUserPreferences.getArrowDirection(asset.balancePercentage) }}
-							</v-icon>
-							<span>
-								{{ storeUserPreferences.maskedPrice(Math.abs(asset.balancePercentage)) }}%
-							</span>	
+				{{ t('UserInfo_All_Text') }}
+			</span>
+
+			<span 
+				:class="['table', tableSelected === 'cryptos' ? 'selected' : '']" 
+				@click="tableSelected = 'cryptos'"
+			>
+				{{ t('UserInfo_Cryptocurrencies_Text') }}
+			</span>
+
+			<span 
+				:class="['table', tableSelected === 'stocks' ? 'selected' : '']" 
+				@click="tableSelected = 'stocks'"
+			>
+				{{ t('UserInfo_Stocks_Text') }}
+			</span>
+		</div>
+
+		<v-table v-if="hasAssets" class="table-container">
+			<thead>
+				<tr>
+					<th class="text-left column-fixed">{{ t('UserInfo_Table_Name') }}</th>
+					<th class="text-right">{{ t('UserInfo_Table_Price') }}</th>
+					<th class="text-right">{{ t('UserInfo_Table_24h') }}</th>
+					<th class="text-right">{{ t('UserInfo_Table_Holdings') }}</th>
+					<th class="text-right">{{ t('UserInfo_Table_Purchase_Price') }}</th>
+					<th class="text-right">{{ t('UserInfo_Table_Profit_Loss') }}</th>
+					<th class="text-right">{{ t('UserInfo_Table_Percentage') }}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr
+					v-for="asset in filteredAssets"        
+					:key="asset.assetId"
+					:class="storeUserPreferences.selectedTheme === 'light' ? 'hover-light' : 'hover-dark'"
+					@click="openAssetInNewTab(asset)"
+					style="cursor: pointer"
+				>
+					<td>
+						<div class="asset-container">
+							<img :src="asset.image" alt="Asset Logo" 
+								class="asset-image" 
+								:class="{ 'stock-image-light': storeUserPreferences.selectedTheme === 'light' && asset.typeOfAsset === 'Stock' }"
+								@error="storeUserPreferences.showDefaultAssetImage(asset)"
+							/>
+							<span class="asset-name">{{ asset.name }}</span>
+							<span class="asset-symbol">{{ asset.symbol.toUpperCase() }}</span>	
 						</div>
-					</div>
-				</td>
-				<td class="text-right">{{ storeUserPreferences.maskedPrice(asset.walletPercentage) }}%</td>
-			</tr>
-		</tbody>
-	</v-table>
-</div>
+					</td>
+					<td class="text-right">
+						{{ storeUserPreferences.convertPrice(asset.price, storeUserPreferences.selectedCurrency, 'before') }}
+					</td>
+					<td class="text-right" :style="{ color: storeUserPreferences.getPriceColor(asset.changesPercentage24h) }">
+						<v-icon class="mb-1">
+							{{ storeUserPreferences.getArrowDirection(asset.changesPercentage24h) }}
+						</v-icon>
+						{{ Math.abs(asset.changesPercentage24h).toFixed(2) }}%
+					</td>
+					<td class="text-right">
+						<div class="asset-total">
+							<span>
+								{{ storeUserPreferences.convertPrice(Number(asset.total.toFixed(2)), storeUserPreferences.selectedCurrency, 'before', true) }}
+							</span>
+							<span class="asset-total-amount-asset">
+								{{ storeUserPreferences.convertAssetAmount(asset.totalAssetAmount, true) }} {{ asset.symbol.toUpperCase() }}
+							</span>
+						</div>
+					</td>
+					<td class="text-right">{{ storeUserPreferences.convertPrice(asset.averagePurchasePrice, storeUserPreferences.selectedCurrency, 'before', true) }}</td>
+					<td class="text-right">
+						<div class="asset-profit">
+							<span :style="{ color: storeUserPreferences.getPriceColor(asset.balance) }">
+								{{ asset.balance > 0 ? '+' : '' }}{{ storeUserPreferences.convertPrice(Number(asset.balance.toFixed(2)), storeUserPreferences.selectedCurrency, 'after', true) }}
+							</span>
+							<div :style="{ color: storeUserPreferences.getPriceColor(asset.balancePercentage) }">
+								<v-icon class="mb-1">
+									{{ storeUserPreferences.getArrowDirection(asset.balancePercentage) }}
+								</v-icon>
+								<span>
+									{{ storeUserPreferences.maskedPrice(Math.abs(asset.balancePercentage)) }}%
+								</span>	
+							</div>
+						</div>
+					</td>
+					<td class="text-right">{{ storeUserPreferences.maskedPrice(asset.walletPercentage) }}%</td>
+				</tr>
+			</tbody>
+		</v-table>
+	</div>
 </template>
   
 <style scoped>

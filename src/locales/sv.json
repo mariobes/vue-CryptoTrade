@@ -166,6 +166,13 @@
     "UserInfo_Panel_Google_pay_Title": "Google Pay",
     "UserInfo_Panel_Google_pay_Text": "Sätt in pengar med ditt Google-konto",
     "UserInfo_Panel_Avaiable": "tillgängligt",
+    "UserInfo_Placeholder_Bank_Transfer": "IBAN",
+    "UserInfo_Placeholder_Card_Name": "Kortinnehavarens namn",
+    "UserInfo_Placeholder_Card_Number": "Kortnummer",
+    "UserInfo_Placeholder_Card_Date": "MM/ÅÅ",
+    "UserInfo_Placeholder_Card_CVC": "CVC",
+    "UserInfo_Placeholder_Google_Pay": "E-postadress",
+
 
     "UserInfo_Overview_Text": "Översikt",
     "UserInfo_Transactions_Text": "Transaktioner",

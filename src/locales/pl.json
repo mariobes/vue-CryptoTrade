@@ -166,6 +166,13 @@
     "UserInfo_Panel_Google_pay_Title": "Google Pay",
     "UserInfo_Panel_Google_pay_Text": "Wpłać pieniądze z konta Google",
     "UserInfo_Panel_Avaiable": "dostępne",
+    "UserInfo_Placeholder_Bank_Transfer": "IBAN",
+    "UserInfo_Placeholder_Card_Name": "Imię i nazwisko posiadacza karty",
+    "UserInfo_Placeholder_Card_Number": "Numer karty",
+    "UserInfo_Placeholder_Card_Date": "MM/RR",
+    "UserInfo_Placeholder_Card_CVC": "CVC",
+    "UserInfo_Placeholder_Google_Pay": "Adres e-mail",
+
 
     "UserInfo_Overview_Text": "Podsumowanie",
     "UserInfo_Transactions_Text": "Transakcje",

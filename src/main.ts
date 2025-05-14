@@ -33,24 +33,7 @@ import CS from './locales/cs.json'
 import EL from './locales/el.json'
 import HU from './locales/hu.json'
 
-const messages = {
-  ES: ES,
-  EN: EN,
-  RU: RU,
-  FR: FR,
-  DE: DE,
-  PT: PT,
-  PL: PL,
-  IT: IT,
-  NL: NL,
-  SV: SV,
-  UK: UK,
-  RO: RO,
-  SR: SR,
-  CS: CS,
-  EL: EL,
-  HU: HU
-}
+const messages = { ES: ES, EN: EN, RU: RU, FR: FR, DE: DE, PT: PT, PL: PL, IT: IT, NL: NL, SV: SV, UK: UK, RO: RO, SR: SR, CS: CS, EL: EL, HU: HU }
 
 const i18n = createI18n({
   legacy: false,

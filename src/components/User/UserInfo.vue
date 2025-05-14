@@ -92,61 +92,66 @@ const walletInfo = computed(() => {
 </script>
 
 <template>
-<div class="main-container">
-	<div class="info-wallet-content">
-    <span class="info-wallet-text">{{ t('UserInfo_Wallet_Title') }}</span>
-    <span class="info-wallet-value">
-      <span>
-        {{ storeUserPreferences.showPrices ? storeUserPreferences.convertPrice((walletInfo.total), storeUserPreferences.selectedCurrency, 'before') : '**********' }}
+  <div class="main-container">
+    <div class="info-wallet-content">
+      <span class="info-wallet-text">{{ t('UserInfo_Wallet_Title') }}</span>
+
+      <span class="info-wallet-value">
+        <span>
+          {{ storeUserPreferences.showPrices ? storeUserPreferences.convertPrice((walletInfo.total), storeUserPreferences.selectedCurrency, 'before') : '**********' }}
+        </span>
+        <span @click="storeUserPreferences.toggleShowPrices()" class="eye-icon">
+          <span v-if="storeUserPreferences.showPrices" class="mdi mdi-eye-outline"></span>
+          <span v-else class="mdi mdi-eye-off-outline"></span>
+        </span>
       </span>
-      <span @click="storeUserPreferences.toggleShowPrices()" class="eye-icon">
-        <span v-if="storeUserPreferences.showPrices" class="mdi mdi-eye-outline"></span>
-        <span v-else class="mdi mdi-eye-off-outline"></span>
+
+      <span class="info-wallet-change" :style="{ color: storeUserPreferences.getPriceColor(walletInfo.percentage) }">
+        {{ walletInfo.balance >= 0 ? '+' : '' }}
+        {{ storeUserPreferences.convertPrice(walletInfo.balance, storeUserPreferences.selectedCurrency, 'before', true) }}
+        <v-icon class="info-wallet-icon mb-1">
+          {{ storeUserPreferences.getArrowDirection(walletInfo.percentage) }}
+        </v-icon>
+        {{ storeUserPreferences.maskedPrice(Math.abs(walletInfo.percentage)) }}% (24h)
       </span>
-    </span>
-    <span class="info-wallet-change" :style="{ color: storeUserPreferences.getPriceColor(walletInfo.percentage) }">
-      {{ walletInfo.balance >= 0 ? '+' : '' }}
-      {{ storeUserPreferences.convertPrice(walletInfo.balance, storeUserPreferences.selectedCurrency, 'before', true) }}
-      <v-icon class="info-wallet-icon mb-1">
-        {{ storeUserPreferences.getArrowDirection(walletInfo.percentage) }}
-      </v-icon>
-      {{ storeUserPreferences.maskedPrice(Math.abs(walletInfo.percentage)) }}% (24h)
-    </span>
-  </div>
-	<div class="info-cash-content">
-    <div class="info-cash-title">
-      <span class="info-cash-text">{{ t('UserInfo_Cash_Title') }}</span>
-      <span class="info-cash-value">{{ userData?.cash != undefined ? storeUserPreferences.convertPrice(userData?.cash, storeUserPreferences.selectedCurrency, 'after', true) : 0 }}</span>
-    </div>
-    <div class="info-cash-options">
-      <button 
-        class="info-cash-btn deposit-btn" 
-        :class="storeUserPreferences.selectedTheme === 'light' ? 'deposit-hover-light' : 'deposit-hover-dark'"
-        @click="openDepositPanel"
-      >
-      {{ t('UserInfo_Deposit_Btn') }}
-      </button>
-      <button 
-        class="info-cash-btn withdrawal-btn"
-        :class="storeUserPreferences.selectedTheme === 'light' ? 'withdrawal-hover-light' : 'withdrawal-hover-dark'"
-        @click="openWithdrawalPanel"
-      >
-      {{ t('UserInfo_Withdrawal_Btn') }}
-      </button>
     </div>
 
-    <span v-if="successMessage" class="buy-sell-success">{{ successMessage }}</span>
-  </div>
-</div>
+    <div class="info-cash-content">
+      <div class="info-cash-title">
+        <span class="info-cash-text">{{ t('UserInfo_Cash_Title') }}</span>
+        <span class="info-cash-value">{{ userData?.cash != undefined ? storeUserPreferences.convertPrice(userData?.cash, storeUserPreferences.selectedCurrency, 'after', true) : 0 }}</span>
+      </div>
 
-<DepositWithDrawalPanel
-  :visible="showDepositPanel || showWithdrawalPanel"
-  :action="activeAction"
-  @close="closePanel"
-  @submit="activeAction === 'deposit' ? handleDeposit() : handleWithdrawal()"
-  @update-cash="updateCash"
-  @success-message="handleSuccessMessage"
-/>
+      <div class="info-cash-options">
+        <button 
+          class="info-cash-btn deposit-btn" 
+          :class="storeUserPreferences.selectedTheme === 'light' ? 'deposit-hover-light' : 'deposit-hover-dark'"
+          @click="openDepositPanel"
+        >
+        {{ t('UserInfo_Deposit_Btn') }}
+        </button>
+        
+        <button 
+          class="info-cash-btn withdrawal-btn"
+          :class="storeUserPreferences.selectedTheme === 'light' ? 'withdrawal-hover-light' : 'withdrawal-hover-dark'"
+          @click="openWithdrawalPanel"
+        >
+        {{ t('UserInfo_Withdrawal_Btn') }}
+        </button>
+      </div>
+
+      <span v-if="successMessage" class="buy-sell-success">{{ successMessage }}</span>
+    </div>
+  </div>
+
+  <DepositWithDrawalPanel
+    :visible="showDepositPanel || showWithdrawalPanel"
+    :action="activeAction"
+    @close="closePanel"
+    @submit="activeAction === 'deposit' ? handleDeposit() : handleWithdrawal()"
+    @update-cash="updateCash"
+    @success-message="handleSuccessMessage"
+  />
 </template>
 
 <style scoped>

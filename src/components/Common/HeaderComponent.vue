@@ -182,6 +182,7 @@ watch(
   color: v-bind(textColor);
   margin-right: 20px;
   padding-left: 10px;
+  font-weight: bold;
   font-family: 'Montserrat', sans-serif;
 }
 
@@ -195,6 +196,7 @@ watch(
   text-decoration: none;
   color: v-bind(textColor);
   margin: 0 20px;
+  font-weight: bold;
   font-family: 'Montserrat', sans-serif;
 }
 
@@ -248,6 +250,7 @@ a {
   border-radius: 8px;
   transition: background-color 0.3s, color 0.3s;
   color: v-bind(textColor);
+  font-weight: bold;
 }
 
 .header-icons:hover {
