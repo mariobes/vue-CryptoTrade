@@ -166,6 +166,13 @@
     "UserInfo_Panel_Google_pay_Title": "Google Pay",
     "UserInfo_Panel_Google_pay_Text": "Položite novac sa vašim Google nalogom",
     "UserInfo_Panel_Avaiable": "dostupno",
+    "UserInfo_Placeholder_Bank_Transfer": "IBAN",
+    "UserInfo_Placeholder_Card_Name": "Ime vlasnika kartice",
+    "UserInfo_Placeholder_Card_Number": "Broj kartice",
+    "UserInfo_Placeholder_Card_Date": "MM/GG",
+    "UserInfo_Placeholder_Card_CVC": "CVC",
+    "UserInfo_Placeholder_Google_Pay": "Email adresa",
+
 
     "UserInfo_Overview_Text": "Pregled",
     "UserInfo_Transactions_Text": "Transakcije",

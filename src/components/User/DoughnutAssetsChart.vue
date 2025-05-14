@@ -96,6 +96,7 @@ const chartOptions = {
 <template>
   <div v-if="chartData.datasets[0].data.length > 0" class="chart-container">
 		<div class="chart-title">{{ t('UserInfo_Chart_Title') }}</div>
+
 		<div class="chart-content">
 			<Doughnut :data="chartData" :options="chartOptions" />
 		</div>
@@ -118,8 +119,8 @@ const chartOptions = {
 				</li>
 			</ul>
 		</div>
-
   </div>
+  
   <div v-else class="no-assets-text">
     {{ t('UserInfo_Chart_Text') }}
   </div>

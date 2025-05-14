@@ -166,6 +166,13 @@
     "UserInfo_Panel_Google_pay_Title": "Google Pay",
     "UserInfo_Panel_Google_pay_Text": "Внесите деньги с вашего аккаунта Google",
     "UserInfo_Panel_Avaiable": "доступно",
+    "UserInfo_Placeholder_Bank_Transfer": "IBAN",
+    "UserInfo_Placeholder_Card_Name": "Имя держателя карты",
+    "UserInfo_Placeholder_Card_Number": "Номер карты",
+    "UserInfo_Placeholder_Card_Date": "MM/ГГ",
+    "UserInfo_Placeholder_Card_CVC": "CVC",
+    "UserInfo_Placeholder_Google_Pay": "Электронная почта",
+
 
     "UserInfo_Overview_Text": "Обзор",
     "UserInfo_Transactions_Text": "Транзакции",

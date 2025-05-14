@@ -12,12 +12,12 @@ import CryptoSparkline from '../Crypto/CryptoSparkline.vue'
 const backgroundColor = computed(() => storeUserPreferences.getTheme().background)
 const textColor = computed(() => storeUserPreferences.getTheme().text)
 
-const { t } = useI18n()
-
 const storeCryptos = useCryptosStore()
 const storeWatchlists = useWatchlistsStore()
 const storeUserPreferences = useUserPreferencesStore()
 const storeAuth = useAuthStore()
+
+const { t } = useI18n()
 
 const sortBy = ref<number | null>(null)
 const order = ref(0)
@@ -79,7 +79,6 @@ async function loadWatchlist() {
 }
 
 async function toggleFavorite(cryptoId: string) {
-
   const isFav = watchlist.value.includes(cryptoId)
 
   if (isFav) {
@@ -234,6 +233,7 @@ onMounted(async () => {
       </tr>
     </tbody>
   </v-table>
+  
   <div v-if="!sortable && !props.showWatchlist" class="cryptos-see-all-container">
     <RouterLink 
       to="/cryptoTable" 

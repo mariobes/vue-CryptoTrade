@@ -182,6 +182,7 @@ const formatDate = (dateInput: string | Date | undefined): string => {
   <div class="main-container">
     <div class="user-options-content">
       <div class="user-title">{{ t('UserSettings_Details_Account_Title') }}</div>
+
       <button
           class="user-option-btn"
           :class="{ selected: selectedOption === 'login' }"
@@ -189,6 +190,7 @@ const formatDate = (dateInput: string | Date | undefined): string => {
         >
         {{ t('UserSettings_Login_Security_Title') }}
         </button>
+
         <button
           class="user-option-btn"
           :class="{ selected: selectedOption === 'data' }"
@@ -201,11 +203,13 @@ const formatDate = (dateInput: string | Date | undefined): string => {
     <div class="user-info-content">
       <div v-if="selectedOption === 'login'">
         <div class="user-title">{{ t('UserSettings_Login_Security_Title') }}</div>
+
         <div class="login-item">
           <div class="login-item-info">
             <span class="login-item-title">{{ t('UserSettings_Email_Title') }}</span>
             <span class="login-item-text">{{ t('UserSettings_Email_Text') }}</span>
           </div>
+
           <div class="login-item-value">
             <div class="input-group">
               <input
@@ -216,6 +220,7 @@ const formatDate = (dateInput: string | Date | undefined): string => {
               <span v-if="errorMessages.email" class="field-error">{{ errorMessages.email }}</span>
               <span v-if="successMessages.email" class="field-success">{{ successMessages.email }}</span>
             </div>
+
             <button
               :disabled="editingField !== null && editingField !== 'email'"
               @click="editingField === 'email' ? confirmEdit('email') : editingField = 'email'">
@@ -229,6 +234,7 @@ const formatDate = (dateInput: string | Date | undefined): string => {
             <span class="login-item-title">{{ t('UserSettings_Phone_Title') }}</span>
             <span class="login-item-text">{{ t('UserSettings_Phone_Text') }}</span>
           </div>
+
           <div class="login-item-value">
             <div class="input-group">
               <input
@@ -239,6 +245,7 @@ const formatDate = (dateInput: string | Date | undefined): string => {
               <span v-if="errorMessages.phone" class="field-error">{{ errorMessages.phone }}</span>
               <span v-if="successMessages.phone" class="field-success">{{ successMessages.phone }}</span>
             </div>
+
             <button
               :disabled="editingField !== null && editingField !== 'phone'"
               @click="editingField === 'phone' ? confirmEdit('phone') : editingField = 'phone'">
@@ -252,6 +259,7 @@ const formatDate = (dateInput: string | Date | undefined): string => {
             <span class="login-item-title">{{ t('UserSettings_Password_Title') }}</span>
             <span class="login-item-text">{{ t('UserSettings_Password_Text') }}</span>
           </div>
+
           <div class="login-item-value login-password">
             <div class="input-group">
               <input
@@ -263,9 +271,11 @@ const formatDate = (dateInput: string | Date | undefined): string => {
               <span v-if="errorMessages.password" class="field-error">{{ errorMessages.password }}</span>
               <span v-if="successMessages.password" class="field-success">{{ successMessages.password }}</span>
             </div>
+
             <button @click="showPassword = !showPassword">
               <span :class="showPassword ? 'mdi mdi-eye-off' : 'mdi mdi-eye'"></span>
             </button>
+
             <button
               :disabled="editingField !== null && editingField !== 'password'"
               @click="editingField === 'password' ? confirmEdit('password') : editingField = 'password'">
@@ -279,12 +289,14 @@ const formatDate = (dateInput: string | Date | undefined): string => {
             <span class="login-item-title">{{ t('UserSettings_Delete_Account_Title') }}</span>
             <span class="login-item-text">{{ t('UserSettings_Delete_Account_Text') }}</span>
           </div>
+
           <button class="login-item-btn" @click="openDeleteModal">{{ t('UserSettings_Delete_Account_Btn') }}</button>
         </div>
       </div>
 
       <div v-if="selectedOption === 'data'">
         <div class="user-title">{{ t('UserSettings_Personal_Data_Title') }}</div>
+
         <div class="login-item">
           <span class="login-item-field">{{ t('UserSettings_Name_Title') }}</span>
           <span class="login-item-value">{{ userData?.name }}</span>
@@ -319,19 +331,22 @@ const formatDate = (dateInput: string | Date | undefined): string => {
   </div>
 
   <div v-if="showDeleteModal" class="popup-delete-container">
-  <div class="popup-delete-content">
-    <span class="popup-delete-title">{{ t('UserSettings_Popup_Delete_Account_Title') }}</span>
-    <p>{{ t('UserSettings_Popup_Delete_Account_Text') }}</p>
-    <div class="popup-delete-btn">
-      <button @click="confirmDelete" class="delete-confirm-btn">
-        {{ t('UserSettings_Popup_Delete_Account_Btn') }}
-      </button>
-      <button @click="showDeleteModal = false" class="delete-cancel-btn" :class="[ storeUserPreferences.selectedTheme === 'light' ? 'delete-cancel-btn-light' : 'delete-cancel-btn-dark' ]">
-        {{ t('UserSettings_Popup_Cancel_Btn') }}
-      </button>
+    <div class="popup-delete-content">
+      <span class="popup-delete-title">{{ t('UserSettings_Popup_Delete_Account_Title') }}</span>
+
+      <p>{{ t('UserSettings_Popup_Delete_Account_Text') }}</p>
+
+      <div class="popup-delete-btn">
+        <button @click="confirmDelete" class="delete-confirm-btn">
+          {{ t('UserSettings_Popup_Delete_Account_Btn') }}
+        </button>
+        
+        <button @click="showDeleteModal = false" class="delete-cancel-btn" :class="[ storeUserPreferences.selectedTheme === 'light' ? 'delete-cancel-btn-light' : 'delete-cancel-btn-dark' ]">
+          {{ t('UserSettings_Popup_Cancel_Btn') }}
+        </button>
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 <style scoped>

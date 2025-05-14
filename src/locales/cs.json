@@ -166,6 +166,12 @@
     "UserInfo_Panel_Google_pay_Title": "Google Pay",
     "UserInfo_Panel_Google_pay_Text": "Vložit peníze pomocí Google účtu",
     "UserInfo_Panel_Avaiable": "k dispozici",
+    "UserInfo_Placeholder_Bank_Transfer": "IBAN",
+    "UserInfo_Placeholder_Card_Name": "Jméno držitele karty",
+    "UserInfo_Placeholder_Card_Number": "Číslo karty",
+    "UserInfo_Placeholder_Card_Date": "MM/RR",
+    "UserInfo_Placeholder_Card_CVC": "CVC",
+    "UserInfo_Placeholder_Google_Pay": "E-mailová adresa",
 
     "UserInfo_Overview_Text": "Přehled",
     "UserInfo_Transactions_Text": "Transakce",

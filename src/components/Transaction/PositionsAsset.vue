@@ -47,13 +47,16 @@ onMounted(async () => {
     <div v-if="storeAuth.isLoggedIn() && userAsset" class="positions-container">
       <div class="positions-title">
         <span>{{ t('TransactionsAsset_Position_Text') }}</span>
+
         <span @click="storeUserPreferences.toggleShowPrices()" class="eye-icon">
           <span v-if="storeUserPreferences.showPrices" class="mdi mdi-eye-outline"></span>
           <span v-else class="mdi mdi-eye-off-outline"></span>
         </span>
       </div>
+
       <div class="positions-total-content">
         <span class="positions-text">{{ t('TransactionsAsset_Total_Text') }}</span>
+
         <span class="positions-total-value">
           {{ storeUserPreferences.convertPrice(userAsset.total, storeUserPreferences.selectedCurrency, 'after', true) }}
         </span>
@@ -61,6 +64,7 @@ onMounted(async () => {
 
       <div class="positions-profit-content">
         <span class="positions-text">{{ t('TransactionsAsset_Profitability_Text') }}</span>
+
         <span class="positions-profit-value" :style="{ color: storeUserPreferences.getPriceColor(userAsset.balance) }">
           <v-icon class="positions-profit-icon mb-1">
             {{ storeUserPreferences.getArrowDirection(userAsset.balance) }}
@@ -77,10 +81,12 @@ onMounted(async () => {
           <span class="positions-text">{{ t('TransactionsAsset_Actives_Text') }}</span>
           <span class="positions-info-value">{{ storeUserPreferences.convertAssetAmount(userAsset.totalAssetAmount, true) }}</span>
         </div>
+
         <div class="positions-info-purchase-price">
           <span class="positions-text">{{ t('TransactionsAsset_Purchase_Price_Text') }}</span>
           <span class="positions-info-value">{{ storeUserPreferences.convertPrice(userAsset.averagePurchasePrice, storeUserPreferences.selectedCurrency, 'after', true) }}</span>
         </div>
+        
         <div class="positions-info-percentage">
           <span class="positions-text">{{ t('TransactionsAsset_Purchase_Percentage_Text') }}</span>
           <span class="positions-info-value">{{ storeUserPreferences.maskedPrice(userAsset.walletPercentage) }} %</span>

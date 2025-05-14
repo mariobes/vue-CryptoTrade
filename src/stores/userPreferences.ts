@@ -301,8 +301,8 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
       }
     },
 
-    showDefaultAssetImage(stock: any) {
-      stock.image = '/src/assets/asset-default.png';
+    showDefaultAssetImage(asset: any) {
+      asset.image = '/src/assets/asset-default.png';
     },
   }
 });
