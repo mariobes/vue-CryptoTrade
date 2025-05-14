@@ -166,6 +166,13 @@
     "UserInfo_Panel_Google_pay_Title": "Google Pay",
     "UserInfo_Panel_Google_pay_Text": "Καταθέστε χρήματα με τον λογαριασμό σας Google",
     "UserInfo_Panel_Avaiable": "διαθέσιμο",
+    "UserInfo_Placeholder_Bank_Transfer": "IBAN",
+    "UserInfo_Placeholder_Card_Name": "Όνομα κατόχου κάρτας",
+    "UserInfo_Placeholder_Card_Number": "Αριθμός κάρτας",
+    "UserInfo_Placeholder_Card_Date": "MM/EE",
+    "UserInfo_Placeholder_Card_CVC": "CVC",
+    "UserInfo_Placeholder_Google_Pay": "Διεύθυνση email",
+
 
     "UserInfo_Overview_Text": "Γενική Επισκόπηση",
     "UserInfo_Transactions_Text": "Συναλλαγές",

@@ -166,6 +166,13 @@
     "UserInfo_Panel_Google_pay_Title": "Google Pay",
     "UserInfo_Panel_Google_pay_Text": "Pénz befizetése a Google fiókoddal",
     "UserInfo_Panel_Avaiable": "elérhető",
+    "UserInfo_Placeholder_Bank_Transfer": "IBAN",
+    "UserInfo_Placeholder_Card_Name": "Kártyabirtokos neve",
+    "UserInfo_Placeholder_Card_Number": "Kártyaszám",
+    "UserInfo_Placeholder_Card_Date": "HH/ÉÉ",
+    "UserInfo_Placeholder_Card_CVC": "CVC",
+    "UserInfo_Placeholder_Google_Pay": "Email cím",
+
 
     "UserInfo_Overview_Text": "Áttekintés",
     "UserInfo_Transactions_Text": "Tranzakciók",

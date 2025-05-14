@@ -11,12 +11,12 @@ import { useI18n } from 'vue-i18n'
 const backgroundColor = computed(() => storeUserPreferences.getTheme().background)
 const textColor = computed(() => storeUserPreferences.getTheme().text)
 
-const { t } = useI18n()
-
 const storeStocks = useStocksStore()
 const storeWatchlists = useWatchlistsStore()
 const storeUserPreferences = useUserPreferencesStore()
 const storeAuth = useAuthStore()
+
+const { t } = useI18n()
 
 const sortBy = ref<number | null>(null)
 const order = ref(0)
@@ -238,6 +238,7 @@ onMounted(async () => {
       </tr>
     </tbody>
   </v-table>
+
   <div v-if="!sortable && !props.showWatchlist" class="stocks-see-all-container">
     <RouterLink 
       to="/stockTable" 
@@ -350,5 +351,4 @@ onMounted(async () => {
 .stocks-see-all:hover {
   color: var(--primary-color) !important;
 }
-
 </style>

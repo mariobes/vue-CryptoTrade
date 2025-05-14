@@ -166,6 +166,13 @@
     "UserInfo_Panel_Google_pay_Title": "Google Pay",
     "UserInfo_Panel_Google_pay_Text": "Deposita denaro con il tuo account Google",
     "UserInfo_Panel_Avaiable": "disponibile",
+    "UserInfo_Placeholder_Bank_Transfer": "IBAN",
+    "UserInfo_Placeholder_Card_Name": "Nome del titolare",
+    "UserInfo_Placeholder_Card_Number": "Numero della carta",
+    "UserInfo_Placeholder_Card_Date": "MM/AA",
+    "UserInfo_Placeholder_Card_CVC": "CVC",
+    "UserInfo_Placeholder_Google_Pay": "Indirizzo email",
+
 
     "UserInfo_Overview_Text": "Panoramica",
     "UserInfo_Transactions_Text": "Transazioni",

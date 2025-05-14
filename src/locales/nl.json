@@ -166,6 +166,13 @@
     "UserInfo_Panel_Google_pay_Title": "Google Pay",
     "UserInfo_Panel_Google_pay_Text": "Stort geld met je Google-account",
     "UserInfo_Panel_Avaiable": "beschikbaar",
+    "UserInfo_Placeholder_Bank_Transfer": "IBAN",
+    "UserInfo_Placeholder_Card_Name": "Naam kaarthouder",
+    "UserInfo_Placeholder_Card_Number": "Kaartnummer",
+    "UserInfo_Placeholder_Card_Date": "MM/JJ",
+    "UserInfo_Placeholder_Card_CVC": "CVC",
+    "UserInfo_Placeholder_Google_Pay": "E-mailadres",
+
 
     "UserInfo_Overview_Text": "Overzicht",
     "UserInfo_Transactions_Text": "Transacties",

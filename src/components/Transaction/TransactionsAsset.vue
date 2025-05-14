@@ -191,6 +191,7 @@ watch(amount, () => {
         >
           {{ t('TransactionsAsset_Buy_Btn') }}
         </button>
+
         <button
           v-if="userAsset && userAsset.totalAssetAmount > 0"
           class="action-btn"
@@ -205,7 +206,7 @@ watch(amount, () => {
         <label v-if="storeAuth.isLoggedIn()" class="amount-input-text">
           {{ selectedAction === 'buy'
             ? `${storeUserPreferences.convertPrice(userCash, storeUserPreferences.selectedCurrency, 'after', true)} ${t('TransactionsAsset_Available_Text')}`
-            : storeUserPreferences.showPrices ? `${userAsset.totalAssetAmount.toFixed(6)} ${t('TransactionsAsset_Available_Assets_Text')}` : '******'
+            : storeUserPreferences.showPrices ? `${userAsset?.totalAssetAmount.toFixed(6)} ${t('TransactionsAsset_Available_Assets_Text')}` : '******'
           }}
         </label>
 
@@ -217,6 +218,7 @@ watch(amount, () => {
           >
             {{ t('TransactionsAsset_Import_Text') }}
           </button>
+
           <button 
             class="select-option-btn"
             :class="{ selectedOption: selectedOption === 'assetAmount' }"
@@ -224,7 +226,6 @@ watch(amount, () => {
           >
             {{ t('TransactionsAsset_Actives_Text') }}
           </button>
-
         </div>
 
         <div class="amount-input-content">
@@ -234,11 +235,11 @@ watch(amount, () => {
             class="amount-input-value"
             placeholder="0" 
             :disabled="!storeAuth.isLoggedIn()"
-            @input="() => { hasInteracted = true; validateFields(); }" />
-
-            <span class="amount-input-currency">
-              {{ storeUserPreferences.getCurrencySymbol(storeUserPreferences.selectedCurrency) }}
-            </span>
+            @input="() => { hasInteracted = true; validateFields(); }" 
+          />
+          <span class="amount-input-currency">
+            {{ storeUserPreferences.getCurrencySymbol(storeUserPreferences.selectedCurrency) }}
+          </span>
         </div>
 
         <div v-if="selectedOption === 'amount'" class="asset-info-container">
@@ -287,6 +288,7 @@ watch(amount, () => {
         <span v-if="errorMessages.buy || errorMessages.sell" class="buy-sell-error" :class="selectedOption === 'assetAmount' ? 'asset-amount-message' : ''">
           {{ selectedAction === 'buy' ? errorMessages.buy : errorMessages.sell }}
         </span>
+        
         <span v-if="successMessage" class="buy-sell-success" :class="selectedOption === 'assetAmount' ? 'asset-amount-message' : ''">
           {{ successMessage }}
         </span>

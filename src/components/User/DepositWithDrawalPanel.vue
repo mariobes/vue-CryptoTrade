@@ -40,6 +40,15 @@ const selectedPaymentMethod = ref<0 | 1 | 2 | null>(null);
 const hasInteracted = ref(false);
 const successMessage = ref<string | null>(null);
 
+const bankAccount = ref('');
+const creditCard = ref({
+  number: '',
+  expiry: '',
+  name: '',
+  cvc: ''
+});
+const googlePayEmail = ref('');
+
 const userData = ref<User | null>(null);
 const userId = storeAuth.getUserId()
 const token = storeAuth.getToken()
@@ -90,7 +99,6 @@ const validateFields = () => {
   const isDeposit = props.action === 'deposit';
   const isWithdrawal = props.action === 'withdrawal';
   const currentCash = Number(userData.value?.cash || 0);
-
   const fieldName = isDeposit ? 'deposit' : 'withdrawal';
 
   if (amount.value < 10) {
@@ -119,139 +127,246 @@ watch(() => props.visible, (newVal) => {
   if (newVal) {
     errorMessages.value = {};
     amount.value = '';
+    bankAccount.value = '';
+    creditCard.value = {
+      number: '',
+      expiry: '',
+      name: '',
+      cvc: ''
+    };
+    googlePayEmail.value = '';
     selectedPaymentMethod.value = null;
     hasInteracted.value = false;
   }
 });
+
+const isButtonDisabled = computed(() => {
+  if (!amount.value || amount.value < 10) return true;
+
+  if (props.action === 'deposit') {
+    if (amount.value >= 10000) return true;
+
+    switch (selectedPaymentMethod.value) {
+      case 0:
+        return !bankAccount.value || bankAccount.value.length < 10;
+      case 1:
+        return (
+          !creditCard.value.name ||
+          !creditCard.value.number || creditCard.value.number.length < 16 ||
+          !creditCard.value.expiry || !/^\d{2}\/\d{2}$/.test(creditCard.value.expiry) ||
+          !creditCard.value.cvc || creditCard.value.cvc.length < 3
+        );
+      case 2:
+        return !googlePayEmail.value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(googlePayEmail.value);
+      default:
+        return true;
+    }
+  }
+
+  if (props.action === 'withdrawal') {
+    return amount.value > Number(userData.value?.cash) || !bankAccount.value || bankAccount.value.length < 10;
+  }
+
+  return true;
+});
 </script>
 
 <template>
-<transition name="slide-panel">
-  <div v-if="props.visible" class="panel-overlay" @click.self="closePanel">
-    <div class="deposit-withdrawal-panel" @click.stop>
-      <v-btn 
-        icon 
-        @click="closePanel" 
-        class="popup-close-btn" 
-        :ripple="false"
-        density="compact"
-      >
-        <v-icon size="25">mdi-close</v-icon>
-      </v-btn>
-
-      <div class="panel-content">
-        <div class="panel-title">
-          <span v-if="props.action === 'withdrawal'">
-            {{ t('UserInfo_Panel_Withdrawal_Title') }}
-          </span>
-          <span v-else-if="props.action === 'deposit' && selectedPaymentMethod === null">
-            {{ t('UserInfo_Panel_Payment_Title') }}
-          </span>
-          <span v-else-if="props.action === 'deposit' && selectedPaymentMethod !== null">
-            {{ t('UserInfo_Panel_Deposit_Title') }}
-          </span>
-        </div>
-
-        <v-btn
-          v-if="props.action === 'deposit' && selectedPaymentMethod !== null"
-          icon
-          @click="selectedPaymentMethod = null"
-          class="popup-close-btn"
-          style="top: 265px; left: 40px;" 
-          :style="{ color: textColor }"
+  <transition name="slide-panel">
+    <div v-if="props.visible" class="panel-overlay" @click.self="closePanel">
+      <div class="deposit-withdrawal-panel" @click.stop>
+        <v-btn 
+          icon 
+          @click="closePanel" 
+          class="popup-close-btn" 
           :ripple="false"
           density="compact"
         >
-          <v-icon size="25">mdi-arrow-left</v-icon>
+          <v-icon size="25">mdi-close</v-icon>
         </v-btn>
 
-        <div v-if="props.action === 'deposit' && selectedPaymentMethod === null" class="panel-payment-options">
-          <div>
-            <button @click="selectedPaymentMethod = 0" class="panel-payment-btn">
-              <span class="mdi mdi-bank-outline panel-payment-icon"></span>
-              <div class="payment-text-content">
-                <span class="panel-payment-title">{{ t('UserInfo_Panel_Bank_Transfer_Title') }}</span>
-                <span class="panel-payment-text">{{ t('UserInfo_Panel_Bank_Transfer_Text') }}</span>
-              </div>
-            </button>
-          </div>
-          <div>
-            <button @click="selectedPaymentMethod = 1" class="panel-payment-btn">
-              <span class="mdi mdi-credit-card-outline panel-payment-icon"></span>
-              <div class="payment-text-content">
-                <span class="panel-payment-title">{{ t('UserInfo_Panel_Credit_Card_Title') }}</span>
-                <span class="panel-payment-text">{{ t('UserInfo_Panel_Credit_Card_Text') }}</span>
-              </div>
-            </button>
-          </div>
-          <div>
-            <button @click="selectedPaymentMethod = 2" class="panel-payment-btn">
-              <span class="mdi mdi-google panel-payment-icon"></span>
-              <div class="payment-text-content">
-                <span class="panel-payment-title">{{ t('UserInfo_Panel_Google_pay_Title') }}</span>
-                <span class="panel-payment-text">{{ t('UserInfo_Panel_Google_pay_Text') }}</span>
-              </div>
-            </button>
-          </div>
-        </div>
+        <div class="panel-content">
+          <div class="panel-title">
+            <span v-if="props.action === 'withdrawal'">
+              {{ t('UserInfo_Panel_Withdrawal_Title') }}
+            </span>
 
-        <div v-if="props.visible && props.action === 'withdrawal'" class="panel-payment-container">
-          <span class="mdi mdi-bank-outline panel-payment-icon"></span>
-          <span class="panel-payment-title">{{ t('UserInfo_Panel_Bank_Transfer_Title') }}</span>
-        </div>
+            <span v-else-if="props.action === 'deposit' && selectedPaymentMethod === null">
+              {{ t('UserInfo_Panel_Payment_Title') }}
+            </span>
 
-        <div v-if="props.action === 'deposit' && selectedPaymentMethod !== null" class="panel-payment-container">
-          <div v-if="selectedPaymentMethod === 0" class="panel-payment-content">
+            <span v-else-if="props.action === 'deposit' && selectedPaymentMethod !== null">
+              {{ t('UserInfo_Panel_Deposit_Title') }}
+            </span>
+          </div>
+
+          <v-btn
+            v-if="props.action === 'deposit' && selectedPaymentMethod !== null"
+            icon
+            @click="selectedPaymentMethod = null"
+            class="popup-close-btn"
+            style="top: 265px; left: 40px;" 
+            :style="{ color: textColor }"
+            :ripple="false"
+            density="compact"
+          >
+            <v-icon size="25">mdi-arrow-left</v-icon>
+          </v-btn>
+
+          <div v-if="props.action === 'deposit' && selectedPaymentMethod === null" class="panel-payment-options">
+            <div>
+              <button @click="selectedPaymentMethod = 0" class="panel-payment-btn">
+                <span class="mdi mdi-bank-outline panel-payment-icon"></span>
+
+                <div class="payment-text-content">
+                  <span class="panel-payment-title">{{ t('UserInfo_Panel_Bank_Transfer_Title') }}</span>
+                  <span class="panel-payment-text">{{ t('UserInfo_Panel_Bank_Transfer_Text') }}</span>
+                </div>
+              </button>
+            </div>
+
+            <div>
+              <button @click="selectedPaymentMethod = 1" class="panel-payment-btn">
+                <span class="mdi mdi-credit-card-outline panel-payment-icon"></span>
+
+                <div class="payment-text-content">
+                  <span class="panel-payment-title">{{ t('UserInfo_Panel_Credit_Card_Title') }}</span>
+                  <span class="panel-payment-text">{{ t('UserInfo_Panel_Credit_Card_Text') }}</span>
+                </div>
+              </button>
+            </div>
+
+            <div>
+              <button @click="selectedPaymentMethod = 2" class="panel-payment-btn">
+                <span class="mdi mdi-google panel-payment-icon"></span>
+
+                <div class="payment-text-content">
+                  <span class="panel-payment-title">{{ t('UserInfo_Panel_Google_pay_Title') }}</span>
+                  <span class="panel-payment-text">{{ t('UserInfo_Panel_Google_pay_Text') }}</span>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <div v-if="props.visible && props.action === 'withdrawal'" class="panel-payment-container">
             <span class="mdi mdi-bank-outline panel-payment-icon"></span>
             <span class="panel-payment-title">{{ t('UserInfo_Panel_Bank_Transfer_Title') }}</span>
           </div>
-          <div v-else-if="selectedPaymentMethod === 1" class="panel-payment-content">
-            <span class="mdi mdi-credit-card-outline panel-payment-icon"></span>
-            <span class="panel-payment-title">{{ t('UserInfo_Panel_Credit_Card_Title') }}</span>
+
+          <div v-if="props.action === 'deposit' && selectedPaymentMethod !== null" class="panel-payment-container">
+            <div v-if="selectedPaymentMethod === 0" class="panel-payment-content">
+              <span class="mdi mdi-bank-outline panel-payment-icon"></span>
+              <span class="panel-payment-title">{{ t('UserInfo_Panel_Bank_Transfer_Title') }}</span>
+            </div>
+
+            <div v-else-if="selectedPaymentMethod === 1" class="panel-payment-content">
+              <span class="mdi mdi-credit-card-outline panel-payment-icon"></span>
+              <span class="panel-payment-title">{{ t('UserInfo_Panel_Credit_Card_Title') }}</span>
+            </div>
+
+            <div v-else-if="selectedPaymentMethod === 2" class="panel-payment-content">
+              <span class="mdi mdi-google panel-payment-icon"></span>
+              <span class="panel-payment-title">{{ t('UserInfo_Panel_Google_pay_Title') }}</span>
+            </div>
           </div>
-          <div v-else-if="selectedPaymentMethod === 2" class="panel-payment-content">
-            <span class="mdi mdi-google panel-payment-icon"></span>
-            <span class="panel-payment-title">{{ t('UserInfo_Panel_Google_pay_Title') }}</span>
+
+          <div class="panel-payment-input">
+            <div v-if="selectedPaymentMethod === 0 || props.action === 'withdrawal'">
+              <input
+                v-model="bankAccount"
+                class="payment-input-value"
+                maxlength="34"
+                inputmode="text"
+                pattern="[A-Z0-9]*"
+                :placeholder="t('UserInfo_Placeholder_Bank_Transfer')" 
+              />
+            </div>
+
+            <div v-if="selectedPaymentMethod === 1">
+              <div>
+                <input
+                  v-model="creditCard.name"
+                  class="payment-input-value"
+                  :placeholder="t('UserInfo_Placeholder_Card_Name')" 
+                />
+
+                <input
+                  v-model="creditCard.number"
+                  class="payment-input-value"
+                  type="tel"
+                  inputmode="numeric"
+                  maxlength="16"
+                  autocomplete="cc-number"
+                  :placeholder="t('UserInfo_Placeholder_Card_Number')" 
+                />
+              </div>
+
+              <div class="input-card-date">
+                <input
+                  v-model="creditCard.expiry"
+                  class="payment-input-date-value"
+                  type="text"
+                  maxlength="5"
+                  pattern="\d{2}/\d{2}"
+                  autocomplete="cc-exp"
+                  :placeholder="t('UserInfo_Placeholder_Card_Date')" 
+                />
+
+                <input
+                  v-model="creditCard.cvc"
+                  class="payment-input-date-value"
+                  type="tel"
+                  inputmode="numeric"
+                  maxlength="4"
+                  autocomplete="cc-csc"
+                  :placeholder="t('UserInfo_Placeholder_Card_CVC')" 
+                />
+              </div>
+            </div>
+
+            <div v-if="selectedPaymentMethod === 2">
+              <input
+                v-model="googlePayEmail"
+                class="payment-input-value"
+                :placeholder="t('UserInfo_Placeholder_Google_Pay')" 
+              />
+            </div>
           </div>
-        </div>          
-        
-        <div v-if="(props.action === 'withdrawal') || (props.action === 'deposit' && selectedPaymentMethod !== null)" 
-          class="panel-input"
-        >
-          <input
-            v-model="amount"
-            class="panel-input-value"
-            :style="{ background: colorGray }"
-            placeholder="0" />
+
+          <div v-if="(props.action === 'withdrawal') || (props.action === 'deposit' && selectedPaymentMethod !== null)" class="panel-input">
+            <input
+              v-model="amount"
+              class="panel-input-value"
+              placeholder="0" 
+            />
 
             <span class="panel-input-currency">
               {{ storeUserPreferences.getCurrencySymbol(storeUserPreferences.selectedCurrency) }}
             </span>
-        </div>
+          </div>
 
-        <div v-if="props.visible && props.action === 'withdrawal'" class="cash-available-text">
-          <span>
-            {{ storeUserPreferences.convertPrice(Number(userData?.cash), storeUserPreferences.selectedCurrency, 'after', true) }}
-            {{ t('UserInfo_Panel_Avaiable') }}
-          </span>
-        </div>
+          <div v-if="props.visible && props.action === 'withdrawal'" class="cash-available-text">
+            <span>
+              {{ storeUserPreferences.convertPrice(Number(userData?.cash), storeUserPreferences.selectedCurrency, 'after', true) }}
+              {{ t('UserInfo_Panel_Avaiable') }}
+            </span>
+          </div>
 
-        <button 
-          v-if="(props.action === 'withdrawal') || (props.action === 'deposit' && selectedPaymentMethod !== null)"
-          class="panel-input-btn"
-          :class="storeUserPreferences.selectedTheme === 'light' ? 'panel-input-btn-hover-light' : 'panel-input-btn-hover-dark'"
-          @click="props.action === 'withdrawal' ? handleWithdrawal() : handleDeposit()" 
-          :disabled="!amount || amount < 10 || 
-           (props.action === 'deposit' && amount >= 10000) || 
-           (props.action === 'withdrawal' && amount > Number(userData?.cash))"
-        >
-        {{ props.action === 'deposit' ? t('UserInfo_Deposit_Btn') : t('UserInfo_Withdrawal_Btn') }}
-        </button>
-        <span v-if="errorMessages.deposit || errorMessages.withdrawal" class="deposit-withdrawal-error">{{ props.action === 'deposit' ? errorMessages.deposit : errorMessages.withdrawal }}</span>
+          <button 
+            v-if="(props.action === 'withdrawal') || (props.action === 'deposit' && selectedPaymentMethod !== null)"
+            class="panel-input-btn"
+            :class="storeUserPreferences.selectedTheme === 'light' ? 'panel-input-btn-hover-light' : 'panel-input-btn-hover-dark'"
+            @click="props.action === 'withdrawal' ? handleWithdrawal() : handleDeposit()" 
+            :disabled="isButtonDisabled"
+          >
+            {{ props.action === 'deposit' ? t('UserInfo_Deposit_Btn') : t('UserInfo_Withdrawal_Btn') }}
+          </button>
+          
+          <span v-if="errorMessages.deposit || errorMessages.withdrawal" class="deposit-withdrawal-error">{{ props.action === 'deposit' ? errorMessages.deposit : errorMessages.withdrawal }}</span>
+        </div>
       </div>
     </div>
-  </div>
-</transition>
+  </transition>
 </template>
 
 <style scoped>
@@ -367,7 +482,7 @@ watch(() => props.visible, (newVal) => {
 }
 
 .panel-payment-container {
-  margin: 0 0 100px 30px;
+  margin: 0 0 50px 30px;
   display: flex;
   align-items: center;
 }
@@ -375,6 +490,48 @@ watch(() => props.visible, (newVal) => {
 .panel-payment-content {
   display: flex;
   align-items: center;
+}
+
+.panel-payment-input {
+  margin: 0 0 50px 30px;
+}
+
+.payment-input-value {
+  font-size: 1.2rem;
+  background-color: v-bind(colorGray);
+  border-radius: 10px;
+  color: v-bind(textColor);
+  padding: 5px 20px;
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.336);
+  margin-bottom: 15px;
+}
+
+.payment-input-value:focus {
+  outline: none;
+  border: none;
+}
+
+.input-card-date {
+  display: flex;
+}
+
+.payment-input-date-value {
+  font-size: 1.2rem;
+  max-width: 40%;
+  background-color: v-bind(colorGray);
+  border-radius: 10px;
+  color: v-bind(textColor);
+  padding: 5px 20px;
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.336);
+}
+
+.payment-input-date-value:focus {
+  outline: none;
+  border: none;
+}
+
+.payment-input-date-value:not(:last-child) {
+	margin-right: 30px;
 }
 
 .panel-input {

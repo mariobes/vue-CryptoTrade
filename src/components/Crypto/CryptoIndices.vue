@@ -108,7 +108,7 @@ const getSentimentTranslation = (sentiment: string | null) => {
   padding: 10px 20px;
   width: 50%;
   margin-bottom: 20px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.336);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.336);
 }
 
 .index-section-content-cap {
@@ -121,7 +121,7 @@ const getSentimentTranslation = (sentiment: string | null) => {
   padding: 10px 30px;
   text-align: center;
   height: 50%;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.336);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.336);
 }
 
 .index-content .title-index {

@@ -69,7 +69,7 @@ storeMarkets.GetStocksGainers()
   color: v-bind(textColor);
   border-radius: 20px;
   padding: 10px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.336);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.336);
 }
 
 .title-table {

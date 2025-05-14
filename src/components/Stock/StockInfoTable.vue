@@ -100,30 +100,31 @@ onMounted(() => {
 <template>
 	<div class="main-container" v-if="stock">
 		<div>
+			<div class="stock-content-name">
+				<img :src="stock.image" alt="Stock Logo" 
+					class="stock-image" 
+					:class="{ 'stock-image-light': storeUserPreferences.selectedTheme === 'light' }"
+					@error="storeUserPreferences.showDefaultAssetImage(stock)" 
+				/>
+				<span class="stock-name">{{ stock.companyName }}</span>
+				<span class="stock-symbol mt-1">{{ stock.symbol.toUpperCase() }}</span>
+				<span class="stock-rank" :style="{ backgroundColor: storeUserPreferences.selectedTheme === 'light' ? 'var(--asset-rank-background-light)' : 'var(--asset-rank-background-dark)' }">
+					#{{ stock.marketCapRank }}
+				</span>
+			</div>
 
-				<div class="stock-content-name">
-					<img :src="stock.image" alt="Stock Logo" 
-						class="stock-image" 
-						:class="{ 'stock-image-light': storeUserPreferences.selectedTheme === 'light' }"
-						@error="storeUserPreferences.showDefaultAssetImage(stock)" 
-					/>
-					<span class="stock-name">{{ stock.companyName }}</span>
-					<span class="stock-symbol mt-1">{{ stock.symbol.toUpperCase() }}</span>
-					<span class="stock-rank" :style="{ backgroundColor: storeUserPreferences.selectedTheme === 'light' ? 'var(--asset-rank-background-light)' : 'var(--asset-rank-background-dark)' }">
-						#{{ stock.marketCapRank }}
+			<div class="stock-content-price-favorite">
+				<div class="stock-content-price">
+					<span class="stock-price">{{ storeUserPreferences.convertPrice(stock.price, storeUserPreferences.selectedCurrency, 'after') }}</span>
+					<span class="stock-percentage" :style="{ color: storeUserPreferences.getPriceColor(stock.changesPercentage) }">
+						<v-icon class="mb-1">
+							{{ storeUserPreferences.getArrowDirection(stock.changesPercentage) }}
+						</v-icon>
+						{{ Math.abs(stock.changesPercentage).toFixed(2) }}% (1D)
 					</span>
 				</div>
-				<div class="stock-content-price-favorite">
-					<div class="stock-content-price">
-						<span class="stock-price">{{ storeUserPreferences.convertPrice(stock.price, storeUserPreferences.selectedCurrency, 'after') }}</span>
-						<span class="stock-percentage" :style="{ color: storeUserPreferences.getPriceColor(stock.changesPercentage) }">
-							<v-icon class="mb-1">
-								{{ storeUserPreferences.getArrowDirection(stock.changesPercentage) }}
-							</v-icon>
-							{{ Math.abs(stock.changesPercentage).toFixed(2) }}% (1D)
-						</span>
-					</div>
-					<div class="stock-content-favorite">
+
+				<div class="stock-content-favorite">
 					<span v-if="storeAuth.isLoggedIn()" @click.stop="toggleFavorite(stock.id)" class="favorite-icon">
 						<span 
 							v-if="watchlist.includes(stock.id)" 
@@ -135,7 +136,7 @@ onMounted(() => {
 						></span>
 					</span>
 				</div>
-				</div>
+			</div>
 		</div>
 
 		<div class="stock-content-cap">
@@ -175,7 +176,6 @@ onMounted(() => {
 				<span class="stock-content-title">{{ t('StockInfoTable_Exchange') }}</span>
 				<span class="stock-content-value">{{ stock.exchangeShortName + ' | ' + stock.exchange }}</span>
 			</div>
-
 		</div>
 
 		<div class="stock-content-info">
@@ -217,6 +217,7 @@ onMounted(() => {
 				{{ t('StockInfoTable_Converter_2') }} 
 				{{ storeUserPreferences.selectedCurrency }}
 			</div>
+			
 			<div class="converter-content">
 				<div class="converter-stock">
 					<label class="converter-text">{{ stock.symbol.toUpperCase() }}</label>

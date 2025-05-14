@@ -140,6 +140,7 @@ onMounted(() => {
 					</span>
 				</div>
 			</div>
+
 			<div class="crypto-content-price">
 				<span class="crypto-price">{{ storeUserPreferences.convertPrice(crypto.current_price, storeUserPreferences.selectedCurrency, 'after') }}</span>
 				<span class="crypto-percentage" :style="{ color: storeUserPreferences.getPriceColor(crypto.price_change_percentage_24h) }">
@@ -196,7 +197,6 @@ onMounted(() => {
 				<span class="crypto-content-title">{{ t('CryptoInfoTable_CirculatingSupply') }}</span>
 				<span class="crypto-content-value">{{ storeUserPreferences.convertToAbbreviated(crypto.circulating_supply, storeUserPreferences.selectedCurrency) }} {{ crypto.symbol.toLocaleUpperCase() }}</span>
 			</div>
-
 		</div>
 
 		<div class="crypto-links-container">
@@ -292,7 +292,6 @@ onMounted(() => {
 		</div>
 
 		<div class="historical-data-container">
-
 			<div class="historical-data-content">
 				<div class="historical-data-text">
 					<span class="historical-data-title">{{ t('CryptoInfoTable_Ath') }}</span>
@@ -318,7 +317,6 @@ onMounted(() => {
 					</span>
 				</div>
 			</div>
-
 		</div>
 
 		<div class="converter-container">
@@ -328,6 +326,7 @@ onMounted(() => {
 				{{ t('CryptoInfoTable_Converter_2') }} 
 				{{ storeUserPreferences.selectedCurrency }}
 			</div>
+			
 			<div class="converter-content">
 				<div class="converter-crypto">
 					<label class="converter-text">{{ crypto.symbol.toUpperCase() }}</label>

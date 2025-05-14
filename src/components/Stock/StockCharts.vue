@@ -147,13 +147,11 @@ const chartOptions = computed(() => {
   const first = new Date(chart.prices[0][0])
   const last = new Date(chart.prices[chart.prices.length - 1][0])
 
-  // Hora de inicio: 11:30 AM
   const startHour = new Date(first)
-  startHour.setHours(11, 30, 0, 0) // 11:30 AM
+  startHour.setHours(11, 30, 0, 0)
 
-  // Hora de finalización: 18:00 PM
   const endHour = new Date(first)
-  endHour.setHours(18, 0, 0, 0) // 18:00 PM
+  endHour.setHours(18, 0, 0, 0)
 
   return {
     responsive: true,
@@ -327,7 +325,6 @@ const chartOptions = computed(() => {
             }
 
             if (selectedTime.value === '1M' || selectedTime.value === '7D' || selectedTime.value === '1D') {
-              // Si la hora es 00:00, mostrar solo día y mes
               if (date.getHours() === 0 && date.getMinutes() === 0) {
                 return date.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' })
                   .replace(/^(\d{2}) (\w+)/, (_, day, month) => {
@@ -335,12 +332,10 @@ const chartOptions = computed(() => {
                     return `${day} ${capitalizedMonth}`
                   })
               }
-              // Si no es 00:00, mostrar hora y minutos
               return date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: false })
             }
 
             if (selectedTime.value === '3M') {
-              // Para 3M, mostramos solo día y mes
               return date.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' })
                 .replace(/^(\d{2}) (\w+)/, (_, day, month) => {
                   const capitalizedMonth = month.charAt(0).toUpperCase() + month.slice(1)
@@ -374,7 +369,6 @@ const chartOptions = computed(() => {
           const chart = storeStocks.chartsStocks
           if (!chart) return
 
-          // Seleccionar los datos correctos según el tipo
           const data = selectedType.value === 'Volume'
             ? chart.volumes
             : chart.prices
@@ -384,7 +378,7 @@ const chartOptions = computed(() => {
           const values = data.map(([_, y]) => y)
           const min = Math.min(...values)
           const max = Math.max(...values)
-          const padding = (max - min) * 0.1  // 10% de margen
+          const padding = (max - min) * 0.1
 
           scale.min = min - padding
           scale.max = max + padding
@@ -406,6 +400,7 @@ const chartOptions = computed(() => {
         >
           {{ t('AssetChart_Price') }}
         </button>
+
         <button
           class="chart-btn-value"
           :class="{ selected: selectedType === 'Volume' }"
@@ -414,6 +409,7 @@ const chartOptions = computed(() => {
         {{ t('AssetChart_Volume') }}
         </button>
       </div>
+
       <div class="chart-btn">
         <button
           class="chart-btn-value time-btn"
@@ -422,6 +418,7 @@ const chartOptions = computed(() => {
         >
           1D
         </button>
+
         <button
           class="chart-btn-value time-btn"
           :class="{ selected: selectedTime === '7D' }"
@@ -429,6 +426,7 @@ const chartOptions = computed(() => {
         >
           7D
         </button>
+
         <button
           class="chart-btn-value time-btn"
           :class="{ selected: selectedTime === '1M' }"
@@ -436,6 +434,7 @@ const chartOptions = computed(() => {
         >
           1M
         </button>
+
         <button
           class="chart-btn-value time-btn"
           :class="{ selected: selectedTime === '3M' }"
@@ -443,6 +442,7 @@ const chartOptions = computed(() => {
         >
           3M
         </button>
+
         <button
           class="chart-btn-value time-btn"
           :class="{ selected: selectedTime === '5Y' }"
@@ -452,10 +452,12 @@ const chartOptions = computed(() => {
         </button>
       </div>
     </div>
+
     <div class="crypto-chart">
       <Line v-if="!isLoading" :data="chartData" :options="chartOptions" />
       <span v-else :style="{ color: textColor }">{{ t('AssetChart_Loading') }}</span>
     </div>
+    
     <div v-if="storeStocks.stock?.description" class="description-container">
       <p class="description-title">
         {{ t('AssetChart_Title_1') }} 
