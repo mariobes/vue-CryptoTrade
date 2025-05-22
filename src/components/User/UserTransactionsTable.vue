@@ -49,10 +49,9 @@ const assetMap = computed(() => {
   return map;
 });
 
-function openAssetInNewTab(asset: Transaction) {
+function goToAsset(asset: Transaction) {
   const route = asset.typeOfAsset === 'Crypto' ? 'cryptoDetails' : 'stockDetails';
-  const url = $router.resolve({ name: route, params: { id: asset.assetId } }).href;
-  window.open(url, '_blank');
+  $router.push({ name: route, params: { id: asset.assetId } });
 }
 </script>
 
@@ -74,7 +73,7 @@ function openAssetInNewTab(asset: Transaction) {
         :class="[
           !assetMap.get(transaction.assetId) ? '' : storeUserPreferences.selectedTheme === 'light' ? 'hover-light' : 'hover-dark'
         ]"
-        @click="assetMap.get(transaction.assetId) && openAssetInNewTab(transaction)"
+        @click="assetMap.get(transaction.assetId) && goToAsset(transaction)"
         :style="{
           cursor: assetMap.get(transaction.assetId) ? 'pointer' : 'default',
         }"

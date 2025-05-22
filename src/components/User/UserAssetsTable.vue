@@ -46,10 +46,9 @@ const hasAssets = computed(() => {
   return storeTransactions.assets.length > 0;
 });
 
-function openAssetInNewTab(asset: UserAssetsSummary) {
+function goToAsset(asset: UserAssetsSummary) {
   const route = asset.typeOfAsset === 'Crypto' ? 'cryptoDetails' : 'stockDetails';
-  const url = $router.resolve({ name: route, params: { id: asset.assetId } }).href;
-  window.open(url, '_blank');
+  $router.push({ name: route, params: { id: asset.assetId } });
 }
 </script>
 
@@ -95,7 +94,7 @@ function openAssetInNewTab(asset: UserAssetsSummary) {
 					v-for="asset in filteredAssets"        
 					:key="asset.assetId"
 					:class="storeUserPreferences.selectedTheme === 'light' ? 'hover-light' : 'hover-dark'"
-					@click="openAssetInNewTab(asset)"
+					@click="goToAsset(asset)"
 					style="cursor: pointer"
 				>
 					<td>

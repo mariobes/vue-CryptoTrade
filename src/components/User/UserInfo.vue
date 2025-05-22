@@ -89,6 +89,10 @@ const walletInfo = computed(() => {
     percentage,
   };
 });
+
+onMounted(async () => {
+  window.scrollTo({ top: 0 });
+})
 </script>
 
 <template>
