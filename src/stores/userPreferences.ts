@@ -302,7 +302,7 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
     },
 
     showDefaultAssetImage(asset: any) {
-      asset.image = '/images/default-asset.png';
+      asset.image = '/images/asset-default.png';
     },
   }
 });
