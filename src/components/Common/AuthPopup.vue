@@ -75,7 +75,7 @@ const formattedBirthDate = computed(() => {
   return t('Header_Popup_Auth_Birthdate_Text')
 })
 
-const handleBirthDate = (val: Date) => {
+const handleBirthDate = (val: Date | null) => {
   birthDate.value = val
   birthDateMenu.value = false
 }
@@ -126,7 +126,7 @@ const handleAuth = async () => {
   } else {
     success = await storeAuth.register(
       name.value,
-      birthDate.value,
+      birthDate.value as Date,
       email.value,
       password.value,
       phone.value,

@@ -16,7 +16,10 @@ const storeUserPreferences = useUserPreferencesStore()
 const cryptoDetails = computed(() => storeCryptos.cryptoDetails)
 
 const route = useRoute()
-const cryptoId = computed(() => route.params.id)
+const cryptoId = computed(() => {
+  const id = route.params.id
+  return Array.isArray(id) ? id[0] : id
+})
 </script>
 
 <template>

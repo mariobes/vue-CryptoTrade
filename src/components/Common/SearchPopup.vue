@@ -17,8 +17,8 @@ const { t } = useI18n()
 const router = useRouter()
 
 const searchQuery = ref('')
-const cryptoResults = ref([])
-const stockResults = ref([])
+const cryptoResults = ref<any[]>([])
+const stockResults = ref<any[]>([])
 const showAllCryptos = ref(false)
 const showAllStocks = ref(false)
 const searchInput = ref<HTMLInputElement | null>(null)
@@ -53,8 +53,8 @@ watch(searchQuery, async (newQuery) => {
     ])
 
     if (searchQuery.value.trim() === trimmedQuery) {
-      cryptoResults.value = cryptos
-      stockResults.value = stocks
+	  cryptoResults.value = cryptos ?? []
+	  stockResults.value = stocks ?? []
     }
   }
 })
@@ -79,7 +79,7 @@ watch(() => props.modelValue, (newVal) => {
 			if (containerStock) containerStock.scrollTop = savedStockScrollTop
     })
 		nextTick(() => {
-		const inputEl = searchInput.value?.$el?.querySelector('input') as HTMLInputElement
+		const inputEl = searchInput.value
 		if (inputEl) {
 			inputEl.focus()
 			if (searchQuery.value.trim()) {

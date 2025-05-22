@@ -12,7 +12,10 @@ const textColor = computed(() => storeUserPreferences.getTheme().text)
 const storeUserPreferences = useUserPreferencesStore()
 
 const route = useRoute()
-const stockId = computed(() => route.params.id)
+const stockId = computed(() => {
+  const id = route.params.id
+  return Array.isArray(id) ? id[0] : id
+})
 </script>
 
 <template>

@@ -25,6 +25,19 @@ export interface Crypto {
     atl: number
     atl_change_percentage: number
     atl_date: Date
-    sparkline_in_7d: string
+    sparkline_in_7d: {
+        price: number[]
+    }
     lastUpdated: Date
+
+    links?: {
+        blockchain_site: string[]
+        homepage: string[]
+        repos_url: {
+            github: string[]
+        }
+        subreddit_url: string | null
+        twitter_screen_name: string | null
+        whitepaper: string | null
+  }
 }

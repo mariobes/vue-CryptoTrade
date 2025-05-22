@@ -16,7 +16,6 @@ const backgroundColor = computed(() => storeUserPreferences.getTheme().backgroun
 const backgroundTable = computed(() => storeUserPreferences.getTheme().table)
 const textColor = computed(() => storeUserPreferences.getTheme().text)
 const grayColor = computed(() => storeUserPreferences.getTheme().colorGray)
-const darkGrayColor = computed(() => storeUserPreferences.getTheme().colorDarkGray)
 
 const storeUserPreferences = useUserPreferencesStore()
 const storeAuth = useAuthStore()

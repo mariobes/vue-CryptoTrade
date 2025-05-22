@@ -51,8 +51,14 @@ watch(selectedTime, fetchChartData)
 const selectType = (type: string) => selectedType.value = type
 const selectTime = (time: string) => selectedTime.value = time
 
+interface CryptoChartData {
+  prices: [number, number][];
+  market_caps: [number, number][];
+  total_volumes: [number, number][];
+}
+
 const chartData = computed(() => {
-  const chart = storeCryptos.chartsCryptos
+  const chart = storeCryptos.chartsCryptos as unknown as CryptoChartData
   if (!chart || !chart.prices?.length) return { labels: [], datasets: [] }
 
   const isMarketCap = selectedType.value === 'Market cap'
@@ -79,7 +85,7 @@ const chartData = computed(() => {
 
   const data = rawData.map(([x, y]: number[]) => ({ x, y }))
   const datasets = []
-  let segment = []
+  let segment: any[] = []
   let previousPoint = null
 
   for (let i = 0; i < data.length; i++) {
@@ -106,12 +112,12 @@ const chartData = computed(() => {
   return { datasets }
 })
 
-function createSegment(data, color, baseline) {
+function createSegment(data: any[], color: string, baseline: number) {
   const isGreen = color === 'green'
   return {
     data,
     borderColor: isGreen ? '#4ade80' : '#ef4444',
-    backgroundColor: (ctx) => createGradient(ctx, color),
+    backgroundColor: (ctx: { chart: { ctx: any; chartArea: any } }) => createGradient(ctx, color),
     borderWidth: 2,
     fill: { target: { value: baseline } },
     pointRadius: 0,
@@ -123,7 +129,7 @@ function createSegment(data, color, baseline) {
   }
 }
 
-function createGradient(ctx, color) {
+function createGradient(ctx: { chart: { ctx: any; chartArea: any } }, color: string) {
   const { ctx: canvasCtx, chartArea } = ctx.chart
   if (!chartArea) return
   const gradient = canvasCtx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom)
@@ -142,7 +148,7 @@ const gridColor = computed(() => {
 })
 
 const chartOptions = computed(() => {
-  const chart = storeCryptos.chartsCryptos
+  const chart = storeCryptos.chartsCryptos as unknown as CryptoChartData
   if (!chart?.prices?.length) return {}
 
   const first = new Date(chart.prices[0][0])
@@ -168,7 +174,7 @@ const chartOptions = computed(() => {
         padding: 10,
         displayColors: false,
         callbacks: {
-          title: (context) => {
+          title: (context: { parsed: { x: string | number | Date } }[]) => {
             const date = new Date(context[0].parsed.x)
             return date.toLocaleString('es-ES', {
               day: '2-digit',
@@ -179,7 +185,7 @@ const chartOptions = computed(() => {
               hour12: false
             })
           },
-          label: (context) => {
+          label: (context: { parsed: { y: any } }) => {
             const isMarketCap = selectedType.value === 'Market cap'
             const value = context.parsed.y
             let price
@@ -191,8 +197,8 @@ const chartOptions = computed(() => {
               return `${t('AssetChart_Price')}: ${price}`
             }  
           },
-          afterLabel: (context) => {
-            const chart = storeCryptos.chartsCryptos
+          afterLabel: (context: { parsed: { x: any } }) => {
+            const chart = storeCryptos.chartsCryptos as unknown as CryptoChartData
             const timestamp = context.parsed.x
 
             if (!chart?.total_volumes?.length) return ''
@@ -320,7 +326,7 @@ const chartOptions = computed(() => {
                          selectedTime.value === '3M' ? 14 : undefined,
           maxRotation: 0,
           minRotation: 0,
-          callback: function (value) {
+          callback: function (value: string | number | Date) {
             const date = new Date(value)
 
             const formatMonth = (d: Date) => {
@@ -367,7 +373,7 @@ const chartOptions = computed(() => {
         },
         ticks: {
           padding: 10,
-          callback: (value) => {
+          callback: (value: number) => {
             if (selectedType.value === 'Market cap') {
               return storeUserPreferences.convertToAbbreviated(value, storeUserPreferences.selectedCurrency)
             } else {
@@ -375,13 +381,14 @@ const chartOptions = computed(() => {
             }
           }
         },
-        afterDataLimits: (scale) => {
+        afterDataLimits: (scale: { min: number; max: number }) => {
           const chart = storeCryptos.chartsCryptos
           if (!chart) return
 
+          const chartData = storeCryptos.chartsCryptos as unknown as CryptoChartData
           const data = selectedType.value === 'Market cap'
-            ? chart.market_caps
-            : chart.prices
+            ? chartData.market_caps
+            : chartData.prices
 
           if (!data?.length) return
 

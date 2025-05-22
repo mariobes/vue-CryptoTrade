@@ -69,7 +69,7 @@ const formatDate = (dateString: string) => {
 const showAllExplorers = ref(false)
 
 const filteredExplorers = computed(() =>
-  cryptoDetails.value?.links.blockchain_site.filter(link => !!link)
+  cryptoDetails.value?.links?.blockchain_site?.filter(link => !!link) ?? []
 )
 
 const getDomainFromUrl = (url: string) => {
@@ -204,7 +204,7 @@ onMounted(() => {
 				<span class="crypto-links-title">{{ t('CryptoInfoTable_Website') }}</span>
 				<span>
 					<a 
-						v-if="cryptoDetails?.links.homepage?.[0]"
+						v-if="cryptoDetails?.links && cryptoDetails.links.homepage?.[0]"
 						:href="cryptoDetails.links.homepage[0]" 
 						target="_blank" 
 						class="crypto-link"
@@ -213,7 +213,7 @@ onMounted(() => {
 						<span>Website</span>
 					</a>
 					<a 
-						v-if="cryptoDetails?.links.whitepaper" 
+						v-if="cryptoDetails?.links && cryptoDetails.links.whitepaper" 
 						:href="cryptoDetails.links.whitepaper" 
 						target="_blank" 
 						class="crypto-link"
@@ -228,7 +228,7 @@ onMounted(() => {
 				<span class="crypto-links-title">{{ t('CryptoInfoTable_Socials') }}</span>
 				<span>
 					<a 
-						v-if="cryptoDetails?.links.twitter_screen_name" 
+						v-if="cryptoDetails?.links && cryptoDetails.links.twitter_screen_name" 
 						:href="`https://twitter.com/${cryptoDetails.links.twitter_screen_name}`" 
 						target="_blank" 
 						class="crypto-link"
@@ -236,7 +236,7 @@ onMounted(() => {
 					<span class="mdi mdi-twitter icon-twitter"></span>
 					</a>
 					<a 
-						v-if="cryptoDetails?.links.subreddit_url" 
+						v-if="cryptoDetails?.links && cryptoDetails.links.subreddit_url" 
 						:href="cryptoDetails.links.subreddit_url" 
 						target="_blank" 
 						class="crypto-link"
@@ -244,7 +244,7 @@ onMounted(() => {
 					<span class="mdi mdi-reddit icon-reddit"></span>
 					</a>
 					<a
-						v-if="cryptoDetails?.links.repos_url.github && cryptoDetails.links.repos_url.github.length"
+						v-if="cryptoDetails?.links && cryptoDetails.links.repos_url?.github && cryptoDetails.links.repos_url.github.length"
 						:href="cryptoDetails.links.repos_url.github[0]"
 						target="_blank"
 						class="crypto-link"
@@ -295,7 +295,7 @@ onMounted(() => {
 			<div class="historical-data-content">
 				<div class="historical-data-text">
 					<span class="historical-data-title">{{ t('CryptoInfoTable_Ath') }}</span>
-					<span class="historical-data-date">{{ formatDate(crypto.ath_date) }}</span>
+					<span class="historical-data-date">{{ formatDate(String(crypto.ath_date)) }}</span>
 				</div>
 				<div class="historical-data-price">
 					<span>{{ storeUserPreferences.convertPrice(crypto.ath, storeUserPreferences.selectedCurrency, 'before') }}</span>
@@ -308,7 +308,7 @@ onMounted(() => {
 			<div class="historical-data-content">
 				<div class="historical-data-text">
 					<span class="historical-data-title">{{ t('CryptoInfoTable_Atl') }}</span>
-					<span class="historical-data-date">{{ formatDate(crypto.atl_date) }}</span>
+					<span class="historical-data-date">{{ formatDate(String(crypto.atl_date)) }}</span>
 				</div>
 				<div>
 					<span class="historical-data-price">{{ storeUserPreferences.convertPrice(crypto.atl, storeUserPreferences.selectedCurrency, 'before') }}</span>

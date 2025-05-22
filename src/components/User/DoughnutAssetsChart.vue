@@ -28,7 +28,7 @@ const topAssets = computed(() => sortedAssets.value.slice(0, 7))
 const otherAssets = computed(() => sortedAssets.value.slice(7))
 
 const chartData = computed(() => {
-  const data = topAssets.value.map(a => a.walletPercentage.toFixed(2))
+  const data = topAssets.value.map(a => Number(a.walletPercentage.toFixed(2)))
   const labels = topAssets.value.map(a => a.symbol.toUpperCase())
   const backgroundColors = [
     '#1F75FE', '#4CAF50', '#FFCE56', '#FF8C00',
@@ -37,7 +37,7 @@ const chartData = computed(() => {
 
   if (otherAssets.value.length > 0) {
     const othersTotal = otherAssets.value.reduce((acc, a) => acc + a.walletPercentage, 0)
-    data.push(othersTotal.toString())
+    data.push(Number(othersTotal.toFixed(2)))
     labels.push(t('UserInfo_Chart_Others'))
     backgroundColors.push('#CCCCCC')
   }
@@ -80,7 +80,7 @@ const chartOptions = {
           return assetNames.value[index]
         },
         label: () => {
-          return null
+          return ''
         }
 			},
       padding: {

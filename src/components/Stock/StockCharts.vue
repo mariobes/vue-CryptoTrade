@@ -50,8 +50,13 @@ watch(selectedTime, fetchChartData)
 const selectType = (type: string) => selectedType.value = type
 const selectTime = (time: string) => selectedTime.value = time
 
+type ChartDataType = {
+  prices: [number, number][];
+  volumes: [number, number][];
+};
+
 const chartData = computed(() => {
-  const chart = storeStocks.chartsStocks
+  const chart = storeStocks.chartsStocks as unknown as ChartDataType
   if (!chart || !chart.prices?.length) return { labels: [], datasets: [] }
 
   const isVolume = selectedType.value === 'Volume'
@@ -78,7 +83,7 @@ const chartData = computed(() => {
 
   const data = rawData.map(([x, y]: number[]) => ({ x, y }))
   const datasets = []
-  let segment = []
+  let segment: { x: number; y: number }[] = []
   let previousPoint = null
 
   for (let i = 0; i < data.length; i++) {
@@ -105,12 +110,12 @@ const chartData = computed(() => {
   return { datasets }
 })
 
-function createSegment(data, color, baseline) {
+function createSegment(data: { x: number; y: number }[], color: string, baseline: number) {
   const isGreen = color === 'green'
   return {
     data,
     borderColor: isGreen ? '#4ade80' : '#ef4444',
-    backgroundColor: (ctx) => createGradient(ctx, color),
+    backgroundColor: (ctx: any) => createGradient(ctx, color),
     borderWidth: 2,
     fill: { target: { value: baseline } },
     pointRadius: 0,
@@ -122,7 +127,7 @@ function createSegment(data, color, baseline) {
   }
 }
 
-function createGradient(ctx, color) {
+function createGradient(ctx: { chart: { ctx: any; chartArea: any } }, color: string) {
   const { ctx: canvasCtx, chartArea } = ctx.chart
   if (!chartArea) return
   const gradient = canvasCtx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom)
@@ -141,7 +146,7 @@ const gridColor = computed(() => {
 })
 
 const chartOptions = computed(() => {
-  const chart = storeStocks.chartsStocks
+  const chart = storeStocks.chartsStocks as unknown as ChartDataType
   if (!chart?.prices?.length) return {}
 
   const first = new Date(chart.prices[0][0])
@@ -157,23 +162,23 @@ const chartOptions = computed(() => {
     responsive: true,
     animation: { duration: 0 },
     interaction: {
-      mode: 'nearest',
+      mode: 'nearest' as const,
       intersect: false,
-      axis: 'x'
+      axis: 'x' as 'x'
     },
     plugins: {
       tooltip: {
         enabled: true,
         intersect: false,
-        mode: 'nearest',
-        axis: 'x',
+        mode: 'nearest' as const,
+        axis: 'x' as const,
         backgroundColor: backgroundColor.value,
         titleColor: textColor.value,
         bodyColor: textColor.value,
         padding: 10,
         displayColors: false,
         callbacks: {
-          title: (context) => {
+          title: (context: { parsed: { x: string | number | Date } }[]) => {
             const date = new Date(context[0].parsed.x)
             return date.toLocaleString('es-ES', {
               day: '2-digit',
@@ -184,7 +189,7 @@ const chartOptions = computed(() => {
               hour12: false
             })
           },
-          label: (context) => {
+          label: (context: { parsed: { y: any } }) => {
             const isVolume = selectedType.value === 'Volume'
             const value = context.parsed.y
             let price
@@ -202,7 +207,7 @@ const chartOptions = computed(() => {
       annotation: {
         annotations: selectedType.value !== 'Volume' ? {
           baseline: {
-            type: 'line',
+            type: 'line' as const,
             yMin: chart.prices[0][1],
             yMax: chart.prices[0][1],
             borderColor: textColor.value,
@@ -210,7 +215,7 @@ const chartOptions = computed(() => {
             borderDash: [1, 3],
           },
           currentPrice: {
-            type: 'label',
+            type: 'label' as const,
             xValue: chart.prices[chart.prices.length - 1][0],
             yValue: chart.prices[chart.prices.length - 1][1],
             backgroundColor: () => {
@@ -236,7 +241,7 @@ const chartOptions = computed(() => {
             borderRadius: 6,
           },
           initialPriceBox: {
-            type: 'label',
+            type: 'label' as const,
             xValue: chart.prices[0][0],
             yValue: chart.prices[0][1],
             backgroundColor: '#d6d2d2',
@@ -310,7 +315,7 @@ const chartOptions = computed(() => {
                          selectedTime.value === '3M' ? 14 : undefined,
           maxRotation: 0,
           minRotation: 0,
-          callback: function (value) {
+          callback: function (value: string | number | Date) {
             const date = new Date(value)
 
             const formatMonth = (d: Date) => {
@@ -357,7 +362,7 @@ const chartOptions = computed(() => {
         },
         ticks: {
           padding: 10,
-          callback: (value) => {
+          callback: (value: number) => {
             if (selectedType.value === 'Volume') {
               return storeUserPreferences.convertToAbbreviated(value, storeUserPreferences.selectedCurrency)
             } else {
@@ -365,8 +370,8 @@ const chartOptions = computed(() => {
             }
           }
         },
-        afterDataLimits: (scale) => {
-          const chart = storeStocks.chartsStocks
+        afterDataLimits: (scale: { min: number; max: number }) => {
+          const chart = storeStocks.chartsStocks as unknown as ChartDataType
           if (!chart) return
 
           const data = selectedType.value === 'Volume'

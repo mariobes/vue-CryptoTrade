@@ -278,8 +278,8 @@ watch(amount, () => {
               (selectedOption === 'assetAmount' && parseFloat(amount) === 0) ||
               (selectedAction === 'buy' && selectedOption === 'amount' && parseFloat(amount) > Number(userData?.cash)) ||
               (selectedAction === 'buy' && selectedOption === 'assetAmount' && parseFloat(amount) * assetPrice > Number(userData?.cash)) ||
-              (selectedAction === 'sell' && selectedOption === 'amount' && parseFloat(amount) > userAsset.total) ||
-              (selectedAction === 'sell' && selectedOption === 'assetAmount' && parseFloat(amount) > userAsset.totalAssetAmount)"
+              (selectedAction === 'sell' && selectedOption === 'amount' && parseFloat(amount) > (userAsset?.total ?? 0)) ||
+              (selectedAction === 'sell' && selectedOption === 'assetAmount' && parseFloat(amount) > (userAsset?.totalAssetAmount ?? 0))"
           >
             {{ selectedAction === 'buy' ? t('TransactionsAsset_Buy_Btn') : t('TransactionsAsset_Sell_Btn') }}
           </button>

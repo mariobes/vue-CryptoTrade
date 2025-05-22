@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { useUserPreferencesStore } from '../../stores/userPreferences';
+import { useUserPreferencesStore, type CurrencyType } from '../../stores/userPreferences';
 import { useI18n } from 'vue-i18n'
 
 const backgroundTable = computed(() => storeUserPreferences.getTheme().table)
@@ -41,7 +41,7 @@ const currencyTexts = computed(() => {
 
 const selectedCurrency = computed(() => storeUserPreferences.selectedCurrency);
 
-const changeCurrency = (currency: string) => {
+const changeCurrency = (currency: CurrencyType) => {
   storeUserPreferences.setSelectedCurrency(currency);
   currencyDialog.value = false;
 };
@@ -69,7 +69,7 @@ const changeCurrency = (currency: string) => {
 						<v-btn
 							class="popup-text"
 							block
-							@click="changeCurrency(value)"
+              @click="changeCurrency(value as CurrencyType)"
 							:style="{ background: backgroundTable }"
 						>
 							<div class="currency-content">

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { useUserPreferencesStore } from '../../stores/userPreferences';
+import { useUserPreferencesStore, type LanguageType } from '../../stores/userPreferences';
 import { useI18n } from 'vue-i18n'
 
 const textColor = computed(() => storeUserPreferences.getTheme().text)
@@ -34,7 +34,7 @@ const languageLabels = computed(() => {
 const selectedLanguage = computed(() => storeUserPreferences.selectedLanguage);
 
 const changeLanguage = (language: string) => {
-  storeUserPreferences.setSelectedLanguage(language);
+  storeUserPreferences.setSelectedLanguage(language as LanguageType);
   locale.value = language;
   languageDialog.value = false;
 };
