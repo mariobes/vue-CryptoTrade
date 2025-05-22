@@ -4,6 +4,7 @@ import { useStocksStore } from '@/stores/stocks'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
 import { useI18n } from 'vue-i18n'
 import { Chart as ChartJS, Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, TimeScale, PointElement, Filler } from 'chart.js'
+import type { ChartOptions } from 'chart.js'
 import { Line } from 'vue-chartjs'
 import 'chartjs-adapter-date-fns'
 import annotationPlugin from 'chartjs-plugin-annotation'
@@ -50,13 +51,13 @@ watch(selectedTime, fetchChartData)
 const selectType = (type: string) => selectedType.value = type
 const selectTime = (time: string) => selectedTime.value = time
 
-type ChartDataType = {
+type StockChartData = {
   prices: [number, number][];
   volumes: [number, number][];
 };
 
 const chartData = computed(() => {
-  const chart = storeStocks.chartsStocks as unknown as ChartDataType
+  const chart = storeStocks.chartsStocks as unknown as StockChartData
   if (!chart || !chart.prices?.length) return { labels: [], datasets: [] }
 
   const isVolume = selectedType.value === 'Volume'
@@ -145,9 +146,16 @@ const gridColor = computed(() => {
   return storeUserPreferences.selectedTheme === 'dark' ? '#3a3535' : '#d3d3d3';
 })
 
-const chartOptions = computed(() => {
-  const chart = storeStocks.chartsStocks as unknown as ChartDataType
-  if (!chart?.prices?.length) return {}
+const chartOptions = computed<ChartOptions<'line'>>(() => {
+  const chart = storeStocks.chartsStocks as unknown as StockChartData
+  if (!chart?.prices?.length) {
+    return {
+      responsive: true,
+      plugins: {
+        legend: { display: false }
+      }
+    }
+  }
 
   const first = new Date(chart.prices[0][0])
   const last = new Date(chart.prices[chart.prices.length - 1][0])
@@ -362,7 +370,8 @@ const chartOptions = computed(() => {
         },
         ticks: {
           padding: 10,
-          callback: (value: number) => {
+          callback: function (this: any, tickValue: string | number) {
+            const value = typeof tickValue === 'number' ? tickValue : Number(tickValue)
             if (selectedType.value === 'Volume') {
               return storeUserPreferences.convertToAbbreviated(value, storeUserPreferences.selectedCurrency)
             } else {
@@ -371,7 +380,7 @@ const chartOptions = computed(() => {
           }
         },
         afterDataLimits: (scale: { min: number; max: number }) => {
-          const chart = storeStocks.chartsStocks as unknown as ChartDataType
+          const chart = storeStocks.chartsStocks as unknown as StockChartData
           if (!chart) return
 
           const data = selectedType.value === 'Volume'
@@ -458,8 +467,8 @@ const chartOptions = computed(() => {
       </div>
     </div>
 
-    <div class="crypto-chart">
-      <Line v-if="!isLoading" :data="chartData" />
+    <div class="stock-chart">
+      <Line v-if="!isLoading && chartData.datasets.length" :data="chartData" :options="chartOptions" />
       <span v-else :style="{ color: textColor }">{{ t('AssetChart_Loading') }}</span>
     </div>
     
@@ -516,7 +525,7 @@ const chartOptions = computed(() => {
   padding: 5px 10px;
 }
 
-.crypto-chart {
+.stock-chart {
 	background-color: v-bind(backgroundTable) !important;
   border: solid 1px var(--dark-gray-color);
 }

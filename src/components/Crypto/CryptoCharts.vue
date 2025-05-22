@@ -4,6 +4,7 @@ import { useCryptosStore } from '@/stores/cryptos'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
 import { useI18n } from 'vue-i18n'
 import { Chart as ChartJS, Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, TimeScale, PointElement, Filler } from 'chart.js'
+import type { ChartOptions } from 'chart.js'
 import { Line } from 'vue-chartjs'
 import 'chartjs-adapter-date-fns'
 import annotationPlugin from 'chartjs-plugin-annotation'
@@ -147,9 +148,16 @@ const gridColor = computed(() => {
   return storeUserPreferences.selectedTheme === 'dark' ? '#3a3535' : '#d3d3d3';
 })
 
-const chartOptions = computed(() => {
+const chartOptions = computed<ChartOptions<'line'>>(() => {
   const chart = storeCryptos.chartsCryptos as unknown as CryptoChartData
-  if (!chart?.prices?.length) return {}
+  if (!chart?.prices?.length) {
+    return {
+      responsive: true,
+      plugins: {
+        legend: { display: false }
+      }
+    }
+  }
 
   const first = new Date(chart.prices[0][0])
   const last = new Date(chart.prices[chart.prices.length - 1][0])
@@ -373,7 +381,8 @@ const chartOptions = computed(() => {
         },
         ticks: {
           padding: 10,
-          callback: (value: number) => {
+          callback: function (this: any, tickValue: string | number) {
+            const value = typeof tickValue === 'number' ? tickValue : Number(tickValue)
             if (selectedType.value === 'Market cap') {
               return storeUserPreferences.convertToAbbreviated(value, storeUserPreferences.selectedCurrency)
             } else {
@@ -471,7 +480,7 @@ const chartOptions = computed(() => {
     </div>
 
     <div class="crypto-chart">
-      <Line v-if="!isLoading" :data="chartData" />
+      <Line v-if="!isLoading && chartData.datasets.length" :data="chartData" :options="chartOptions" />
       <span v-else :style="{ color: textColor }">{{ t('AssetChart_Loading') }}</span>
     </div>
     
