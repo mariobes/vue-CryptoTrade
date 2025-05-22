@@ -295,12 +295,12 @@ onMounted(() => {
 			<div class="historical-data-content">
 				<div class="historical-data-text">
 					<span class="historical-data-title">{{ t('CryptoInfoTable_Ath') }}</span>
-					<span class="historical-data-date">{{ formatDate(String(crypto.ath_date)) }}</span>
+					<span class="historical-data-date">{{ crypto.ath_date ? formatDate(String(crypto.ath_date)) : '0' }}</span>
 				</div>
 				<div class="historical-data-price">
 					<span>{{ storeUserPreferences.convertPrice(crypto.ath, storeUserPreferences.selectedCurrency, 'before') }}</span>
 					<span :style="{ color: storeUserPreferences.getPriceColor(crypto.ath_change_percentage) }">
-						{{ crypto.ath_change_percentage.toFixed(2) }}%
+						{{ crypto.ath_change_percentage ? crypto.ath_change_percentage.toFixed(2) : '0' }}%
 					</span>
 				</div>
 			</div>
@@ -308,12 +308,12 @@ onMounted(() => {
 			<div class="historical-data-content">
 				<div class="historical-data-text">
 					<span class="historical-data-title">{{ t('CryptoInfoTable_Atl') }}</span>
-					<span class="historical-data-date">{{ formatDate(String(crypto.atl_date)) }}</span>
+					<span class="historical-data-date">{{ crypto.atl_date ? formatDate(String(crypto.atl_date)) : '0' }}</span>
 				</div>
 				<div>
 					<span class="historical-data-price">{{ storeUserPreferences.convertPrice(crypto.atl, storeUserPreferences.selectedCurrency, 'before') }}</span>
 					<span :style="{ color: storeUserPreferences.getPriceColor(crypto.atl_change_percentage) }">
-						{{ crypto.atl_change_percentage > 0 ? '+' : '' }}{{ (crypto.atl_change_percentage ?? 0).toFixed(2) }}%
+						{{ crypto.atl_change_percentage > 0 ? '+' : '' }}{{ crypto.atl_change_percentage ? (crypto.atl_change_percentage ?? 0).toFixed(2) : '0' }}%
 					</span>
 				</div>
 			</div>
