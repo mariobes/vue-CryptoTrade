@@ -471,7 +471,7 @@ const chartOptions = computed(() => {
     </div>
 
     <div class="crypto-chart">
-      <Line v-if="!isLoading" :data="chartData" :options="chartOptions" />
+      <Line v-if="!isLoading" :data="chartData" />
       <span v-else :style="{ color: textColor }">{{ t('AssetChart_Loading') }}</span>
     </div>
     
