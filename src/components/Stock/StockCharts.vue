@@ -215,7 +215,7 @@ const chartOptions = computed<ChartOptions<'line'>>(() => {
       annotation: {
         annotations: selectedType.value !== 'Volume' ? {
           baseline: {
-            type: 'line' as const,
+            type: 'line',
             yMin: chart.prices[0][1],
             yMax: chart.prices[0][1],
             borderColor: textColor.value,
@@ -223,7 +223,7 @@ const chartOptions = computed<ChartOptions<'line'>>(() => {
             borderDash: [1, 3],
           },
           currentPrice: {
-            type: 'label' as const,
+            type: 'label',
             xValue: chart.prices[chart.prices.length - 1][0],
             yValue: chart.prices[chart.prices.length - 1][1],
             backgroundColor: () => {
@@ -249,7 +249,7 @@ const chartOptions = computed<ChartOptions<'line'>>(() => {
             borderRadius: 6,
           },
           initialPriceBox: {
-            type: 'label' as const,
+            type: 'label',
             xValue: chart.prices[0][0],
             yValue: chart.prices[0][1],
             backgroundColor: '#d6d2d2',

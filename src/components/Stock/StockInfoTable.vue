@@ -148,7 +148,7 @@ onMounted(() => {
 			<div class="stock-container-cap">
 				<span class="stock-content-title">{{ t('StockInfoTable_Changes') }}</span>
 				<span class="stock-content-value" :style="{ color: storeUserPreferences.getPriceColor(stock.changes) }">
-					{{ stock.changes ? '+' : '-' }}{{ storeUserPreferences.convertPrice(Math.abs(stock.changes), storeUserPreferences.selectedCurrency, 'after') }}
+					{{ stock.changes > 0 ? '+' : '-' }}{{ storeUserPreferences.convertPrice(Math.abs(stock.changes), storeUserPreferences.selectedCurrency, 'after') }}
 				</span>
 			</div>
 
