@@ -237,7 +237,7 @@ watch(amount, () => {
             :disabled="!storeAuth.isLoggedIn()"
             @input="() => { hasInteracted = true; validateFields(); }" 
           />
-          <span class="amount-input-currency">
+          <span v-if="selectedOption === 'amount'" class="amount-input-currency">
             {{ storeUserPreferences.getCurrencySymbol(storeUserPreferences.selectedCurrency) }}
           </span>
         </div>
