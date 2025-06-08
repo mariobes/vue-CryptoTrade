@@ -5,27 +5,24 @@ import CryptosTrendingTable from '@/components/Crypto/CryptosTrendingTable.vue'
 import StocksTrendingTable from '@/components/Stock/StocksTrendingTable.vue'
 import CryptoTable from '@/components/Crypto/CryptoTable.vue'
 import StockTable from '@/components/Stock/StockTable.vue'
-import { useCryptosStore } from '@/stores/cryptos'
-import { useStocksStore } from '@/stores/stocks'
-import { useMarketsStore } from '@/stores/markets'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
+import { useTransactionsStore } from '@/stores/transactions'
+import { useAuthStore } from '@/stores/auth'
 import { useI18n } from 'vue-i18n'
 
 const textColor = computed(() => storeUserPreferences.getTheme().text)
 
-const storeCryptos = useCryptosStore()
-const storeStocks = useStocksStore()
-const storeMarkets = useMarketsStore()
 const storeUserPreferences = useUserPreferencesStore()
+const storeTransactions = useTransactionsStore()
+const storeAuth = useAuthStore()
 
 const { t } = useI18n()
 
 onMounted(async () => {
-    await storeMarkets.GetCryptoIndices()
-    await storeMarkets.GetCryptosTrending()
-    await storeMarkets.GetStocksTrending()
-    await storeCryptos.GetAllCryptos(0, 0)
-    await storeStocks.GetAllStocks(0, 0)
+  if (storeAuth.isLoggedIn())
+  {
+    await storeTransactions.GetAssets(storeAuth.getUserId(), storeAuth.getToken());
+  }
 });
 </script>
 
