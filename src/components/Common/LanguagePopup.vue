@@ -37,6 +37,7 @@ const changeLanguage = (language: string) => {
   storeUserPreferences.setSelectedLanguage(language as LanguageType);
   locale.value = language;
   languageDialog.value = false;
+  window.location.reload();
 };
 </script>
 
