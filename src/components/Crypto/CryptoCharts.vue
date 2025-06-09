@@ -177,7 +177,7 @@ const chartOptions = computed<ChartOptions<'line'>>(() => {
         mode: 'nearest',
         axis: 'x',
         backgroundColor: backgroundColor.value,
-        titleColor: textColor.value,
+        titleColor: '#808080',
         bodyColor: textColor.value,
         padding: 10,
         displayColors: false,

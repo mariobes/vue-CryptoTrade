@@ -44,6 +44,7 @@ const selectedCurrency = computed(() => storeUserPreferences.selectedCurrency);
 const changeCurrency = (currency: CurrencyType) => {
   storeUserPreferences.setSelectedCurrency(currency);
   currencyDialog.value = false;
+  window.location.reload();
 };
 </script>
 
