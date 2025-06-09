@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { Doughnut } from 'vue-chartjs'
 import type { UserAssetsSummary } from '@/core/transaction'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
 import { useI18n } from 'vue-i18n'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, Colors } from 'chart.js'
 import type { PropType } from 'vue'
+
+const backgroundColor = computed(() => storeUserPreferences.getTheme().background)
+const textColor = computed(() => storeUserPreferences.getTheme().text)
 
 const storeUserPreferences = useUserPreferencesStore()
 
@@ -19,6 +22,8 @@ const props = defineProps({
     required: true
   }
 })
+
+const doughnutChart = ref()
 
 const sortedAssets = computed(() => {
   return [...props.assets].sort((a, b) => b.walletPercentage - a.walletPercentage)
@@ -60,6 +65,14 @@ const assetNames = computed(() => {
   return names
 })
 
+watch([backgroundColor, textColor], () => {
+  if (doughnutChart.value?.chart) {
+    doughnutChart.value.chart.options.plugins.tooltip.backgroundColor = backgroundColor.value
+    doughnutChart.value.chart.options.plugins.tooltip.titleColor = textColor.value
+    doughnutChart.value.chart.update()
+  }
+})
+
 const chartOptions = {
   responsive: true,
   cutout: '75%',
@@ -74,6 +87,8 @@ const chartOptions = {
 			display: false,
     },
 		tooltip: {
+      backgroundColor: backgroundColor.value,
+      titleColor: textColor.value,
 			callbacks: {
         title: (context: any) => {
           const index = context[0].dataIndex
@@ -98,7 +113,7 @@ const chartOptions = {
 		<div class="chart-title">{{ t('UserInfo_Chart_Title') }}</div>
 
 		<div class="chart-content">
-			<Doughnut :data="chartData" :options="chartOptions" />
+			<Doughnut ref="doughnutChart" :data="chartData" :options="chartOptions" />
 		</div>
 
 		<div class="legend-container">
