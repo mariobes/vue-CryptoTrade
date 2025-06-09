@@ -3,6 +3,7 @@ import { ref, computed, onMounted } from 'vue'
 import type { User } from '@/core/user'
 import { useUsersStore } from '@/stores/users'
 import { useUserPreferencesStore } from '@/stores/userPreferences';
+import { useTransactionsStore } from '@/stores/transactions'
 import { useAuthStore } from '@/stores/auth'
 import DepositWithDrawalPanel from '@/components/User/DepositWithDrawalPanel.vue';
 import { useI18n } from 'vue-i18n'
@@ -12,6 +13,7 @@ const colorDarkGray = computed(() => storeUserPreferences.getTheme().colorDarkGr
 
 const storeUsers = useUsersStore()
 const storeUserPreferences = useUserPreferencesStore()
+const storeTransactions = useTransactionsStore()
 const storeAuth = useAuthStore()
 
 const { t } = useI18n()
@@ -35,6 +37,7 @@ const loadUserData = async () => {
 }
 
 onMounted(async () => {
+  await storeTransactions.GetAssets(userId, token);
   await loadUserData();
 });
 
@@ -293,8 +296,12 @@ onMounted(async () => {
 }
 
 @media (max-width: 800px) {
+  .main-container {
+    margin-left: 10px;
+  }
+
   .info-wallet-content {
-    margin-right: 20px;
+    margin-right: 30px;
   }
 
   .eye-icon {

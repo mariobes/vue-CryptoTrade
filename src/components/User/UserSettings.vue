@@ -597,5 +597,15 @@ button:disabled {
   .login-item-text {
     display: none;
   }
+
+  .login-item-title {
+    font-size: 1rem;
+  }
+
+  .input-group {
+    max-width: 100px;
+    font-size: 0.8rem;
+    margin-right: 10px;
+  }
 }
 </style>

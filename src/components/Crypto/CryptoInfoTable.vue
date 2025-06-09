@@ -396,10 +396,7 @@ onMounted(() => {
 	margin-right: 10px;
 	font-size: 1.6rem;
 	font-weight: bold;
-	overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-	max-width: 230px;
+	max-width: 200px;
 }
 
 .crypto-symbol {
