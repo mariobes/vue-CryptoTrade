@@ -71,7 +71,8 @@ onMounted(async () => {
           </v-icon>
           <span class="mr-2">{{ storeUserPreferences.convertPrice(Math.abs(userAsset.balance), storeUserPreferences.selectedCurrency, 'after', true) }}</span>
           <span>
-            ({{ userAsset.balancePercentage > 0 ? '+' : '-' }} {{ storeUserPreferences.maskedPrice(Math.abs(userAsset.balancePercentage)) }} %)
+            ({{ Number(userAsset.balancePercentage.toFixed(2)) > 0 ? '+' : Number(userAsset.balancePercentage.toFixed(2)) < 0 ? '-' : '' }} 
+            {{ storeUserPreferences.maskedPrice(Math.abs(userAsset.balancePercentage)) }} %)
           </span>
         </span>
       </div>

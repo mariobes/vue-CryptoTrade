@@ -331,13 +331,36 @@ a {
 }
 
 @media (max-width: 850px) {
-  .header-icons {
+  .header-icons-text {
     display: none;
   }
 
   .header-icons-search {
     display: flex;
-    width: 150px;
+    width: 50px;
+  }
+
+  .header-icons-search-text {
+    display: none;
+  }
+}
+
+@media (max-width: 500px) {
+  .header-title {
+    display: none;
+  }
+
+  .header-logo {
+    width: 50px;
+    height: 50px;
+  }
+
+  .divider-bar {
+    margin-left: 10px;
+  }
+
+  .login-btn {
+    display: none;
   }
 }
 </style>
