@@ -154,8 +154,9 @@ const validateFields = () => {
 
   const isBuy = selectedAction.value === 'buy';
   const isSell = selectedAction.value === 'sell';
-  const cash = Number(userData.value?.cash);
-  const total = userAsset.value?.total ? userAsset.value.total : 0;
+  const cash = storeUserPreferences.convertPrice(userData.value?.cash ?? 0, storeUserPreferences.selectedCurrency);
+  const totalPrevious = storeUserPreferences.convertPrice(userAsset.value?.total ?? 0, storeUserPreferences.selectedCurrency);
+  const total = parseFloat(totalPrevious.replace(/\./g, '').replace(',', '.'));
   const totalAssetAmount = userAsset.value?.totalAssetAmount ? userAsset.value.totalAssetAmount : 0;
 
   const fieldName = isBuy ? 'buy' : 'sell';
@@ -164,7 +165,7 @@ const validateFields = () => {
     errorMessages.value[fieldName] = t(
       isBuy ? 'TransactionsAsset_Buy_Low_Error' : 'TransactionsAsset_Sell_Low_Error'
     );
-  } else if ((isBuy && amount.value > cash && selectedOption.value === 'amount') || (isBuy && amount.value * assetPrice.value > cash && selectedOption.value === 'assetAmount')) {
+  } else if ((isBuy && amount.value >= parseFloat(cash.replace(',', '.')) && selectedOption.value === 'amount') || (isBuy && amount.value * parseFloat(storeUserPreferences.convertPrice(assetPrice.value, storeUserPreferences.selectedCurrency).replace(/\./g, '').replace(',', '.')) >= parseFloat(cash.replace(',', '.')) && selectedOption.value === 'assetAmount')) {
     errorMessages.value[fieldName] = t('TransactionsAsset_Buy_High_Error');
   } else if ((isSell && amount.value > total && selectedOption.value === 'amount') || (isSell && amount.value > totalAssetAmount) && selectedOption.value === 'assetAmount') {
     errorMessages.value[fieldName] = t('TransactionsAsset_Sell_High_Error');
@@ -273,13 +274,7 @@ watch(amount, () => {
           <button 
             :class="['buy-sell-btn', selectedAction === 'buy' ? 'buy-btn' : 'sell-btn']"
             @click="selectedAction === 'buy' ? handleBuy() : handleSell()"
-            :disabled="!storeAuth.isLoggedIn() || !amount ||
-              (selectedOption === 'amount' && parseFloat(amount) < 1) ||
-              (selectedOption === 'assetAmount' && parseFloat(amount) === 0) ||
-              (selectedAction === 'buy' && selectedOption === 'amount' && parseFloat(amount) > Number(userData?.cash)) ||
-              (selectedAction === 'buy' && selectedOption === 'assetAmount' && parseFloat(amount) * assetPrice > Number(userData?.cash)) ||
-              (selectedAction === 'sell' && selectedOption === 'amount' && parseFloat(amount) > (userAsset?.total ?? 0)) ||
-              (selectedAction === 'sell' && selectedOption === 'assetAmount' && parseFloat(amount) > (userAsset?.totalAssetAmount ?? 0))"
+            :disabled="!storeAuth.isLoggedIn() || !amount || !!errorMessages[selectedAction]"
           >
             {{ selectedAction === 'buy' ? t('TransactionsAsset_Buy_Btn') : t('TransactionsAsset_Sell_Btn') }}
           </button>
