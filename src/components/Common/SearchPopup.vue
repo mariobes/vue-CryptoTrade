@@ -464,4 +464,25 @@ const goToStock = (id: string) => {
 .popup-show-more-btn:hover {
   background-color: var(--primary-color-dark-hover);
 }
+
+/* Responsive */
+@media (max-width: 800px) {
+  .search-container {
+		width: 350px;
+	}
+
+	.popup-results-asset-cap {
+		display: none;
+	}
+
+	.popup-results-asset-price {
+		display: none;
+	}
+
+	::v-deep(.popup-search input::placeholder) {
+		white-space: normal;
+		font-size: 0.75rem;
+		margin-right: 30px;
+	}
+}
 </style>

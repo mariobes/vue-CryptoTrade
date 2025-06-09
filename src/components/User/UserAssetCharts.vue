@@ -307,5 +307,22 @@ const profitPercentage = computed(() => {
 	.chart-assets-content {
 		width: 100%;
 	}
+
+  .mini-charts {
+    gap: 15px;
+  }
+
+  .mini-chart-item {
+    min-width: 170px;
+    padding: 10px 15px;
+  }
+
+  .item-icon {
+    font-size: 1rem;
+  }
+
+  .item-asset-value {
+    font-size: 0.8rem;
+  }
 }
 </style>

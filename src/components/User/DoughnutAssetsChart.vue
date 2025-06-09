@@ -183,4 +183,15 @@ const chartOptions = {
   justify-content: center;
   align-items: center;
 }
+
+@media (max-width: 750px) {
+  .chart-content {
+    width: 200px;
+    margin-top: 35px;
+  }
+
+  .legend-container {
+    margin-right: 20px;
+  }
+}
 </style>
