@@ -10,7 +10,6 @@ import { useAuthStore } from '@/stores/auth'
 import { useI18n } from 'vue-i18n'
 
 const textColor = computed(() => storeUserPreferences.getTheme().text)
-const colorGray = computed(() => storeUserPreferences.getTheme().colorGray)
 const colorDarkGray = computed(() => storeUserPreferences.getTheme().colorDarkGray)
 
 const storeUserPreferences = useUserPreferencesStore()
