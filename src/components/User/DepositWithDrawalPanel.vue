@@ -36,6 +36,7 @@ const errorMessages = ref<{
 }>({})
 
 const amount = ref();
+let amountToSend: number | undefined = undefined;
 const selectedPaymentMethod = ref<0 | 1 | 2 | null>(null);
 const hasInteracted = ref(false);
 const successMessage = ref<string | null>(null);
@@ -65,7 +66,8 @@ onMounted(async () => {
 const handleDeposit = async () => {
   if (!validateFields()) return
 
-  await storeTransactions.MakeDeposit(userId, amount.value, selectedPaymentMethod.value!, token);
+  amountToSend = parseFloat(storeUserPreferences.normalizeInputAmount(amount.value, storeUserPreferences.selectedCurrency));
+  await storeTransactions.MakeDeposit(userId, amountToSend, selectedPaymentMethod.value!, token);
 
   await loadUserData();
   amount.value = '';
@@ -78,7 +80,8 @@ const handleDeposit = async () => {
 const handleWithdrawal = async () => {
   if (!validateFields()) return
 
-  await storeTransactions.MakeWithdrawal(userId, amount.value, token);
+  amountToSend = parseFloat(storeUserPreferences.normalizeInputAmount(amount.value, storeUserPreferences.selectedCurrency));
+  await storeTransactions.MakeWithdrawal(userId, amountToSend, token);
   await loadUserData();
   amount.value = '';
   closePanel();
@@ -98,7 +101,8 @@ const validateFields = () => {
 
   const isDeposit = props.action === 'deposit';
   const isWithdrawal = props.action === 'withdrawal';
-  const currentCash = Number(userData.value?.cash || 0);
+  const currentCashPrevious = storeUserPreferences.convertPrice(Number(userData.value?.cash), storeUserPreferences.selectedCurrency);
+  const currentCash = parseFloat(currentCashPrevious.replace(/\./g, '').replace(',', '.'));
   const fieldName = isDeposit ? 'deposit' : 'withdrawal';
 
   if (amount.value < 10) {
@@ -141,6 +145,9 @@ watch(() => props.visible, (newVal) => {
 });
 
 const isButtonDisabled = computed(() => {
+  const currentCashPrevious = storeUserPreferences.convertPrice(Number(userData.value?.cash), storeUserPreferences.selectedCurrency);
+  const currentCash = parseFloat(currentCashPrevious.replace(/\./g, '').replace(',', '.'));
+
   if (!amount.value || amount.value < 10) return true;
 
   if (props.action === 'deposit') {
@@ -164,7 +171,7 @@ const isButtonDisabled = computed(() => {
   }
 
   if (props.action === 'withdrawal') {
-    return amount.value > Number(userData.value?.cash) || !bankAccount.value || bankAccount.value.length < 10;
+    return amount.value > currentCash || !bankAccount.value || bankAccount.value.length < 10;
   }
 
   return true;
