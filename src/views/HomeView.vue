@@ -1,29 +1,18 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed } from 'vue'
 import CryptoIndices from '@/components/Crypto/CryptoIndices.vue'
 import CryptosTrendingTable from '@/components/Crypto/CryptosTrendingTable.vue'
 import StocksTrendingTable from '@/components/Stock/StocksTrendingTable.vue'
 import CryptoTable from '@/components/Crypto/CryptoTable.vue'
 import StockTable from '@/components/Stock/StockTable.vue'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
-import { useTransactionsStore } from '@/stores/transactions'
-import { useAuthStore } from '@/stores/auth'
 import { useI18n } from 'vue-i18n'
 
 const textColor = computed(() => storeUserPreferences.getTheme().text)
 
 const storeUserPreferences = useUserPreferencesStore()
-const storeTransactions = useTransactionsStore()
-const storeAuth = useAuthStore()
 
 const { t } = useI18n()
-
-onMounted(async () => {
-  if (storeAuth.isLoggedIn())
-  {
-    await storeTransactions.GetAssets(storeAuth.getUserId(), storeAuth.getToken());
-  }
-});
 </script>
 
 <template>
