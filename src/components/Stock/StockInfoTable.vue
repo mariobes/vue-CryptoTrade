@@ -100,30 +100,19 @@ onMounted(() => {
 <template>
 	<div class="main-container" v-if="stock">
 		<div>
-			<div class="stock-content-name">
-				<img :src="stock.image" alt="Stock Logo" 
-					class="stock-image" 
-					:class="{ 'stock-image-light': storeUserPreferences.selectedTheme === 'light' }"
-					@error="storeUserPreferences.showDefaultAssetImage(stock)" 
-				/>
-				<span class="stock-name">{{ stock.companyName }}</span>
-				<span class="stock-symbol mt-1">{{ stock.symbol.toUpperCase() }}</span>
-				<span class="stock-rank" :style="{ backgroundColor: storeUserPreferences.selectedTheme === 'light' ? 'var(--asset-rank-background-light)' : 'var(--asset-rank-background-dark)' }">
-					#{{ stock.marketCapRank }}
-				</span>
-			</div>
-
-			<div class="stock-content-price-favorite">
-				<div class="stock-content-price">
-					<span class="stock-price">{{ storeUserPreferences.convertPrice(stock.price, storeUserPreferences.selectedCurrency, 'after') }}</span>
-					<span class="stock-percentage" :style="{ color: storeUserPreferences.getPriceColor(stock.changesPercentage) }">
-						<v-icon class="mb-1">
-							{{ storeUserPreferences.getArrowDirection(stock.changesPercentage) }}
-						</v-icon>
-						{{ Math.abs(stock.changesPercentage).toFixed(2) }}% (1D)
+			<div class="stock-content-name-favorite">
+				<div class="stock-content-name">
+					<img :src="stock.image" alt="Stock Logo" 
+						class="stock-image" 
+						:class="{ 'stock-image-light': storeUserPreferences.selectedTheme === 'light' }"
+						@error="storeUserPreferences.showDefaultAssetImage(stock)" 
+					/>
+					<span class="stock-name">{{ stock.companyName }}</span>
+					<span class="stock-symbol mt-1">{{ stock.symbol.toUpperCase() }}</span>
+					<span class="stock-rank" :style="{ backgroundColor: storeUserPreferences.selectedTheme === 'light' ? 'var(--asset-rank-background-light)' : 'var(--asset-rank-background-dark)' }">
+						#{{ stock.marketCapRank }}
 					</span>
 				</div>
-
 				<div class="stock-content-favorite">
 					<span v-if="storeAuth.isLoggedIn()" @click.stop="toggleFavorite(stock.id)" class="favorite-icon">
 						<span 
@@ -136,6 +125,16 @@ onMounted(() => {
 						></span>
 					</span>
 				</div>
+			</div>
+
+			<div class="stock-content-price">
+				<span class="stock-price">{{ storeUserPreferences.convertPrice(stock.price, storeUserPreferences.selectedCurrency, 'after') }}</span>
+				<span class="stock-percentage" :style="{ color: storeUserPreferences.getPriceColor(stock.changesPercentage) }">
+					<v-icon class="mb-1">
+						{{ storeUserPreferences.getArrowDirection(stock.changesPercentage) }}
+					</v-icon>
+					{{ Math.abs(stock.changesPercentage).toFixed(2) }}% (1D)
+				</span>
 			</div>
 		</div>
 
@@ -250,6 +249,12 @@ onMounted(() => {
 	padding: 25px;
 }
 
+.stock-content-name-favorite {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
 .stock-content-name {
 	display: flex;
   align-items: center;
@@ -258,7 +263,7 @@ onMounted(() => {
 .stock-image {
   width: 30px;
   height: 30px;
-  margin-right: 10px;
+  margin-right: 15px;
   border-radius: 50%;
 }
 
@@ -289,19 +294,8 @@ onMounted(() => {
 	font-weight: bold;
 }
 
-.stock-content-price-favorite {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-}
-
-.stock-content-price {
-	display: flex;
-	margin-top: 5px;
-}
-
-.favorite-icon-active {
-  color: var(--gold-color);
+.stock-content-favorite {
+	margin-left: 10px;
 }
 
 .favorite-icon {
@@ -313,6 +307,15 @@ onMounted(() => {
 
 .favorite-icon:hover {
   color: var(--gold-color);
+}
+
+.favorite-icon-active {
+  color: var(--gold-color);
+}
+
+.stock-content-price {
+	display: flex;
+	margin-top: 5px;
 }
 
 .stock-price {
