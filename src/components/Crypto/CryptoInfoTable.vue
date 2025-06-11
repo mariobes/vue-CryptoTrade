@@ -370,25 +370,10 @@ onMounted(() => {
   align-items: center;
 }
 
-.favorite-icon-active {
-  color: var(--gold-color);
-}
-
-.favorite-icon {
-  color: v-bind(textColor);
-	cursor: pointer;
-	font-size: 1.6rem;
-	margin-right: 15px;
-}
-
-.favorite-icon:hover {
-  color: var(--gold-color);
-}
-
 .crypto-image {
   width: 30px;
   height: 30px;
-  margin-right: 10px;
+  margin-right: 15px;
   border-radius: 50%;
 }
 
@@ -412,6 +397,25 @@ onMounted(() => {
 	margin-left: 5px;
 	font-size: 0.85rem;
 	font-weight: bold;
+}
+
+.crypto-content-favorite {
+	margin-left: 10px;
+}
+
+.favorite-icon {
+  color: v-bind(textColor);
+	cursor: pointer;
+	font-size: 1.6rem;
+	margin-right: 15px;
+}
+
+.favorite-icon:hover {
+  color: var(--gold-color);
+}
+
+.favorite-icon-active {
+  color: var(--gold-color);
 }
 
 .crypto-content-price {
