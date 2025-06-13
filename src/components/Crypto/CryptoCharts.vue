@@ -484,7 +484,7 @@ const chartOptions = computed<ChartOptions<'line'>>(() => {
 
     <div class="crypto-chart">
       <Line v-if="!isLoading && chartData.datasets.length" :data="chartData" :options="chartOptions" />
-      <span v-else :style="{ color: textColor }">{{ t('AssetChart_Loading') }}</span>
+      <span v-else class="crypto-chart-loading" :style="{ color: textColor }">{{ t('AssetChart_Loading') }}</span>
     </div>
     
     <div v-if="props.cryptoDetails?.description?.en" class="description-container">
@@ -545,6 +545,14 @@ const chartOptions = computed<ChartOptions<'line'>>(() => {
   border: solid 1px var(--dark-gray-color);
 }
 
+.crypto-chart-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 514px;
+  font-size: 2rem;
+}
+
 .description-container {
   margin: 30px 15px 0 15px;
 }
@@ -553,12 +561,18 @@ const chartOptions = computed<ChartOptions<'line'>>(() => {
   color: v-bind(textColor);
   margin-bottom: 15px;
   font-size: 1.4rem;
-
 }
 
 .description-text {
   color: v-bind(textColor);
   font-size: 0.9rem;
   text-align: justify;
+}
+
+/* Responsive */
+@media (max-width: 950px) {
+  .crypto-chart-loading {
+    height: 224px;
+  }
 }
 </style>
