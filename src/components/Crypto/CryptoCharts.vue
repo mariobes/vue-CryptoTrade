@@ -181,8 +181,11 @@ const chartOptions = computed<ChartOptions<'line'>>(() => {
         bodyColor: textColor.value,
         padding: 10,
         displayColors: false,
+        filter: (tooltipItem) => tooltipItem.dataIndex != 0,
         callbacks: {
           title: (context: { parsed: { x: string | number | Date } }[]) => {
+            if (!context[0] || !context[0].parsed) return ''
+            
             const date = new Date(context[0].parsed.x)
             return date.toLocaleString('es-ES', {
               day: '2-digit',
