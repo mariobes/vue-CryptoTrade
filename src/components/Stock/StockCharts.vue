@@ -32,15 +32,15 @@ const isLoading = ref(true)
 
 const timeToDays = {
   '1D': '1min',
-  '7D': '5min',
   '1M': '30min',
   '3M': '1hour',
+  '6M': '4hour',
   '5Y': '1day',
 } as const
 
 const fetchChartData = async () => {
   isLoading.value = true
-  const days = timeToDays[selectedTime.value as keyof typeof timeToDays].toString() ?? 1
+  const days = timeToDays[selectedTime.value as keyof typeof timeToDays].toString() ?? '1min'
   await storeStocks.GetStockCharts(props.stockId, days)
   isLoading.value = false
 }
@@ -60,27 +60,8 @@ const chartData = computed(() => {
   const chart = storeStocks.chartsStocks as unknown as StockChartData
   if (!chart || !chart.prices?.length) return { labels: [], datasets: [] }
 
-  const isVolume = selectedType.value === 'Volume'
-  const rawData = isVolume ? chart.volumes : chart.prices
-  const baseline = chart.prices[0][1]
-
-  if (isVolume) {
-    return {
-      datasets: [{
-        label: 'Volume',
-        data: rawData.map(([x, y]: number[]) => ({ x, y })),
-        borderColor: '#3b82f6',
-        backgroundColor: 'rgba(59, 130, 246, 0.1)',
-        borderWidth: 2,
-        pointRadius: 0,
-        pointHoverRadius: 5,
-        pointHoverBorderWidth: 1.5,
-        pointHoverBorderColor: 'white',
-        pointHoverBackgroundColor: '#3b82f6',
-        tension: 0,
-      }]
-    }
-  }
+  const rawData = [...chart.prices].reverse()
+  const baseline = rawData[0][1]
 
   const data = rawData.map(([x, y]: number[]) => ({ x, y }))
   const datasets = []
@@ -160,33 +141,30 @@ const chartOptions = computed<ChartOptions<'line'>>(() => {
   const first = new Date(chart.prices[0][0])
   const last = new Date(chart.prices[chart.prices.length - 1][0])
 
-  const startHour = new Date(first)
-  startHour.setHours(11, 30, 0, 0)
-
-  const endHour = new Date(first)
-  endHour.setHours(18, 0, 0, 0)
-
   return {
     responsive: true,
     animation: { duration: 0 },
     interaction: {
-      mode: 'nearest' as const,
+      mode: 'nearest',
       intersect: false,
-      axis: 'x' as 'x'
+      axis: 'x'
     },
     plugins: {
       tooltip: {
         enabled: true,
         intersect: false,
-        mode: 'nearest' as const,
-        axis: 'x' as const,
+        mode: 'nearest',
+        axis: 'x',
         backgroundColor: backgroundColor.value,
-        titleColor: textColor.value,
+        titleColor: '#808080',
         bodyColor: textColor.value,
         padding: 10,
         displayColors: false,
+        filter: (tooltipItem) => tooltipItem.dataIndex != 0,
         callbacks: {
           title: (context: { parsed: { x: string | number | Date } }[]) => {
+            if (!context[0] || !context[0].parsed) return ''
+
             const date = new Date(context[0].parsed.x)
             return date.toLocaleString('es-ES', {
               day: '2-digit',
@@ -198,64 +176,70 @@ const chartOptions = computed<ChartOptions<'line'>>(() => {
             })
           },
           label: (context: { parsed: { y: any } }) => {
-            const isVolume = selectedType.value === 'Volume'
             const value = context.parsed.y
-            let price
-            if (isVolume) {
-              price = storeUserPreferences.convertToAbbreviated(value, storeUserPreferences.selectedCurrency, 'after')
-              return `${t('AssetChart_Volume')}: ${price}`
-            } else {
-              price = storeUserPreferences.convertPrice(value, storeUserPreferences.selectedCurrency, 'after')
-              return `${t('AssetChart_Price')}: ${price}`
-            }  
+            let price = storeUserPreferences.convertPrice(value, storeUserPreferences.selectedCurrency, 'after')
+            return `${t('AssetChart_Price')}: ${price}`    
           },
+          afterLabel: (context: { parsed: { x: any } }) => {
+            const chart = storeStocks.chartsStocks as unknown as StockChartData
+            const timestamp = context.parsed.x
+
+            if (!chart?.volumes?.length) return ''
+
+            let closest = chart.volumes.reduce((prev, curr) => {
+              return Math.abs(curr[0] - timestamp) < Math.abs(prev[0] - timestamp) ? curr : prev
+            })
+
+            const volume = storeUserPreferences.convertToAbbreviated(closest[1], storeUserPreferences.selectedCurrency, 'after')
+            return `Vol. 24 h: ${volume}`
+          }
         }
       },
       legend: { display: false },
       annotation: {
-        annotations: selectedType.value !== 'Volume' ? {
+        annotations: {
           baseline: {
             type: 'line',
-            yMin: chart.prices[0][1],
-            yMax: chart.prices[0][1],
+            yMin: chart.prices[chart.prices.length - 1][1],
+            yMax: chart.prices[chart.prices.length - 1][1],
             borderColor: textColor.value,
             borderWidth: 1,
             borderDash: [1, 3],
           },
           currentPrice: {
             type: 'label',
-            xValue: chart.prices[chart.prices.length - 1][0],
-            yValue: chart.prices[chart.prices.length - 1][1],
+            xValue: chart.prices[0][0],
+            yValue: chart.prices[0][1],
             backgroundColor: () => {
               const last = chart.prices[chart.prices.length - 1][1]
               const first = chart.prices[0][1]
-              return last >= first ? '#4ade80' : '#ef4444'
+              return first >= last ? '#4ade80' : '#ef4444'
             },
             color: 'white',
             content: [
-              storeUserPreferences.convertPrice(chart.prices[chart.prices.length - 1][1], storeUserPreferences.selectedCurrency)
+              storeUserPreferences.convertPrice(chart.prices[0][1], storeUserPreferences.selectedCurrency)
             ],
             font: {
               weight: 'bold',
               size: 11
             },
             position: {
-              x: 'end',
+              x: 'start',
               y: 'center'
             },
-            xAdjust: 0,
+            xAdjust: -40,
             yAdjust: 0,
-            padding: 5,
+            padding: 4,
             borderRadius: 6,
           },
           initialPriceBox: {
             type: 'label',
-            xValue: chart.prices[0][0],
-            yValue: chart.prices[0][1],
+            xValue: chart.prices[chart.prices.length - 1][0],
+            yValue: chart.prices[chart.prices.length - 1][1],
             backgroundColor: '#d6d2d2',
             color: '#232323',
             content: [
-              storeUserPreferences.convertPrice(chart.prices[0][1], storeUserPreferences.selectedCurrency)
+              storeUserPreferences.convertPrice(chart.prices[chart.prices.length - 1][1], storeUserPreferences.selectedCurrency)
             ],
             font: {
               weight: 'bold',
@@ -270,45 +254,23 @@ const chartOptions = computed<ChartOptions<'line'>>(() => {
             padding: 4,
             borderRadius: 6,
           }
-        } : {
-          volumeLabel: {
-            type: 'label',
-            xValue: chart.volumes[chart.volumes.length - 1][0],
-            yValue: chart.volumes[chart.volumes.length - 1][1],
-            backgroundColor: '#3b82f6',
-            color: 'white',
-            content: [
-              storeUserPreferences.convertToAbbreviated(chart.volumes[chart.volumes.length - 1][1], storeUserPreferences.selectedCurrency)
-            ],
-            font: {
-              weight: 'bold',
-              size: 11
-            },
-            position: {
-              x: 'end',
-              y: 'center'
-            },
-            xAdjust: 0,
-            yAdjust: 0,
-            padding: 5,
-            borderRadius: 6,
-          }
         }
       }
     },
     scales: {
       x: {
         type: 'time',
-        min: selectedTime.value === '1D' ? startHour.getTime() : first.getTime(),
-        max: selectedTime.value === '1D' ? endHour.getTime() : last.getTime(),
+        min: last.getTime(),
+        max: first.getTime(),
         time: {
           unit: selectedTime.value === '1M' ? 'day' :
                 selectedTime.value === '3M' ? 'day' : 'hour',
           stepSize: selectedTime.value === '1D' ? 2 :
-                    selectedTime.value === '7D' ? 12 :
-                    selectedTime.value === '3M' ? 14 : 1,
+                    selectedTime.value === '3M' ? 14 :
+                    selectedTime.value === '6M' ? 14 : 1,
           tooltipFormat: selectedTime.value === '1M' ? 'dd MMM' :
-                         selectedTime.value === '3M' ? 'dd MMM' : 'HH:mm dd MMM',
+                         selectedTime.value === '3M' ? 'dd MMM' :
+                         selectedTime.value === '6M' ? 'dd MMM' : 'HH:mm dd MMM',
           displayFormats: {
             hour: 'HH:mm',
             day: 'dd MMM',
@@ -318,9 +280,9 @@ const chartOptions = computed<ChartOptions<'line'>>(() => {
         ticks: {
           autoSkip: false,
           maxTicksLimit: selectedTime.value === '1D' ? 12 :
-                         selectedTime.value === '7D' ? 15 :
                          selectedTime.value === '1M' ? 16 :
-                         selectedTime.value === '3M' ? 14 : undefined,
+                         selectedTime.value === '3M' ? 14 :
+                         selectedTime.value === '6M' ? 14 : undefined,
           maxRotation: 0,
           minRotation: 0,
           callback: function (value: string | number | Date) {
@@ -337,7 +299,7 @@ const chartOptions = computed<ChartOptions<'line'>>(() => {
               return `${month} '${year}`
             }
 
-            if (selectedTime.value === '1M' || selectedTime.value === '7D' || selectedTime.value === '1D') {
+            if (selectedTime.value === '1M' || selectedTime.value === '1D') {
               if (date.getHours() === 0 && date.getMinutes() === 0) {
                 return date.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' })
                   .replace(/^(\d{2}) (\w+)/, (_, day, month) => {
@@ -348,7 +310,7 @@ const chartOptions = computed<ChartOptions<'line'>>(() => {
               return date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: false })
             }
 
-            if (selectedTime.value === '3M') {
+            if (selectedTime.value === '3M' || selectedTime.value === '6M') {
               return date.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' })
                 .replace(/^(\d{2}) (\w+)/, (_, day, month) => {
                   const capitalizedMonth = month.charAt(0).toUpperCase() + month.slice(1)
@@ -372,20 +334,14 @@ const chartOptions = computed<ChartOptions<'line'>>(() => {
           padding: 10,
           callback: function (this: any, tickValue: string | number) {
             const value = typeof tickValue === 'number' ? tickValue : Number(tickValue)
-            if (selectedType.value === 'Volume') {
-              return storeUserPreferences.convertToAbbreviated(value, storeUserPreferences.selectedCurrency)
-            } else {
-              return storeUserPreferences.convertPrice(value, storeUserPreferences.selectedCurrency)
-            }
+            return storeUserPreferences.convertToAbbreviated(value, storeUserPreferences.selectedCurrency)
           }
         },
         afterDataLimits: (scale: { min: number; max: number }) => {
           const chart = storeStocks.chartsStocks as unknown as StockChartData
           if (!chart) return
 
-          const data = selectedType.value === 'Volume'
-            ? chart.volumes
-            : chart.prices
+          const data = chart.prices
 
           if (!data?.length) return
 
@@ -414,14 +370,6 @@ const chartOptions = computed<ChartOptions<'line'>>(() => {
         >
           {{ t('AssetChart_Price') }}
         </button>
-
-        <button
-          class="chart-btn-value"
-          :class="{ selected: selectedType === 'Volume' }"
-          @click="selectType('Volume')"
-        >
-        {{ t('AssetChart_Volume') }}
-        </button>
       </div>
 
       <div class="chart-btn">
@@ -431,14 +379,6 @@ const chartOptions = computed<ChartOptions<'line'>>(() => {
           @click="selectTime('1D')"
         >
           1D
-        </button>
-
-        <button
-          class="chart-btn-value time-btn"
-          :class="{ selected: selectedTime === '7D' }"
-          @click="selectTime('7D')"
-        >
-          7D
         </button>
 
         <button
@@ -455,6 +395,14 @@ const chartOptions = computed<ChartOptions<'line'>>(() => {
           @click="selectTime('3M')"
         >
           3M
+        </button>
+
+        <button
+          class="chart-btn-value time-btn"
+          :class="{ selected: selectedTime === '6M' }"
+          @click="selectTime('6M')"
+        >
+          6M
         </button>
 
         <button
