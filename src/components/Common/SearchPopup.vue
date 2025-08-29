@@ -53,8 +53,8 @@ watch(searchQuery, async (newQuery) => {
     ])
 
     if (searchQuery.value.trim() === trimmedQuery) {
-	  cryptoResults.value = cryptos ?? []
-	  stockResults.value = stocks ?? []
+			cryptoResults.value = cryptos ?? []
+			stockResults.value = stocks ?? []
     }
   }
 })
@@ -79,14 +79,14 @@ watch(() => props.modelValue, (newVal) => {
 			if (containerStock) containerStock.scrollTop = savedStockScrollTop
     })
 		nextTick(() => {
-		const inputEl = searchInput.value
-		if (inputEl) {
-			inputEl.focus()
-			if (searchQuery.value.trim()) {
-				inputEl.select()
+			const inputEl = searchInput.value
+			if (inputEl) {
+				inputEl.focus()
+				if (searchQuery.value.trim()) {
+					inputEl.select()
+				}
 			}
-		}
-	})
+		})
   }
 })
 
