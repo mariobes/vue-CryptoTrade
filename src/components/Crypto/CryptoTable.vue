@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue'
-import { RouterLink } from 'vue-router';
-import { useRoute } from 'vue-router'
+import { RouterLink, useRoute } from 'vue-router';
 import { useCryptosStore } from '@/stores/cryptos'
 import { useWatchlistsStore } from '@/stores/watchlists'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
@@ -116,19 +115,19 @@ onMounted(async () => {
           <span :class="{'cursor-pointer': sortable}" @click="sortable ? toggleSort(1) : null">
             #
           </span>
-          <v-icon v-if="sortBy !== null && sortBy === 1">{{ storeUserPreferences.getArrowDirection(order) }}</v-icon>
+          <v-icon v-if="sortBy !== null && sortBy === 1">{{ storeUserPreferences.getArrowDirection(order, true) }}</v-icon>
         </th>
         <th class="text-left column-fixed">
           <span :class="{'cursor-pointer': sortable}" @click="sortable ? toggleSort(2) : null">
             {{ t('CryptoTable_Name') }}
           </span>
-          <v-icon v-if="sortBy !== null && sortBy === 2">{{ storeUserPreferences.getArrowDirection(order) }}</v-icon>
+          <v-icon v-if="sortBy !== null && sortBy === 2">{{ storeUserPreferences.getArrowDirection(order, true) }}</v-icon>
         </th>
         <th class="text-right">
           <span :class="{'cursor-pointer': sortable}" @click="sortable ? toggleSort(3) : null">
             {{ t('CryptoTable_Price') }}
           </span>
-          <v-icon v-if="sortBy !== null && sortBy === 3">{{ storeUserPreferences.getArrowDirection(order) }}</v-icon>
+          <v-icon v-if="sortBy !== null && sortBy === 3">{{ storeUserPreferences.getArrowDirection(order, true) }}</v-icon>
         </th>
         <th class="text-right">
           <span :class="{'cursor-pointer': sortable}" @click="sortable ? toggleSort(4) : null">
@@ -152,19 +151,19 @@ onMounted(async () => {
           <span :class="{'cursor-pointer': sortable}" @click="sortable ? toggleSort(0) : null">
             {{ t('CryptoTable_MarketCap') }}
           </span>
-          <v-icon v-if="sortBy !== null && sortBy === 0">{{ storeUserPreferences.getArrowDirection(order) }}</v-icon>
+          <v-icon v-if="sortBy !== null && sortBy === 0">{{ storeUserPreferences.getArrowDirection(order, true) }}</v-icon>
         </th>
         <th class="text-right">
           <span :class="{'cursor-pointer': sortable}" @click="sortable ? toggleSort(7) : null">
             {{ t('CryptoTable_Volume_24h') }}
           </span>
-          <v-icon v-if="sortBy !== null && sortBy === 7">{{ storeUserPreferences.getArrowDirection(order) }}</v-icon>
+          <v-icon v-if="sortBy !== null && sortBy === 7">{{ storeUserPreferences.getArrowDirection(order, true) }}</v-icon>
         </th> 
         <th class="text-right" v-if="sortable">
           <span :class="{'cursor-pointer': sortable}" @click="sortable ? toggleSort(8) : null">
             {{ t('CryptoTable_Circulating_Supply') }}
           </span>
-          <v-icon v-if="sortBy !== null && sortBy === 8">{{ storeUserPreferences.getArrowDirection(order) }}</v-icon>
+          <v-icon v-if="sortBy !== null && sortBy === 8">{{ storeUserPreferences.getArrowDirection(order, true) }}</v-icon>
         </th> 
         <th class="text-right">
           <span>{{ t('CryptoTable_Last_7_Days') }}</span>
