@@ -29,7 +29,6 @@ export interface Crypto {
         price: number[]
     }
     lastUpdated: Date
-
     links?: {
         blockchain_site: string[]
         homepage: string[]

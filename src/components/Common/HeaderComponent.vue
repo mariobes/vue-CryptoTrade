@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router';
 import { ref, computed, watch } from "vue";
-import { useRoute } from 'vue-router'
+import { RouterLink, useRoute } from 'vue-router'
 import router from '@/router'
 import { useUserPreferencesStore } from '../../stores/userPreferences';
 import { useAuthStore } from '@/stores/auth'

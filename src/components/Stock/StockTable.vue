@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue'
-import { RouterLink } from 'vue-router';
-import { useRoute } from 'vue-router'
+import { RouterLink, useRoute } from 'vue-router';
 import { useStocksStore } from '@/stores/stocks'
 import { useWatchlistsStore } from '@/stores/watchlists'
 import { useUserPreferencesStore } from '@/stores/userPreferences'
@@ -116,19 +115,19 @@ onMounted(async () => {
           <span :class="{'cursor-pointer': sortable}" @click="sortable ? toggleSort(1) : null">
             #
           </span>
-          <v-icon v-if="sortBy !== null && sortBy === 1">{{ storeUserPreferences.getArrowDirection(order) }}</v-icon>
+          <v-icon v-if="sortBy !== null && sortBy === 1">{{ storeUserPreferences.getArrowDirection(order, true) }}</v-icon>
         </th>
         <th class="text-left column-fixed">
           <span :class="{'cursor-pointer': sortable}" @click="sortable ? toggleSort(2) : null">
             {{ t('StockTable_Name') }}
           </span>
-          <v-icon v-if="sortBy !== null && sortBy === 2">{{ storeUserPreferences.getArrowDirection(order) }}</v-icon>
+          <v-icon v-if="sortBy !== null && sortBy === 2">{{ storeUserPreferences.getArrowDirection(order, true) }}</v-icon>
         </th>
         <th class="text-right">
           <span :class="{'cursor-pointer': sortable}" @click="sortable ? toggleSort(3) : null">
             {{ t('StockTable_Price') }}
           </span>
-          <v-icon v-if="sortBy !== null && sortBy === 3">{{ storeUserPreferences.getArrowDirection(order) }}</v-icon>
+          <v-icon v-if="sortBy !== null && sortBy === 3">{{ storeUserPreferences.getArrowDirection(order, true) }}</v-icon>
         </th>
         <th class="text-right">
           <span :class="{'cursor-pointer': sortable}" @click="sortable ? toggleSort(4) : null">
@@ -146,25 +145,25 @@ onMounted(async () => {
           <span :class="{'cursor-pointer': sortable}" @click="sortable ? toggleSort(6) : null">
             {{ t('StockTable_Currency') }}
           </span>
-          <v-icon v-if="sortBy !== null && sortBy === 6">{{ storeUserPreferences.getArrowDirection(order) }}</v-icon>
+          <v-icon v-if="sortBy !== null && sortBy === 6">{{ storeUserPreferences.getArrowDirection(order, true) }}</v-icon>
         </th>
         <th class="text-right" v-if="sortable">
           <span :class="{'cursor-pointer': sortable}" @click="sortable ? toggleSort(7) : null">
             {{ t('StockTable_Last_Dividend_Annual') }}
           </span>
-          <v-icon v-if="sortBy !== null && sortBy === 7">{{ storeUserPreferences.getArrowDirection(order) }}</v-icon>
+          <v-icon v-if="sortBy !== null && sortBy === 7">{{ storeUserPreferences.getArrowDirection(order, true) }}</v-icon>
         </th>
         <th class="text-right">
           <span :class="{'cursor-pointer': sortable}" @click="sortable ? toggleSort(0) : null">
             {{ t('StockTable_MarketCap') }}
           </span>
-          <v-icon v-if="sortBy !== null && sortBy === 0">{{ storeUserPreferences.getArrowDirection(order) }}</v-icon>
+          <v-icon v-if="sortBy !== null && sortBy === 0">{{ storeUserPreferences.getArrowDirection(order, true) }}</v-icon>
         </th>
         <th class="text-right">
           <span :class="{'cursor-pointer': sortable}" @click="sortable ? toggleSort(8) : null">
             {{ t('StockTable_Average_Volume') }}
           </span>
-          <v-icon v-if="sortBy !== null && sortBy === 8">{{ storeUserPreferences.getArrowDirection(order) }}</v-icon>
+          <v-icon v-if="sortBy !== null && sortBy === 8">{{ storeUserPreferences.getArrowDirection(order, true) }}</v-icon>
         </th>
         <th class="text-right">
           <span>

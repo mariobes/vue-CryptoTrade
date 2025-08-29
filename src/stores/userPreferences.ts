@@ -78,9 +78,9 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
       return price > 0 ? 'green' : 'red'
     },
 
-    getArrowDirection(price: number): string {
-      if (price === 0) return '';
-      if (Number(price.toFixed(2)) === 0) return ''
+    getArrowDirection(price: number, ActiveFilters : boolean = false): string {
+      if (price === 0 && !ActiveFilters) return '';
+      if (Number(price.toFixed(2)) === 0  && !ActiveFilters) return ''
       return price > 0 ? 'mdi-menu-up' : 'mdi-menu-down';
     },
 
