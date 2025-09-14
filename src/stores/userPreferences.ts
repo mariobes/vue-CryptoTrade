@@ -8,7 +8,7 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
   state: () => ({
     selectedLanguage: localStorage.getItem('language') as LanguageType || "ES",
     selectedCurrency: localStorage.getItem('currency') as CurrencyType || "USD",
-    selectedTheme: localStorage.getItem('theme') as ThemeType || "light",
+    selectedTheme: localStorage.getItem('theme') as ThemeType || "dark",
     showPrices: localStorage.getItem('showPrices') === 'false' ? false : true,
   }),
 
