@@ -1,4 +1,5 @@
 <h1>CryptoTrade</h1>
+<p>Visita la aplicación: <a href="https://jolly-flower-0cd90ac03.6.azurestaticapps.net/" target="_blank" rel="noopener noreferrer">CryptoTrade Web App</a></p>
 <b>Proyecto de final de curso.</b><br>
 CryptoTrade es una aplicación web construida con Vue 3, diseñada para proporcionar una interfaz de usuario interactiva y dinámica para gestionar transacciones de activos como criptomonedas y acciones. La aplicación se comunica de manera eficiente con la API RESTful, mostrando información actualizada en tiempo real.
 <hr style="height: 4px;">
