@@ -79,7 +79,7 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
     },
 
     getArrowDirection(price: number, ActiveFilters : boolean = false): string {
-      if (price === 0 && !ActiveFilters) return '';
+      if (price === 0 || price === null || price === undefined && !ActiveFilters) return '';
       if (Number(price.toFixed(2)) === 0  && !ActiveFilters) return ''
       return price > 0 ? 'mdi-menu-up' : 'mdi-menu-down';
     },
